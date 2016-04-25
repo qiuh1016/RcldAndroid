@@ -1,11 +1,17 @@
 package com.cetcme.rcldandroid;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,12 +27,16 @@ public class IndexActivity extends AppCompatActivity {
     private Button routeButton;
     private Button helpButton;
 
+    private TitleBar titleBar;
+
     private JSONObject myShipInfoJSON;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+
+        //setTitleBar();
 
         welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
         myShipButton = (Button) findViewById(R.id.myShipButton);
@@ -36,6 +46,7 @@ public class IndexActivity extends AppCompatActivity {
 
         Bundle bundle = this.getIntent().getExtras();
         String str = bundle.getString("myShipInfo");
+        //str = "{\"code\":0,\"data\":[{\"deviceNo\":\"10000001\",\"latitude\":30.782284,\"latitudeDisp\":\"N30°46′56.22\\\"\",\"longitude\":120.669029,\"longitudeDisp\":\"E120°40′8.50\\\"\",\"offlineFlag\":true,\"ownerName\":\"船东\",\"ownerTelNo\":\"18877779999\",\"picName\":\"qhhhhhTest\",\"picTelNo\":\"123456789900009\",\"shipName\":\"浙嘉渔0415\",\"shipNo\":\"3304001987070210\"}],\"msg\":\"成功\",\"success\":true,\"total\":0}";
         try {
             myShipInfoJSON = new JSONObject(str);
             JSONArray data = myShipInfoJSON.getJSONArray("data");
@@ -96,4 +107,6 @@ public class IndexActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
+
+
 }

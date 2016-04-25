@@ -88,7 +88,7 @@
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/switch1"
+            android:id="@+id/showMediumPiontSwitchInRouteActivity"
             android:layout_alignTop="@+id/textView11"
             android:layout_alignRight="@+id/routeSearchButton"
             android:layout_alignEnd="@+id/routeSearchButton"
@@ -122,9 +122,11 @@
             android:textColor="#3166ff"
             android:layout_alignTop="@+id/textView10"
             android:layout_alignLeft="@+id/startTimePickButton"
-            android:layout_alignStart="@+id/startTimePickButton"
             android:layout_marginTop="-10dp"
-            android:textSize="18dp" />
+            android:textSize="18sp"
+            android:layout_alignEnd="@+id/textView7"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentStart="false" />
     </RelativeLayout>
 
 </RelativeLayout>

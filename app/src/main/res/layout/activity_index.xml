@@ -76,4 +76,15 @@
         android:layout_above="@+id/fenceButton"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="32dp" />
+
+    <com.cetcme.rcldandroid.TitleBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/titleBarInIndex"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="-10dp"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginRight="-10dp" />
 </RelativeLayout>
