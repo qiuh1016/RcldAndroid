@@ -9,6 +9,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,6 +43,9 @@ public class FenceActivity extends AppCompatActivity {
     private List<Map<String, Object>> dataList;
     private KProgressHUD kProgressHUD;
 
+    private Toast toast;
+    Boolean refreshEnable = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +53,7 @@ public class FenceActivity extends AppCompatActivity {
         fenceListView = (ListView) findViewById(R.id.fenceListView);
 
         setTitle("港口信息");
+        toast = Toast.makeText(FenceActivity.this, "获取成功!", LENGTH_SHORT);
 
         simpleAdapter = new SimpleAdapter(this, getFenceData(), R.layout.fencelistview,
                 new String[]{"fenceName", "bowei", "fenceID", "shipNumber", "fenceType"},
@@ -74,19 +80,32 @@ public class FenceActivity extends AppCompatActivity {
                 String fenceID = (String) map.get("fenceID");
                 Integer shipNumber = (Integer) map.get("shipNumber");
                 String fenceType = (String) map.get("fenceType");
-                dialog(fenceName, fenceID, shipNumber, fenceType);
+                fenceInfodialog(fenceName, fenceID, shipNumber, fenceType);
             }
         });
 
-        kProgressHUD = KProgressHUD.create(FenceActivity.this)
-                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setLabel("获取中")
-                .setAnimationSpeed(1)
-                .setDimAmount(0.3f)
-                .setSize(110, 110)
-                .show();
+    }
 
+    //TODO: 下拉刷新
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
 
+        MenuItem setting = menu.add(0, 0, 0, "刷新");
+        setting.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        setting.setIcon(R.drawable.refresh1);
+        setting.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                //toast结束之前 不许刷新
+                if (refreshEnable) {
+                    getFenceData();
+                }
+                return false;
+            }
+        });
+
+        return true;
     }
 
     void ReadSharedPreferences(){
@@ -98,12 +117,23 @@ public class FenceActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
+        toast.cancel();
         super.onBackPressed();
         overridePendingTransition(R.anim.push_right_in_no_alpha,
                 R.anim.push_right_out_no_alpha);
     }
 
     private List<Map<String, Object>> getFenceData() {
+
+        toast.cancel();
+        refreshEnable = false;
+        kProgressHUD = KProgressHUD.create(FenceActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel("获取中")
+                .setAnimationSpeed(1)
+                .setDimAmount(0.3f)
+                .setSize(110, 110)
+                .show();
 
         String shipNumber,password;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
@@ -138,55 +168,44 @@ public class FenceActivity extends AppCompatActivity {
                         map.put("fenceType", fence.get("fenceLevel"));
                         dataList.add(map);
                     }
+                    simpleAdapter.notifyDataSetChanged();
 
-                    //
-                    new Handler().postDelayed(new Runnable(){
-                        public void run() {
-                            kProgressHUD.dismiss();
-                            simpleAdapter.notifyDataSetChanged();
-                        }
-                    }, 500);
-
-
+                    toast.setText("获取成功");
+                    toast.show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+                new Handler().postDelayed(new Runnable(){
+                    public void run() {
+                        kProgressHUD.dismiss();
+                    }
+                }, 300);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshEnable = true;
+                    }
+                }, 2000);
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                kProgressHUD.dismiss();
+                toast.setText("网络连接失败");
+                toast.show();
             }
         });
 
         return dataList;
     }
 
-    protected void dialog(String fenceName, String fenceID, Integer shipNumber, String fenceType) {
+    protected void fenceInfodialog(String fenceName, String fenceID, Integer shipNumber, String fenceType) {
         AlertDialog.Builder builder = new AlertDialog.Builder(FenceActivity.this);
         builder.setMessage("港口ID：" + fenceID + "\n" +  "港内船数：" + shipNumber + "\n" + "港口类型：" + fenceType);
         builder.setTitle(fenceName);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                Log.i("Main", "dialog dismiss ok");
-
-            }
-        });
-
-//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                dialogInterface.dismiss();
-//                Log.i("Main", "dialog dismiss cancel");
-//            }
-//        });
-
-//        builder.setNeutralButton("Neutral", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                dialogInterface.dismiss();
-//                Log.i("Main", "dialog dismiss neutral");
-//            }
-//        });
-
+        builder.setPositiveButton("OK", null);
         builder.create().show();
     }
 }

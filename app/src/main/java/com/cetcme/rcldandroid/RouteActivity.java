@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.baidu.mapapi.model.LatLng;
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -42,7 +43,10 @@ public class RouteActivity extends AppCompatActivity {
     private Button startTimePickButton;
     private Button endTimePickButton;
     private Button routeSearchButton;
-    private Switch showMediumPiontSwitch;
+    private Switch showMediumPointSwitch;
+
+    KProgressHUD kProgressHUD;
+    Toast toast;
 
     private String startTime;
     private String endTime;
@@ -55,10 +59,12 @@ public class RouteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_route);
 
         setTitle("轨迹记录");
+        toast = Toast.makeText(getApplicationContext(),"没有符合条件的数据",Toast.LENGTH_SHORT);
+
         startTimePickButton = (Button) findViewById(R.id.startTimePickButton);
         endTimePickButton = (Button) findViewById(R.id.endTimePickButton);
         routeSearchButton = (Button) findViewById(R.id.routeSearchButton);
-        showMediumPiontSwitch = (Switch) findViewById(R.id.showMediumPiontSwitchInRouteActivity);
+        showMediumPointSwitch = (Switch) findViewById(R.id.showMediumPointSwitchInRouteActivity);
 
         startTimePickButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,8 +87,14 @@ public class RouteActivity extends AppCompatActivity {
                 if (startTime == null || endTime == null) {
                     dialog();
                 } else {
+                    kProgressHUD = KProgressHUD.create(RouteActivity.this)
+                            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                            .setLabel("查询中")
+                            .setAnimationSpeed(1)
+                            .setDimAmount(0.3f)
+                            .setSize(110, 110)
+                            .show();
                     getRouteData();
-                    //showDisplayIntent();
                 }
 
             }
@@ -94,7 +106,7 @@ public class RouteActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString("startTime", startTime);
         bundle.putString("endTime", endTime);
-        bundle.putBoolean("showMediaPoint", showMediumPiontSwitch.isChecked());
+        bundle.putBoolean("showMediaPoint", showMediumPointSwitch.isChecked());
         bundle.putString("dataString", dataString);
 
         Intent intent = new Intent();
@@ -105,11 +117,13 @@ public class RouteActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
+        toast.cancel();
         super.onBackPressed();
         overridePendingTransition(R.anim.push_right_in_no_alpha,
                 R.anim.push_right_out_no_alpha);
     }
 
+    //TODO: 日期和时间 一个界面
     public void pickTime(final Button button) {
 
         Calendar calendar = Calendar.getInstance();
@@ -257,7 +271,8 @@ public class RouteActivity extends AppCompatActivity {
                 try {
                     String msg = response.getString("msg");
                     if (msg.equals("没有符合条件的数据")) {
-                        Toast.makeText(getApplicationContext(),"没有符合条件的数据",Toast.LENGTH_SHORT).show();
+                        toast.setText("没有符合条件的数据");
+                        toast.show();
                     } else if (msg.equals("成功")) {
                         dataString = response.toString();
                         showDisplayIntent();
@@ -265,7 +280,15 @@ public class RouteActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                kProgressHUD.dismiss();
+            }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                kProgressHUD.dismiss();
+                toast.setText("网络连接失败");
+                toast.show();
             }
         });
 

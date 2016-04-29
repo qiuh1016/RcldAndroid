@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -17,6 +16,11 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!-- Baidu Map -->
+    <meta-data
+        android:name="com.baidu.lbsapi.API_KEY"
+        android:value="scfFuUVYVYimLAGl65LmD8ELf9O7ctNK" />
 
     <application
         android:allowBackup="true"
@@ -33,17 +37,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".IndexActivity" />
-        <activity android:name=".MyshipActivity" />
-        <activity android:name=".FenceActivity" />
-        <activity android:name=".RouteActivity" />
-        <activity android:name=".RouteDisplayActivity" />
+        <activity android:name=".IndexActivity" android:screenOrientation="portrait" />
+        <activity android:name=".MyshipActivity" android:screenOrientation="portrait" />
+        <activity android:name=".FenceActivity" android:screenOrientation="portrait" />
+        <activity android:name=".RouteActivity" android:screenOrientation="portrait" />
+        <activity android:name=".RouteDisplayActivity" android:screenOrientation="portrait" />
+        <activity android:name=".HelpActivity" android:screenOrientation="portrait" />
 
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="scfFuUVYVYimLAGl65LmD8ELf9O7ctNK" />
 
-        <activity android:name=".HelpActivity"></activity>
+
+
     </application>
 
 </manifest>

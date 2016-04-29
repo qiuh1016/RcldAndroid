@@ -9,12 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -140,6 +143,47 @@ public class MyshipActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+//        MenuItem setting = menu.add(0, 0, 0, "菜单");
+//        setting.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        setting.setIcon(R.drawable.menuicon);
+//        setting.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//                Toast.makeText(getApplicationContext(),"待开发",Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//        });
+
+
+        //TODO: 回港 出海
+        MenuItem changeInfo = menu.add(0, 0, 0, "修改信息");
+        MenuItem iConfirm = menu.add(0, 0, 0, "出海确认");
+        MenuItem oConfirm = menu.add(0, 0, 0, "回港确认");
+        MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
+
+        changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        iConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        oConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
+        changeInfo.setIcon(R.drawable.menuicon);
+        changeInfo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Toast.makeText(getApplicationContext(),"待开发",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+
+
+        return true;
     }
 
     public void onBackPressed() {

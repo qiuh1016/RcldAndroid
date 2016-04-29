@@ -12,7 +12,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/boder"
@@ -36,7 +36,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="起始时间："
             android:id="@+id/textView9"
@@ -44,30 +44,33 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp" />
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="结束时间："
             android:id="@+id/textView10"
             android:layout_below="@+id/textView9"
             android:layout_alignLeft="@+id/textView9"
             android:layout_alignStart="@+id/textView9"
-            android:layout_marginTop="30dp" />
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="显示中间点："
             android:id="@+id/textView11"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/textView10"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical" />
 
         <Button
             android:layout_width="wrap_content"
@@ -79,54 +82,56 @@
             android:layout_below="@+id/textView11"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:layout_marginLeft="20dp"
             android:layout_alignRight="@+id/textView7"
             android:layout_alignEnd="@+id/textView7"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:textSize="15dp"
+            android:layout_marginBottom="20dp" />
 
         <Switch
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/showMediumPiontSwitchInRouteActivity"
-            android:layout_alignTop="@+id/textView11"
-            android:layout_alignRight="@+id/routeSearchButton"
-            android:layout_alignEnd="@+id/routeSearchButton"
+            android:layout_height="40dp"
+            android:id="@+id/showMediumPointSwitchInRouteActivity"
             android:checked="false"
-            android:layout_above="@+id/routeSearchButton"
-            android:layout_marginRight="20dp"
-            android:clickable="true" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="点击选择时间"
-            android:id="@+id/startTimePickButton"
-            android:layout_alignTop="@+id/textView9"
+            android:clickable="true"
+            android:gravity="center"
+            android:layout_alignTop="@+id/textView11"
             android:layout_alignRight="@+id/textView7"
             android:layout_alignEnd="@+id/textView7"
-            android:layout_marginTop="-10dp"
             android:layout_marginRight="20dp"
-            android:background="#00000000"
-            android:textColor="#3166ff"
-            android:textSize="18dp" />
+            android:layout_alignLeft="@+id/endTimePickButton"
+            android:layout_alignStart="@+id/endTimePickButton" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:text="点击选择时间"
+            android:id="@+id/startTimePickButton"
+            android:background="#00000000"
+            android:textColor="#3166ff"
+            android:textSize="16dp"
+            android:layout_below="@+id/textView7"
+            android:layout_alignRight="@+id/textView7"
+            android:layout_alignEnd="@+id/textView7"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:text="点击选择时间"
             android:id="@+id/endTimePickButton"
             android:background="#00000000"
             android:textColor="#3166ff"
+            android:textSize="16dp"
             android:layout_alignTop="@+id/textView10"
-            android:layout_alignLeft="@+id/startTimePickButton"
-            android:layout_marginTop="-10dp"
-            android:textSize="18dp"
+            android:layout_alignRight="@+id/textView7"
             android:layout_alignEnd="@+id/textView7"
-            android:layout_marginRight="20dp"
-            android:layout_alignParentStart="false" />
+            android:layout_marginRight="20dp" />
     </RelativeLayout>
 
 </RelativeLayout>

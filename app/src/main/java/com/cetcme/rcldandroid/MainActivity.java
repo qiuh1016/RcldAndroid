@@ -4,16 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -29,13 +26,12 @@ import cz.msebera.android.httpclient.Header;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,View.OnKeyListener{
 
     private EditText shipNumberEditText;
     private EditText passwordEditText;
     private Button loginButton;
     private Button closeButton;
-    private ProgressBar progressBar;
     private JSONObject myShipInfo;
     private KProgressHUD kProgressHUD;
 
@@ -45,14 +41,24 @@ public class MainActivity extends AppCompatActivity {
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
 
-        shipNumberEditText = (EditText) findViewById(R.id.editText2);
-        passwordEditText = (EditText) findViewById(R.id.editText);
+        shipNumberEditText = (EditText) findViewById(R.id.shipNumberEditText);
+        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
+        passwordEditText.setOnKeyListener(this);
         loginButton = (Button) findViewById(R.id.loginButton);
+        loginButton.setOnClickListener(this);
+        closeButton = (Button) findViewById(R.id.closeButton);
+        closeButton.setOnClickListener(this);
+
+        Button autofillButton = (Button) findViewById(R.id.autofillButton);
+        autofillButton.setOnClickListener(this);
 
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.loginButton:
                 loginButton.setEnabled(false);
                 kProgressHUD = KProgressHUD.create(MainActivity.this)
                         .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -62,32 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         .setSize(110, 110)
                         .show();
                 login(shipNumberEditText.getText().toString(), passwordEditText.getText().toString());
-            }
-        });
-
-        passwordEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    loginButton.callOnClick();
-                }
-                return false;
-            }
-        });
-
-        closeButton = (Button) findViewById(R.id.closeButton);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        Button autofillButton = (Button) findViewById(R.id.autofillButton);
-        assert autofillButton != null;
-        autofillButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.autofillButton:
                 shipNumberEditText.setText("3304001987070210");
                 passwordEditText.setText("ICy5YqxZB1uWSwcVLSNLcA==");
 //TODO: OKView
@@ -111,9 +93,24 @@ public class MainActivity extends AppCompatActivity {
 //                        textHud.dismiss();
 //                    }
 //                }, 1000);
-            }
-        });
+                break;
+            case R.id.closeButton:
+                finish();
+                break;
+        }
+    }
 
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        switch (v.getId()) {
+            case R.id.passwordEditText:
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    loginButton.callOnClick();
+                }
+                break;
+        }
+
+        return false;
     }
 
     public void login(final String shipNumber, final String password) {
@@ -147,6 +144,12 @@ public class MainActivity extends AppCompatActivity {
                 kProgressHUD.dismiss();
                 loginButton.setEnabled(true);
             }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                kProgressHUD.dismiss();
+                Toast.makeText(getApplicationContext(),"网络连接失败",Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -164,8 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 myShipInfo = response;
                 kProgressHUD.dismiss();
                 WriteSharedPreferences(shipNumber, password);
-                Toast.makeText(getApplicationContext(), "Login Succeed!", LENGTH_SHORT).show();
-
+                Toast.makeText(MainActivity.this, "登录成功!", LENGTH_SHORT).show();
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
                         Bundle bundle = new Bundle();
@@ -181,6 +183,12 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }, 500);
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                kProgressHUD.dismiss();
+                Toast.makeText(getApplicationContext(),"网络连接失败",Toast.LENGTH_SHORT).show();
             }
         });
     }
