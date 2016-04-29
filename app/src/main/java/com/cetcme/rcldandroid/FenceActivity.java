@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -38,6 +39,7 @@ public class FenceActivity extends AppCompatActivity {
     private ListView fenceListView;
     private SimpleAdapter simpleAdapter;
     private List<Map<String, Object>> dataList;
+    private KProgressHUD kProgressHUD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,14 @@ public class FenceActivity extends AppCompatActivity {
                 dialog(fenceName, fenceID, shipNumber, fenceType);
             }
         });
+
+        kProgressHUD = KProgressHUD.create(FenceActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel("获取中")
+                .setAnimationSpeed(1)
+                .setDimAmount(0.3f)
+                .setSize(110, 110)
+                .show();
 
 
     }
@@ -129,7 +139,14 @@ public class FenceActivity extends AppCompatActivity {
                         dataList.add(map);
                     }
 
-                    simpleAdapter.notifyDataSetChanged();
+                    //
+                    new Handler().postDelayed(new Runnable(){
+                        public void run() {
+                            kProgressHUD.dismiss();
+                            simpleAdapter.notifyDataSetChanged();
+                        }
+                    }, 500);
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();

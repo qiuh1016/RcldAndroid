@@ -27,8 +27,6 @@ public class IndexActivity extends AppCompatActivity {
     private Button routeButton;
     private Button helpButton;
 
-    private TitleBar titleBar;
-
     private JSONObject myShipInfoJSON;
 
     @Override
@@ -97,8 +95,10 @@ public class IndexActivity extends AppCompatActivity {
         helpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "待开发", Toast.LENGTH_SHORT).show();
-                System.out.println("help");
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), HelpActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
             }
     });
     }

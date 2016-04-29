@@ -26,4 +26,5 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.android.support:design:23.3.0'
     compile files('libs/BaiduLBS_Android.jar')
+    compile 'com.kaopiz:kprogresshud:1.0.5'
 }

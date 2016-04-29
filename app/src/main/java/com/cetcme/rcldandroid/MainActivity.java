@@ -6,14 +6,18 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Button closeButton;
     private ProgressBar progressBar;
     private JSONObject myShipInfo;
+    private KProgressHUD kProgressHUD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +48,19 @@ public class MainActivity extends AppCompatActivity {
         shipNumberEditText = (EditText) findViewById(R.id.editText2);
         passwordEditText = (EditText) findViewById(R.id.editText);
         loginButton = (Button) findViewById(R.id.loginButton);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loginButton.setEnabled(false);
-                progressBar.setVisibility(View.VISIBLE);
+                kProgressHUD = KProgressHUD.create(MainActivity.this)
+                        .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                        .setLabel("登录中")
+                        .setAnimationSpeed(1)
+                        .setDimAmount(0.3f)
+                        .setSize(110, 110)
+                        .show();
                 login(shipNumberEditText.getText().toString(), passwordEditText.getText().toString());
             }
         });
@@ -80,6 +90,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 shipNumberEditText.setText("3304001987070210");
                 passwordEditText.setText("ICy5YqxZB1uWSwcVLSNLcA==");
+//TODO: OKView
+//                ImageView imageView = new ImageView(MainActivity.this);
+//                imageView.setImageResource(R.drawable.checkmark);
+////                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+////                params.height = 30;
+////                params.width = 30;
+////                imageView.setLayoutParams(params);
+//
+//
+//                final KProgressHUD textHud = KProgressHUD.create(MainActivity.this)
+//                        .setCustomView(imageView)
+//                        .setLabel("登录成功")
+//                        .setSize(110,110)
+//                        .show();
+//
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        textHud.dismiss();
+//                    }
+//                }, 1000);
             }
         });
 
@@ -113,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Login Failed!", LENGTH_SHORT).show();
                 }
-                progressBar.setVisibility(View.INVISIBLE);
+                kProgressHUD.dismiss();
                 loginButton.setEnabled(true);
             }
         });
@@ -131,10 +162,9 @@ public class MainActivity extends AppCompatActivity {
                 // If the response is JSONObject instead of expected JSONArray
                 System.out.println(response);
                 myShipInfo = response;
-                Toast.makeText(getApplicationContext(), "Login Succeed!", LENGTH_SHORT).show();
-                progressBar.setVisibility(View.INVISIBLE);
-                loginButton.setEnabled(true);
+                kProgressHUD.dismiss();
                 WriteSharedPreferences(shipNumber, password);
+                Toast.makeText(getApplicationContext(), "Login Succeed!", LENGTH_SHORT).show();
 
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
