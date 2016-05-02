@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -35,11 +36,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private JSONObject myShipInfo;
     private KProgressHUD kProgressHUD;
 
+    AsyncHttpClient client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //百度地图初始化
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+
+        client = new AsyncHttpClient();
 
         shipNumberEditText = (EditText) findViewById(R.id.shipNumberEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
@@ -121,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String urlBody = "http://120.27.149.252/api/app/login.json";
 
-        AsyncHttpClient client = new AsyncHttpClient();
         client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -148,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 kProgressHUD.dismiss();
+                loginButton.setEnabled(true);
                 Toast.makeText(getApplicationContext(),"网络连接失败",Toast.LENGTH_SHORT).show();
             }
         });
@@ -158,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         params.put("userName", shipNumber);
         params.put("password", password);
         String urlBody = "http://120.27.149.252/api/app/ship/get.json";
-        AsyncHttpClient client = new AsyncHttpClient();
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -188,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 kProgressHUD.dismiss();
+                loginButton.setEnabled(true);
                 Toast.makeText(getApplicationContext(),"网络连接失败",Toast.LENGTH_SHORT).show();
             }
         });
@@ -207,6 +213,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor.putString("shipNumber", strName);
         editor.putString("password", strPassword);
         editor.apply();
+    }
+
+    //TODO: kprogress 按返回键的情况
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //client.cancelAllRequests(true);
+        client.cancelRequests(getApplicationContext(), true);
+        Log.i("******************main", "123");
     }
 
 
