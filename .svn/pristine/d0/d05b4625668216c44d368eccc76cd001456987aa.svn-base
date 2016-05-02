@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">Rcld Android</string>
-    <string name="loginTitle">人船联动系统</string>
-    <string name="login">登陆</string>
-    <string name="shipNumber">船号</string>
-    <string name="password">密码</string>
-</resources>
