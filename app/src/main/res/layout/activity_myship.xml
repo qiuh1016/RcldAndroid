@@ -10,66 +10,6 @@
     tools:context="com.cetcme.rcldandroid.MyshipActivity"
     android:background="#efeff4">
 
-    <TextView
-        android:gravity="center_vertical|start"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/shipNameTextViewOnMyShipActivity"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textColor="#ffffff"
-        android:background="#3562bd"
-        android:textSize="18dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/shipNumberTextViewOnMyShipActivity"
-        android:layout_below="@+id/shipNameTextViewOnMyShipActivity"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/ownerNameTextViewOnMyShipActivity"
-        android:layout_below="@+id/shipNumberTextViewOnMyShipActivity"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="5dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/ownerTelTextViewOnMyShipActivity"
-        android:layout_below="@+id/ownerNameTextViewOnMyShipActivity"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="5dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/deviceNumberTextViewOnMyShipActivity"
-        android:layout_below="@+id/ownerTelTextViewOnMyShipActivity"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="5dp" />
-
     <com.baidu.mapapi.map.MapView
             android:id="@+id/baiduMapInMyShipActivity"
             android:layout_width="fill_parent"
@@ -78,32 +18,27 @@
             android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true" android:layout_marginTop="170dp"/>
-    <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/fullScreenImageButton"
-            android:src="@drawable/fullsreen"
-            android:adjustViewBounds="false" android:scaleType="fitXY"
-            android:background="@drawable/mapbuttonbackground" android:contentDescription="" android:clickable="true"
-            android:layout_alignBottom="@+id/baiduMapInMyShipActivity"
-            android:layout_alignRight="@+id/baiduMapInMyShipActivity"
-            android:layout_alignEnd="@+id/baiduMapInMyShipActivity" android:layout_marginRight="7dp"
-            android:layout_marginBottom="100dp"/>
+            android:layout_alignParentTop="true" />
+
     <ImageButton android:layout_width="40dp" android:layout_height="40dp" android:id="@+id/showShipLocationImageButton"
                  android:src="@drawable/ship" android:adjustViewBounds="false" android:scaleType="fitXY"
                  android:background="@drawable/mapbuttonbackground" android:contentDescription="" android:clickable="true"
-                 android:layout_above="@+id/fullScreenImageButton" android:layout_alignLeft="@+id/fullScreenImageButton"
-                 android:layout_alignStart="@+id/fullScreenImageButton" android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="100dp"
+        android:layout_alignBottom="@+id/baiduMapInMyShipActivity"
+        android:layout_alignRight="@+id/baiduMapInMyShipActivity"
+        android:layout_alignEnd="@+id/baiduMapInMyShipActivity"
+        android:layout_marginRight="7dp" />
     <ImageButton android:layout_width="40dp" android:layout_height="40dp" android:id="@+id/imageButton2"
                  android:src="@drawable/ren" android:adjustViewBounds="false" android:scaleType="fitXY"
                  android:background="@drawable/mapbuttonbackground" android:contentDescription="" android:clickable="true"
                  android:layout_above="@+id/showShipLocationImageButton" android:layout_alignLeft="@+id/showShipLocationImageButton"
-                 android:layout_alignStart="@+id/showShipLocationImageButton" android:layout_marginBottom="10dp"/>
+                 android:layout_alignStart="@+id/showShipLocationImageButton" android:layout_marginBottom="10dp"
+        android:visibility="invisible" />
     <ImageButton android:layout_width="40dp" android:layout_height="40dp" android:id="@+id/imageButton3"
                  android:src="@drawable/mapline" android:adjustViewBounds="false" android:scaleType="fitXY"
                  android:background="@drawable/mapbuttonbackground" android:contentDescription="" android:clickable="true"
                  android:layout_above="@+id/imageButton2" android:layout_alignLeft="@+id/imageButton2"
-                 android:layout_alignStart="@+id/imageButton2" android:layout_marginBottom="10dp"/>
+                 android:layout_alignStart="@+id/imageButton2" android:layout_marginBottom="10dp"
+        android:visibility="invisible" />
 
 </RelativeLayout>

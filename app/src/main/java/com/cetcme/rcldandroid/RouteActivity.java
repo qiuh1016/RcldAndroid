@@ -19,6 +19,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.baidu.mapapi.model.LatLng;
+import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
+import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -28,8 +30,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +42,7 @@ import java.util.Map;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.impl.client.SystemDefaultCredentialsProvider;
 
-public class RouteActivity extends AppCompatActivity {
+public class RouteActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button startTimePickButton;
     private Button endTimePickButton;
@@ -47,11 +51,39 @@ public class RouteActivity extends AppCompatActivity {
 
     KProgressHUD kProgressHUD;
     Toast toast;
+    SlideDateTimePicker slideDateTimeListener;
+    Boolean isStartTime = true;
 
     private String startTime;
     private String endTime;
-
     private String dataString;
+
+    private SlideDateTimeListener listener = new SlideDateTimeListener() {
+
+        @Override
+        public void onDateTimeSet(Date date)
+        {
+            // Do something with the date. This Date object contains
+            // the date and time that the user has selected.
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+            if (isStartTime) {
+                startTime = df.format(date);
+                startTimePickButton.setText(startTime);
+            } else {
+                endTime = df.format(date);
+                endTimePickButton.setText(endTime);
+            }
+
+            Log.i("Datetime",df.format(date));
+        }
+
+        @Override
+        public void onDateTimeCancel()
+        {
+            // Overriding onDateTimeCancel() is optional.
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,24 +98,33 @@ public class RouteActivity extends AppCompatActivity {
         routeSearchButton = (Button) findViewById(R.id.routeSearchButton);
         showMediumPointSwitch = (Switch) findViewById(R.id.showMediumPointSwitchInRouteActivity);
 
-        startTimePickButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickTime(startTimePickButton);
-            }
-        });
+        startTimePickButton.setOnClickListener(this);
+        endTimePickButton.setOnClickListener(this);
+        routeSearchButton.setOnClickListener(this);
 
-        endTimePickButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickTime(endTimePickButton);
-            }
-        });
+        slideDateTimeListener = new SlideDateTimePicker.Builder(getSupportFragmentManager())
+                .setListener(listener)
+                .setInitialDate(new Date())
+                .setIs24HourTime(true)
+                .build();
 
-        routeSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.startTimePickButton:
+                isStartTime = true;
+                slideDateTimeListener.show();
+//                pickTime(startTimePickButton);
+                break;
+            case R.id.endTimePickButton:
+                isStartTime = false;
+                slideDateTimeListener.show();
+//                pickTime(endTimePickButton);
+                break;
+            case R.id.routeSearchButton:
+                //TODO: 7day most
                 if (startTime == null || endTime == null) {
                     dialog();
                 } else {
@@ -96,10 +137,8 @@ public class RouteActivity extends AppCompatActivity {
                             .show();
                     getRouteData();
                 }
-
-            }
-        });
-
+                break;
+        }
     }
 
     public void showDisplayIntent() {
@@ -249,10 +288,8 @@ public class RouteActivity extends AppCompatActivity {
         shipNumber = user.getString("shipNumber","");
         password = user.getString("password","");
 
-        String startTimeURL = startTime + ":00";
-        startTimeURL = startTimeURL.replace(" ", "%20");
-        String endTimeURL = endTime + ":00";
-        endTimeURL = endTimeURL.replace(" ", "%20");
+        String startTimeURL = startTime.replace(" ", "%20");
+        String endTimeURL = endTime.replace(" ", "%20");
 
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
@@ -268,6 +305,7 @@ public class RouteActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
+                Log.i("JSONObject", response.toString());
                 try {
                     String msg = response.getString("msg");
                     if (msg.equals("没有符合条件的数据")) {

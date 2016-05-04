@@ -86,7 +86,11 @@ public class FenceActivity extends AppCompatActivity {
 
     }
 
+    //TODO: 点击扩展Cell 显示详细内容
+    //TODO: 点击显示港口地图
     //TODO: 下拉刷新
+
+    //TODO: 泊位api更改 拿到下面一栏
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -152,7 +156,7 @@ public class FenceActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-
+                Log.i("JSONObject", response.toString());
                 try {
                     JSONArray dataArray = response.getJSONArray("data");
 

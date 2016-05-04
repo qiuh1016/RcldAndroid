@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private KProgressHUD kProgressHUD;
 
     AsyncHttpClient client;
+    String originalAntiThiefRadius;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button autofillButton = (Button) findViewById(R.id.autofillButton);
         autofillButton.setOnClickListener(this);
 
-
     }
 
     @Override
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 login(shipNumberEditText.getText().toString(), passwordEditText.getText().toString());
                 break;
             case R.id.autofillButton:
-                shipNumberEditText.setText("3304001987070210");
+                shipNumberEditText.setText("16040205"); //3304001987070210
                 passwordEditText.setText("ICy5YqxZB1uWSwcVLSNLcA==");
 //TODO: OKView
 //                ImageView imageView = new ImageView(MainActivity.this);
@@ -111,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.passwordEditText:
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    loginButton.callOnClick();
+                    //TODO: 回车登录
+//                    loginButton.callOnClick();
                 }
                 break;
         }
@@ -168,7 +169,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-                System.out.println(response);
+                Log.i("shipInfo",response.toString());
+//                System.out.println(response);
                 myShipInfo = response;
                 kProgressHUD.dismiss();
                 WriteSharedPreferences(shipNumber, password);
@@ -220,9 +222,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         //client.cancelAllRequests(true);
-        client.cancelRequests(getApplicationContext(), true);
-        Log.i("******************main", "123");
+//        client.cancelRequests(getApplicationContext(), true);
+//        Log.i("******************main", "123");
     }
+
+
 
 
 }

@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="港口类型"
+                android:text="港口等级"
                 android:id="@+id/textView6"
                 android:layout_alignTop="@+id/textView5"
                 android:layout_alignParentRight="true"

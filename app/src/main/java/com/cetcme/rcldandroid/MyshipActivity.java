@@ -1,10 +1,8 @@
 package com.cetcme.rcldandroid;
 
-import android.graphics.drawable.Icon;
-import android.media.Image;
-import android.media.ImageReader;
-import android.support.annotation.BoolRes;
-import android.support.v7.app.ActionBar;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,39 +10,33 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.location.Poi;
 import com.baidu.mapapi.map.*;
 import com.baidu.mapapi.model.LatLng;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import cz.msebera.android.httpclient.Header;
 
-public class MyshipActivity extends AppCompatActivity {
+import static android.widget.Toast.LENGTH_SHORT;
+
+public class MyshipActivity extends AppCompatActivity implements View.OnClickListener{
 
     private JSONObject myShipInfoJSON;
 
-    private TextView shipNameTextView;
-    private TextView shipNumberTextView;
-    private TextView ownerNameTextView;
-    private TextView ownerTelTextView;
-    private TextView deviceNoTextView;
-
-    private ImageButton fullScreenImageButton;
     private ImageButton showShipLocationImageButton;
 
     private MapView mapView;
@@ -53,38 +45,29 @@ public class MyshipActivity extends AppCompatActivity {
     private Boolean isFullScreen = false;
 
     private LatLng shipLocation;
-    private int topMargin;
-    private RelativeLayout.LayoutParams layoutParams;
 
-    public LocationClient mLocationClient = null;
-    public BDLocationListener myListener = new MyLocationListener();
+    String shipInfoString;
+
+    String picName;
+    String picTelNo;
+
+    String antiThiefRadius;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_myship);
 
-        shipNameTextView = (TextView) findViewById(R.id.shipNameTextViewOnMyShipActivity);
-        shipNumberTextView = (TextView) findViewById(R.id.shipNumberTextViewOnMyShipActivity);
-        ownerNameTextView = (TextView) findViewById(R.id.ownerNameTextViewOnMyShipActivity);
-        ownerTelTextView = (TextView) findViewById(R.id.ownerTelTextViewOnMyShipActivity);
-        deviceNoTextView = (TextView) findViewById(R.id.deviceNumberTextViewOnMyShipActivity);
-        mapView = (MapView) findViewById(R.id.baiduMapInMyShipActivity);
-        baiduMap = mapView.getMap();
+        setTitle("本船信息");
 
-        fullScreenImageButton = (ImageButton) findViewById(R.id.fullScreenImageButton);
+        mapView = (MapView) findViewById(R.id.baiduMapInMyShipActivity);
+
         showShipLocationImageButton = (ImageButton) findViewById(R.id.showShipLocationImageButton);
 
-        layoutParams = (RelativeLayout.LayoutParams) mapView.getLayoutParams();
-        topMargin = layoutParams.topMargin;
+        showShipLocationImageButton.setOnClickListener(this);
 
-        mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
-        mLocationClient.registerLocationListener( myListener );    //注册监听函数
-        initLocation();
-        mLocationClient.start();
-
-        setTitle("本船信息");
+        baiduMap = mapView.getMap();
 
         mapSet();
 
@@ -101,47 +84,52 @@ public class MyshipActivity extends AppCompatActivity {
             String ownerName = data0.getString("ownerName");
             String deviceNo = data0.getString("deviceNo");
             String ownerTelNo = data0.getString("ownerTelNo");
+            Boolean offlineFlag = data0.getBoolean("offlineFlag");
+            String cfsStartDate = data0.getString("cfsStartDate");
+            String cfsEndDate = data0.getString("cfsEndDate");
+            picName = data0.getString("picName");
+            picTelNo = data0.getString("picTelNo");
+
+            String atFence;
+            String onLine;
+
+            try {
+                String fenceNo = data0.getString("fenceNo");
+                atFence = "是";
+            }  catch (JSONException e) {
+                e.printStackTrace();
+                atFence = "否";
+            }
+
+            if (offlineFlag) {
+                onLine = "是";
+            } else {
+                onLine = "否";
+            }
+
             Double Lat = data0.getDouble("latitude");
             Double Lng = data0.getDouble("longitude");
 
-            shipNameTextView.setText("  船名：" + shipName);
+            shipInfoString = shipName + "\n" +
+                    "船东：" + ownerName + "\n" +
+                    "电话：" + ownerTelNo + "\n" +
+                    "终端序号：" + deviceNo + "\n" +
+                    "是否在线：" + onLine + "\n" +
+                    "是否在港：" + atFence + "\n" +
+                    "伏休期起始日期：" + cfsStartDate + "\n" +
+                    "伏休期结束日期：" + cfsEndDate;
 
-            shipNumberTextView.setText("  船号：" + shipNumber);
-            ownerNameTextView.setText("  船东：" + ownerName);
-            ownerTelTextView.setText("  电话：" + ownerTelNo);
-            deviceNoTextView.setText("  终端序号：" + deviceNo);
+//            mapMark(Lat, Lng);
 
-            shipLocation = new LatLng(Lat, Lng);
-
-            mapMark(Lat, Lng);
+            //校准
+            geoconv(Lng, Lat);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        fullScreenImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                if (isFullScreen) {
-                    layoutParams.topMargin = topMargin;
-                    fullScreenImageButton.setImageResource(R.drawable.fullsreen);
-                } else {
-                    layoutParams.topMargin = 0;
-                    fullScreenImageButton.setImageResource(R.drawable.unfullsreen);
-                }
-                isFullScreen = !isFullScreen;
-
-            }
-        });
-
-        showShipLocationImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mapStatus(shipLocation.latitude, shipLocation.longitude);
-            }
-        });
-
+        modifyAntiTHiefRadius();
 
     }
 
@@ -166,6 +154,7 @@ public class MyshipActivity extends AppCompatActivity {
         MenuItem iConfirm = menu.add(0, 0, 0, "出海确认");
         MenuItem oConfirm = menu.add(0, 0, 0, "回港确认");
         MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
+        MenuItem antiThief = menu.add(0, 0, 0, "");
 
         changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         iConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -176,7 +165,17 @@ public class MyshipActivity extends AppCompatActivity {
         changeInfo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Toast.makeText(getApplicationContext(),"待开发",Toast.LENGTH_SHORT).show();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("picName", picName);
+                bundle.putString("picTelNo", picTelNo);
+
+                Intent changeInfoIntent = new Intent();
+                changeInfoIntent.setClass(getApplicationContext(),ChangeInfoActivity.class);
+                changeInfoIntent.putExtras(bundle);
+                startActivity(changeInfoIntent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+
                 return false;
             }
         });
@@ -191,6 +190,62 @@ public class MyshipActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.push_right_in_no_alpha,
                 R.anim.push_right_out_no_alpha);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.showShipLocationImageButton:
+                mapStatus(shipLocation.latitude, shipLocation.longitude);
+                break;
+        }
+    }
+
+    public void geoconv(final Double lat, final Double lng) {
+
+        String urlBody = "http://api.map.baidu.com/geoconv/v1/";
+        String ak = "stfZ8nXV0rvMfTLuAAY9SX2AqgLGLuOQ";
+        RequestParams params = new RequestParams();
+        params.put("coords", lat + "," + lng);
+        params.put("ak", ak);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // If the response is JSONObject instead of expected JSONArray
+                Log.i("JSONObject",response.toString());
+                Integer status;
+                try {
+                    status = response.getInt("status");
+                    if (status == 0) {
+                        JSONArray result = response.getJSONArray("result");
+                        JSONObject result0 = result.getJSONObject(0);
+
+                        Double latconv = result0.getDouble("y");
+                        Double lngconv = result0.getDouble("x");
+
+                        mapMark(latconv, lngconv);
+                        shipLocation = new LatLng(latconv, lngconv);
+                        setAntiThiefCircle(latconv,lngconv,"2");
+
+                    } else {
+                        String message = response.getString("message");
+                        Toast.makeText(getApplicationContext(), message, LENGTH_SHORT).show();
+                        mapMark(lat, lng);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+
+            }
+        });
+    }
+
 //
 //    @Override
 //    protected void onDestroy() {
@@ -212,7 +267,7 @@ public class MyshipActivity extends AppCompatActivity {
 //        mapView.onPause();
 //    }
 
-    void mapSet() {
+    private void mapSet() {
         mapView.showZoomControls(true);
         mapView.showScaleControl(true);
     }
@@ -233,18 +288,23 @@ public class MyshipActivity extends AppCompatActivity {
         //在地图上添加Marker，并显示
         baiduMap.addOverlay(option);
 
+
         //创建InfoWindow展示的view
         Button button = new Button(getApplicationContext());
-        button.setBackgroundResource(R.drawable.mapinfoview);
+//        button.setBackgroundResource(R.drawable.mapinfoview);
+        button.setBackgroundResource(R.drawable.boder);
+        button.setBackgroundColor(0x88FFFFFF);
         button.setTextSize(15);
         button.setGravity(Gravity.CENTER);
-        button.setPadding(0,0,0,20);
-        button.setText("设备编号：10000001");
-        button.setTextColor(0xFF000000);
+        button.setPadding(20,20,20,20);
+        button.setText(shipInfoString);
+        button.setTextColor(0xFF7D7D7D);
+        button.setGravity(Gravity.LEFT);
         //定义用于显示该InfoWindow的坐标点
         LatLng pt = new LatLng(Lat, Lng);
         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
         InfoWindow mInfoWindow = new InfoWindow(button, pt, -75);
+
         //显示InfoWindow
         baiduMap.showInfoWindow(mInfoWindow);
 
@@ -260,48 +320,28 @@ public class MyshipActivity extends AppCompatActivity {
         baiduMap.setMapStatus(mapStatusUpdate);
     }
 
-//    private void showUserLocation() {
-//        BaiduMap baiduMap = mapView.getMap();
-//        // 开启定位图层
-//        baiduMap.setMyLocationEnabled(true);
-//        // 构造定位数据
-//        MyLocationData locData = new MyLocationData.Builder()
-//                .accuracy(location.getRadius())
-//                // 此处设置开发者获取到的方向信息，顺时针0-360
-//                .direction(100).latitude(location.getLatitude())
-//                .longitude(location.getLongitude()).build();
-//        // 设置定位数据
-//        baiduMap.setMyLocationData(locData);
-//        // 设置定位图层的配置（定位模式，是否允许方向信息，用户自定义定位图标）
-//        BitmapDescriptor mCurrentMarker = BitmapDescriptorFactory
-//                .fromResource(R.drawable.mapmakericon);
-//        MyLocationConfiguration config = new MyLocationConfiguration(mCurrentMode, true, mCurrentMarker);
-//        baiduMap.setMyLocationConfiguration(config);
-//        // 当不需要定位图层时关闭定位图层
-//        baiduMap.setMyLocationEnabled(false);
-//    }
-
-    private void initLocation(){
-        LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
-        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
-        int span=1000;
-        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
-        //option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
-        option.setOpenGps(true);//可选，默认false,设置是否使用gps
-        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
-//        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
-//        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
-//        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
-//        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
-//        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
-        mLocationClient.setLocOption(option);
+    void modifyAntiTHiefRadius() {
+        SharedPreferences antiThief = getSharedPreferences("antiThief", Activity.MODE_PRIVATE);
+        antiThiefRadius = antiThief.getString("antiThiefRadius","");
+        if (antiThiefRadius.isEmpty()) {
+            SharedPreferences.Editor editor = antiThief.edit();
+            editor.putString("antiThiefRadius", "1");
+            editor.apply();
+            antiThiefRadius = antiThief.getString("antiThiefRadius","");
+            Log.i("Main","Default antiThiefRadius set");
+        }
     }
 
-
-
-
-
+    void setAntiThiefCircle(Double lat, Double lng, String antiThiefRadius) {
+        LatLng latLng = new LatLng(lat,lng);
+        OverlayOptions polygonOption = new CircleOptions()
+                .center(latLng)
+                .radius(Integer.parseInt(antiThiefRadius) * 1852)
+                .stroke(new Stroke(3, 0xAA167CF3))
+                .fillColor(0x552884EF);
+        //在地图上添加多边形Option，用于显示
+        baiduMap.addOverlay(polygonOption);
+    }
 
 }
 
