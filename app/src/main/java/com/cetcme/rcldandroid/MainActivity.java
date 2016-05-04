@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private KProgressHUD kProgressHUD;
 
     AsyncHttpClient client;
-    String originalAntiThiefRadius;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

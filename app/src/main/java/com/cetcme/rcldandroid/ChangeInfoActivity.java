@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.security.PrivateKey;
 
@@ -36,15 +37,14 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         antiThiefRadiusEditText = (EditText) findViewById(R.id.antiThiefRadiusTextInChangeInfoActivity);
         changeInfoButton = (Button) findViewById(R.id.changeInfoButton);
 
+        changeInfoButton.setOnClickListener(this);
+
         Bundle bundle = this.getIntent().getExtras();
         originalPicName = bundle.getString("picName");
         originalPicTelNo = bundle.getString("picTelNo");
 
-        SharedPreferences user = getSharedPreferences("user",0);
-//        originalAntiThiefRadius = user.getString("antiThiefRadius","");
-//        originalAntiThiefRadius = "2"; //TODO:
-
-        setDefaultAntiTHiefRadius();
+        SharedPreferences antiThief = getSharedPreferences("antiThief", Activity.MODE_PRIVATE);
+        originalAntiThiefRadius = antiThief.getString("antiThiefRadius","");
 
         picNameEditText.setText(originalPicName);
         picTelNoEditText.setText(originalPicTelNo);
@@ -83,21 +83,23 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.changeInfoButton:
+                //修改半径
+                String newAntiThiefRadius = antiThiefRadiusEditText.getText().toString();
+                if (!newAntiThiefRadius.equals(originalAntiThiefRadius) && newAntiThiefRadius != "0") {
+                    SharedPreferences antiThief = getSharedPreferences("antiThief", Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = antiThief.edit();
+                    editor.putString("antiThiefRadius", newAntiThiefRadius);
+                    editor.apply();
+                    Toast.makeText(getApplicationContext(),"半径修改成功：" + newAntiThiefRadius, Toast.LENGTH_SHORT).show();
+                }
+
+
+
+
+                //修改信息
 
                 break;
         }
     }
 
-    void setDefaultAntiTHiefRadius() {
-        SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
-        originalAntiThiefRadius = user.getString("antiThiefRadius","");
-        Log.i("Main",originalAntiThiefRadius);
-        if (originalAntiThiefRadius == null) {
-            SharedPreferences.Editor editor = user.edit();
-            editor.putString("antiThiefRadius", "2");
-            editor.apply();
-            originalAntiThiefRadius = "2";
-        }
-
-    }
 }
