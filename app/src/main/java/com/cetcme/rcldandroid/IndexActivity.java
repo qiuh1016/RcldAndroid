@@ -61,8 +61,8 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             myShipInfoJSON = new JSONObject(str);
             JSONArray data = myShipInfoJSON.getJSONArray("data");
             JSONObject data0 = data.getJSONObject(0);
-            String picName = data0.getString("picName");
-            welcomeTextView.setText(picName + "，欢迎您使用本软件！");
+            String ownerName = data0.getString("ownerName");
+            welcomeTextView.setText(ownerName + "，欢迎您使用本软件！");
         } catch (JSONException e) {
             e.printStackTrace();
             welcomeTextView.setText("欢迎您使用本软件！");

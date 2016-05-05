@@ -11,10 +11,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.github.lzyzsd.jsbridge.BridgeHandler;
+import com.github.lzyzsd.jsbridge.BridgeWebView;
+import com.github.lzyzsd.jsbridge.CallBackFunction;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -22,21 +27,26 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.liquidplayer.webkit.javascriptcore.JSContext;
+import org.liquidplayer.webkit.javascriptcore.JSValue;
 
 import cz.msebera.android.httpclient.Header;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,View.OnKeyListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,View.OnKeyListener {
 
     private EditText shipNumberEditText;
     private EditText passwordEditText;
     private Button loginButton;
     private Button closeButton;
+    private CheckBox savePasswordCheckBox;
+
     private JSONObject myShipInfo;
     private KProgressHUD kProgressHUD;
 
     AsyncHttpClient client;
+    Boolean savePassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +64,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         loginButton.setOnClickListener(this);
         closeButton = (Button) findViewById(R.id.closeButton);
         closeButton.setOnClickListener(this);
+        savePasswordCheckBox = (CheckBox) findViewById(R.id.savePasswordCheckBox);
+        savePasswordCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                savePassword = isChecked;
+                SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = user.edit();
+                editor.putBoolean("savePassword",savePassword);
+                editor.apply();
+            }
+        });
+
+        //savePassword operation
+        SharedPreferences user = getSharedPreferences("user", 0);
+        savePassword = user.getBoolean("savePassword", false);
+        if (savePassword) {
+            ReadSharedPreferences();
+            savePasswordCheckBox.setChecked(true);
+        }
 
         Button autofillButton = (Button) findViewById(R.id.autofillButton);
         autofillButton.setOnClickListener(this);
+
+        //TODO: 维护人员改ip功能
 
     }
 
@@ -75,8 +106,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 login(shipNumberEditText.getText().toString(), passwordEditText.getText().toString());
                 break;
             case R.id.autofillButton:
-                shipNumberEditText.setText("16040205"); //3304001987070210
-                passwordEditText.setText("ICy5YqxZB1uWSwcVLSNLcA==");
+                shipNumberEditText.setText("16040205"); //3304001987070210   16040205  99999999
+                passwordEditText.setText("123"); //ICy5YqxZB1uWSwcVLSNLcA==
 //TODO: OKView
 //                ImageView imageView = new ImageView(MainActivity.this);
 //                imageView.setImageResource(R.drawable.checkmark);
@@ -122,12 +153,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void login(final String shipNumber, final String password) {
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", password);
+        params.put("password", new PrivateEncode().b64_md5(password));
         params.put("userType", 0);
 
         String urlBody = "http://120.27.149.252/api/app/login.json";
 
-        client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
+        client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
@@ -135,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     code = response.getInt("code");
                     if (code == 0) {
-                        getShipInfo(shipNumber,password);
+                        getShipInfo(shipNumber, password);
                         return;
                     } else {
                         String msg = response.getString("msg");
@@ -149,12 +180,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 kProgressHUD.dismiss();
                 loginButton.setEnabled(true);
             }
+
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 kProgressHUD.dismiss();
                 loginButton.setEnabled(true);
-                Toast.makeText(getApplicationContext(),"网络连接失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -162,25 +194,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void getShipInfo(final String shipNumber, final String password) {
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", password);
+        params.put("password", new PrivateEncode().b64_md5(password));
         String urlBody = "http://120.27.149.252/api/app/ship/get.json";
-        client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
+        client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-                Log.i("shipInfo",response.toString());
-//                System.out.println(response);
+                Log.i("Main", response.toString());
+
                 myShipInfo = response;
                 kProgressHUD.dismiss();
                 WriteSharedPreferences(shipNumber, password);
                 Toast.makeText(MainActivity.this, "登录成功!", LENGTH_SHORT).show();
-                new Handler().postDelayed(new Runnable(){
+                new Handler().postDelayed(new Runnable() {
                     public void run() {
                         Bundle bundle = new Bundle();
                         bundle.putString("myShipInfo", myShipInfo.toString());
 
                         Intent indexIntent = new Intent();
-                        indexIntent.setClass(getApplicationContext(),IndexActivity.class);
+                        indexIntent.setClass(getApplicationContext(), IndexActivity.class);
                         indexIntent.putExtras(bundle);
                         startActivity(indexIntent);
                         //overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
@@ -190,25 +222,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }, 500);
             }
+
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 kProgressHUD.dismiss();
                 loginButton.setEnabled(true);
-                Toast.makeText(getApplicationContext(),"网络连接失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    void ReadSharedPreferences(){
-        String strName,strPassword;
-        SharedPreferences user = getSharedPreferences("user",0);
-        strName = user.getString("shipNumber","");
-        strPassword = user.getString("password","");
+    void ReadSharedPreferences() {
+        String strName, strPassword;
+        SharedPreferences user = getSharedPreferences("user", 0);
+        strName = user.getString("shipNumber", "");
+        strPassword = user.getString("password", "");
+
+        shipNumberEditText.setText(strName);
+        passwordEditText.setText(strPassword);
 
     }
 
-    void WriteSharedPreferences(String strName,String strPassword){
+    void WriteSharedPreferences(String strName, String strPassword) {
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = user.edit();
         editor.putString("shipNumber", strName);
@@ -224,9 +260,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        client.cancelRequests(getApplicationContext(), true);
 //        Log.i("******************main", "123");
     }
-
-
-
-
 }
-

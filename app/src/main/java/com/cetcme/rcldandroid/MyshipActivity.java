@@ -3,6 +3,7 @@ package com.cetcme.rcldandroid;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +31,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cz.msebera.android.httpclient.Header;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -53,8 +57,11 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
     Boolean antiThiefIsOpen = false;
     String antiThiefRadius;
     OverlayOptions antiThiefPolygonOption;
+    Boolean isGeoConved = false;
 
     MenuItem antiThiefMenuItem;
+
+    Toast toast;
 
 
     @Override
@@ -65,14 +72,14 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         setTitle("本船信息");
 
         mapView = (MapView) findViewById(R.id.baiduMapInMyShipActivity);
-
         showShipLocationImageButton = (ImageButton) findViewById(R.id.showShipLocationImageButton);
-
         showShipLocationImageButton.setOnClickListener(this);
 
         baiduMap = mapView.getMap();
 
-        mapSet();
+        toast =  Toast.makeText(MyshipActivity.this, "", LENGTH_SHORT);
+
+        //mapSet();
 
         Bundle bundle = this.getIntent().getExtras();
         String str = bundle.getString("myShipInfo");
@@ -133,11 +140,10 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
 
-        //读取防盗状态
+        //读取防盗状态 和 防盗半径
         SharedPreferences antiThief = getSharedPreferences("antiThief", Activity.MODE_PRIVATE);
         antiThiefIsOpen = antiThief.getBoolean("antiThiefIsOpen",false);
-
-        modifyAntiTHiefRadius();
+        modifyAntiThiefRadius();
 
     }
 
@@ -146,14 +152,14 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreateOptionsMenu(menu);
 
         MenuItem changeInfo = menu.add(0, 0, 0, "修改信息");
-        MenuItem iConfirm = menu.add(0, 0, 0, "出海确认");
-        MenuItem oConfirm = menu.add(0, 0, 0, "回港确认");
+        MenuItem oConfirm = menu.add(0, 0, 0, "出海确认");
+        MenuItem iConfirm = menu.add(0, 0, 0, "回港确认");
         MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
         antiThiefMenuItem = menu.add(0, 0, 0, antiThiefIsOpen? "关闭防盗" : "开启防盗");
 
         changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        iConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         oConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        iConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         antiThiefMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
@@ -187,10 +193,14 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
 
                 if (antiThiefIsOpen) {
                     baiduMap.addOverlay(antiThiefPolygonOption);
+                    toast.setText("防盗已开启，防盗半径：" + antiThiefRadius + "海里");
                 } else {
                     baiduMap.clear();
                     mapMark(shipLocation);
+                    toast.setText("防盗已关闭");
                 }
+
+                toast.show();
 
                 //延时改变菜单内容
                 new Handler().postDelayed(new Runnable() {
@@ -204,6 +214,36 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+        iConfirm.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Bundle bundle = new Bundle();
+                bundle.putString("title", "出海确认");
+
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), PunchActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+                return false;
+            }
+        });
+
+        oConfirm.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Bundle bundle = new Bundle();
+                bundle.putString("title", "回港确认");
+
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), PunchActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+                return false;
+            }
+        });
+
         return true;
     }
 
@@ -211,6 +251,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         super.onBackPressed();
         overridePendingTransition(R.anim.push_right_in_no_alpha,
                 R.anim.push_right_out_no_alpha);
+        toast.cancel();
     }
 
     @Override
@@ -240,6 +281,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     status = response.getInt("status");
                     if (status == 0) {
+                        Log.i("Main","geoconv OK");
                         JSONArray result = response.getJSONArray("result");
                         JSONObject result0 = result.getJSONObject(0);
 
@@ -248,23 +290,34 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
 
                         shipLocation = new LatLng(latconv, lngconv);
                         mapMark(shipLocation);
+                        isGeoConved = true;
                         setAntiThiefCircle(shipLocation,antiThiefRadius);
 
                     } else {
                         String message = response.getString("message");
-                        Toast.makeText(getApplicationContext(), message, LENGTH_SHORT).show();
+                        toast.setText(message);
+                        toast.show();
                         mapMark(shipLocation);
                         setAntiThiefCircle(shipLocation,antiThiefRadius);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    toast.setText("纠偏失败");
+                    toast.show();
+
+                    mapMark(shipLocation);
+                    setAntiThiefCircle(shipLocation,antiThiefRadius);
                 }
 
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                toast.setText("纠偏失败");
+                toast.show();
 
+                mapMark(shipLocation);
+                setAntiThiefCircle(shipLocation,antiThiefRadius);
             }
         });
     }
@@ -280,11 +333,14 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-//        baiduMap.clear();
+        baiduMap.clear();
         //TODO: 修改半径后重新绘制
-        modifyAntiTHiefRadius();
-        setAntiThiefCircle(shipLocation,antiThiefRadius);
-        //mapMark(shipLocation);
+        modifyAntiThiefRadius();
+
+        if (isGeoConved) {
+            mapMark(shipLocation);
+            setAntiThiefCircle(shipLocation,antiThiefRadius);
+        }
 
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
         //mapView.onResume();
@@ -302,6 +358,8 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void mapMark(LatLng latLng){
+
+        Log.i("Main","mapMark");
         //设置地图范围
         mapStatus(latLng);
 
@@ -341,14 +399,14 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
 
     private void mapStatus(LatLng latLng) {
         //设置中心点 和显示范围
-        MapStatus mapStatus = new MapStatus.Builder().target(latLng).zoom(15)
+        MapStatus mapStatus = new MapStatus.Builder().target(latLng).zoom(14) //15
                 .build();
         MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                 .newMapStatus(mapStatus);
         baiduMap.setMapStatus(mapStatusUpdate);
     }
 
-    void modifyAntiTHiefRadius() {
+    void modifyAntiThiefRadius() {
         //读取防盗半径，如果没有定义就设为1海里
         SharedPreferences antiThief = getSharedPreferences("antiThief", Activity.MODE_PRIVATE);
         antiThiefRadius = antiThief.getString("antiThiefRadius","");
@@ -373,6 +431,8 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         }
 
     }
+
+
 
 }
 

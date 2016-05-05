@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.JsResult;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Switch;
@@ -58,6 +59,8 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
     private String endTime;
     private String dataString;
 
+    List<LatLng> route;
+
     private SlideDateTimeListener listener = new SlideDateTimeListener() {
 
         @Override
@@ -66,7 +69,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
             // Do something with the date. This Date object contains
             // the date and time that the user has selected.
 
-            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             if (isStartTime) {
                 startTime = df.format(date);
                 startTimePickButton.setText(startTime);
@@ -102,6 +105,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         endTimePickButton.setOnClickListener(this);
         routeSearchButton.setOnClickListener(this);
 
+        //TODO：点击已有时间的按钮 时候 时间
         slideDateTimeListener = new SlideDateTimePicker.Builder(getSupportFragmentManager())
                 .setListener(listener)
                 .setInitialDate(new Date())
@@ -124,7 +128,6 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 //                pickTime(endTimePickButton);
                 break;
             case R.id.routeSearchButton:
-                //TODO: 7day most
                 if (startTime == null || endTime == null) {
                     dialog();
                 } else {
@@ -293,43 +296,109 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", password);
+        params.put("password", new PrivateEncode().b64_md5(password));
         params.put("startTime", startTimeURL);
         params.put("endTime", endTimeURL);
 
+        String ps = new PrivateEncode().b64_md5(password);
+
         String urlBody = "http://120.27.149.252/api/app/trail/get.json";
-        String url = "http://120.27.149.252/api/app/trail/get.json?userName=" + shipNumber +"&password="+password+"&startTime="+startTimeURL+"&endTime=" + endTimeURL;
+        String url = "http://120.27.149.252/api/app/trail/get.json?userName=" + shipNumber +"&password="+ps+"&startTime="+startTimeURL+"&endTime=" + endTimeURL;
         AsyncHttpClient client = new AsyncHttpClient();
 
         client.get(url, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-                Log.i("JSONObject", response.toString());
+                Log.i("Main", response.toString());
+                route = new ArrayList<>();
+
+                //TODO: 有问题
                 try {
                     String msg = response.getString("msg");
+                    Log.i("Main", msg);
                     if (msg.equals("没有符合条件的数据")) {
                         toast.setText("没有符合条件的数据");
                         toast.show();
+                        kProgressHUD.dismiss();
                     } else if (msg.equals("成功")) {
-                        dataString = response.toString();
-                        showDisplayIntent();
+                        JSONArray data = response.getJSONArray("data");
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject point = data.getJSONObject(i);
+                            Double lat = point.getDouble("latitude");
+                            Double lng = point.getDouble("longitude");
+                            LatLng latLng = new LatLng(lat,lng);
+                            route.add(latLng);
+                        }
+                        Log.i("Main", "getRouteArray");
+                        geoconv(route);
+//                        showDisplayIntent();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    kProgressHUD.dismiss();
+                    toast.setText("获取失败");
+                    toast.show();
+
                 }
-                kProgressHUD.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 kProgressHUD.dismiss();
-                toast.setText("网络连接失败");
+                toast.setText("获取失败");
                 toast.show();
             }
         });
 
+    }
+
+    public void geoconv(List<LatLng> list) {
+
+        String urlBody = "http://api.map.baidu.com/geoconv/v1/";
+        String ak = "stfZ8nXV0rvMfTLuAAY9SX2AqgLGLuOQ";
+        RequestParams params = new RequestParams();
+        String coords = "";
+        for (LatLng latLng :list) {
+            coords += latLng.longitude + "," + latLng.latitude + ";";
+        }
+        coords = coords.substring(0, coords.length() - 1); //去掉最后一个分号
+        params.put("coords", coords);
+        params.put("ak", ak);
+
+        //TODO: 一次最多100个点
+        //TODO: 纠偏失败 显示原来的点
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // If the response is JSONObject instead of expected JSONArray
+                Log.i("Main", response.toString());
+                Integer status;
+                try {
+                    status = response.getInt("status");
+                    if (status == 0) {
+                        dataString = response.toString();
+                        showDisplayIntent();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    toast.setText("纠偏失败");
+                    toast.show();
+                }
+                kProgressHUD.dismiss();
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                kProgressHUD.dismiss();
+                toast.setText("纠偏失败");
+                toast.show();
+            }
+        });
     }
 
 }
