@@ -97,6 +97,16 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        //TODO: 修改密码
+//        MenuItem changePassword = menu.add(0, 0, 0, "修改密码");
+//        changePassword.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//        changePassword.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                Toast.makeText(getApplicationContext(),"修改密码",LENGTH_SHORT).show();
+//                return false;
+//            }
+//        });
 
         return true;
 

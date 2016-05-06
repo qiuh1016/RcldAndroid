@@ -129,6 +129,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     editor.apply();
                     Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "120.27.149.252", LENGTH_SHORT).show();
                     return;
+                }  else if (shipName.equals("setserveripdefault2")) {
+                    //setServerIP2
+                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = user.edit();
+                    editor.putString("serverIP", "114.55.101.20");
+                    editor.apply();
+                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "114.55.101.20", LENGTH_SHORT).show();
+                    return;  //114.55.101.20
                 }
 
 
@@ -144,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 login(shipName, password);
                 break;
             case R.id.autofillButton:
-                shipNumberEditText.setText("16040205"); //3304001987070210   16040205  99999999
+                shipNumberEditText.setText("3304001987070210"); //3304001987070210   16040205  99999999
                 passwordEditText.setText("123"); //ICy5YqxZB1uWSwcVLSNLcA==
 //TODO: OKView
 //                ImageView imageView = new ImageView(MainActivity.this);

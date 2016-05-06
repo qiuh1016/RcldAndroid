@@ -216,7 +216,8 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Bundle bundle = new Bundle();
-                bundle.putString("title", "出海确认");
+                bundle.putInt("iofFlag", 2);
+//                bundle.putString("title", "出海确认");
 
                 Intent intent = new Intent();
                 intent.setClass(getApplicationContext(), PunchActivity.class);
@@ -231,7 +232,8 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Bundle bundle = new Bundle();
-                bundle.putString("title", "回港确认");
+                bundle.putInt("iofFlag", 1);
+//                bundle.putString("title", "回港确认");
 
                 Intent intent = new Intent();
                 intent.setClass(getApplicationContext(), PunchActivity.class);

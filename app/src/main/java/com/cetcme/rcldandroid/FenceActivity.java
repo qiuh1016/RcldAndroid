@@ -56,7 +56,7 @@ public class FenceActivity extends AppCompatActivity {
         toast = Toast.makeText(FenceActivity.this, "获取成功!", LENGTH_SHORT);
 
         simpleAdapter = new SimpleAdapter(this, getFenceData(), R.layout.fencelistview,
-                new String[]{"fenceName", "bowei", "fenceID", "shipNumber", "fenceType"},
+                new String[]{"fenceName", "bowei", "fenceID", "shipNumber", "fenceLevel"},
                 new int[]{
                         R.id.fenceNameTextViewInFenceListView,
                         R.id.boweiTextViewInFenceListView,
@@ -74,13 +74,15 @@ public class FenceActivity extends AppCompatActivity {
         fenceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Map<String, Object> map = dataList.get(i);
-                String fenceName = (String) map.get("fenceName");
-                fenceName = fenceName.replace("港口名：", "");
-                String fenceID = (String) map.get("fenceID");
-                Integer shipNumber = (Integer) map.get("shipNumber");
-                String fenceType = (String) map.get("fenceType");
-                fenceInfodialog(fenceName, fenceID, shipNumber, fenceType);
+//                Map<String, Object> map = dataList.get(i);
+//                String fenceName = (String) map.get("fenceName");
+//                String city = (String) map.get("city");
+//                String country = (String) map.get("country");
+//                String fenceAddr = (String) map.get("fenceAddr");
+//                String fenceTypeName = (String) map.get("fenceTypeName");
+//                int fenceType = (int) map.get("fenceType");
+//
+//                fenceInfodialog(fenceName, city, country, fenceAddr, fenceType, fenceTypeName);
             }
         });
 
@@ -192,7 +194,14 @@ public class FenceActivity extends AppCompatActivity {
 
                             map.put("fenceID", fence.get("fenceNo"));
                             map.put("shipNumber", fence.get("inShipAmount"));
-                            map.put("fenceType", fence.get("fenceLevel"));
+                            map.put("fenceLevel", fence.get("fenceLevel"));
+
+//                            map.put("city",fence.getString("city"));
+//                            map.put("country",fence.getString("country"));
+//                            map.put("fenceAddr",fence.getString("fenceAddr"));
+//                            map.put("fenceType",fence.getInt("fenceType"));
+//                            map.put("fenceTypeName",fence.getString("fenceTypeName"));
+
                             dataList.add(map);
                         }
                         simpleAdapter.notifyDataSetChanged();
@@ -231,9 +240,15 @@ public class FenceActivity extends AppCompatActivity {
         return dataList;
     }
 
-    protected void fenceInfodialog(String fenceName, String fenceID, Integer shipNumber, String fenceType) {
+    protected void fenceInfodialog(String fenceName, String city, String country, String fenceAddr, int fenceType, String fenceTypeName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(FenceActivity.this);
-        builder.setMessage("港口ID：" + fenceID + "\n" +  "港内船数：" + shipNumber + "\n" + "港口类型：" + fenceType);
+        builder.setMessage(
+                "所在市：" + city + "\n" +
+                "所在县（市）：" + country + "\n" +
+                "港口港址：" + fenceAddr + "\n" +
+                "港口类型：" + fenceType + "\n" +
+                "港口类型名称：" + fenceTypeName
+            );
         builder.setTitle(fenceName);
         builder.setPositiveButton("OK", null);
         builder.create().show();
