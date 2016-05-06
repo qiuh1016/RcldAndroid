@@ -98,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="防盗半径（公里）"
+            android:text="防盗半径（海里）"
             android:id="@+id/textView18"
             android:layout_below="@+id/picTelNoEditTextInChangeInfoActivity"
             android:layout_marginTop="5dp"

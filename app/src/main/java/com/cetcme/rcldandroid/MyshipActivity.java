@@ -1,6 +1,7 @@
 package com.cetcme.rcldandroid;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -18,9 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.*;
 import com.baidu.mapapi.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
@@ -141,7 +139,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         //读取防盗状态 和 防盗半径
-        SharedPreferences antiThief = getSharedPreferences("antiThief", Activity.MODE_PRIVATE);
+        SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
         antiThiefIsOpen = antiThief.getBoolean("antiThiefIsOpen",false);
         modifyAntiThiefRadius();
 
@@ -185,7 +183,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         antiThiefMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                SharedPreferences antiThief = getSharedPreferences("antiThief", Activity.MODE_PRIVATE);
+                SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = antiThief.edit();
                 editor.putBoolean("antiThiefIsOpen", !antiThiefIsOpen);
                 editor.apply();
@@ -380,7 +378,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         Button button = new Button(getApplicationContext());
 //        button.setBackgroundResource(R.drawable.mapinfoview);
         button.setBackgroundResource(R.drawable.boder);
-        button.setBackgroundColor(0x88FFFFFF);
+//        button.setBackgroundColor(0x88FFFFFF);
         button.setTextSize(15);
         button.setGravity(Gravity.CENTER);
         button.setPadding(20,20,20,20);
@@ -408,7 +406,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
 
     void modifyAntiThiefRadius() {
         //读取防盗半径，如果没有定义就设为1海里
-        SharedPreferences antiThief = getSharedPreferences("antiThief", Activity.MODE_PRIVATE);
+        SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
         antiThiefRadius = antiThief.getString("antiThiefRadius","");
         if (antiThiefRadius.isEmpty()) {
             SharedPreferences.Editor editor = antiThief.edit();

@@ -139,45 +139,71 @@ public class FenceActivity extends AppCompatActivity {
                 .setSize(110, 110)
                 .show();
 
-        String shipNumber,password;
+        final String shipNumber,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         shipNumber = user.getString("shipNumber","");
         password = user.getString("password","");
+        serverIP = user.getString("serverIP", "120.27.149.252");
 
         dataList = new ArrayList<>();
 
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
         params.put("password", new PrivateEncode().b64_md5(password));
-        String urlBody = "http://120.27.149.252/api/app/fence/all.json";
+        String urlBody = "http://"+serverIP+"/api/app/fence/all.json";
         AsyncHttpClient client = new AsyncHttpClient();
 
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-                Log.i("JSONObject", response.toString());
+                Log.i("Main", response.toString());
                 try {
-                    JSONArray dataArray = response.getJSONArray("data");
+                    //TODO: 120.27.149.252 服务器更新后换成新的
+                    if (serverIP.equals("120.27.149.252")) {
+                        //原
+                        JSONArray dataArray = response.getJSONArray("data");
+                        for(int i = 0; i < dataArray.length(); i++) {
+                            JSONObject fence = (JSONObject) dataArray.get(i);
+                            Map<String, Object> map = new Hashtable<>();
+                            map.put("fenceName", "港口名：" + fence.get("fenceName"));
+                            Integer bowei = (Integer) fence.get("shipAmount");
+                            bowei = bowei * 10;
+                            map.put("bowei", "泊位：" + bowei + "%");
+                            map.put("fenceID", fence.get("fenceNo"));
+                            map.put("shipNumber", fence.get("shipAmount"));
+                            map.put("fenceType", fence.get("fenceLevel"));
+                            dataList.add(map);
+                        }
+                        simpleAdapter.notifyDataSetChanged();
+                    } else {
+                        //新
+                        JSONArray dataArray = response.getJSONArray("data");
+                        for(int i = 0; i < dataArray.length(); i++) {
+                            JSONObject fence = (JSONObject) dataArray.get(i);
+                            Map<String, Object> map = new Hashtable<>();
+                            map.put("fenceName", fence.get("fenceName"));
+                            try {
+                                map.put("bowei", "泊位：" + fence.getString("berthAmount"));
+                            } catch (JSONException e) {
+                                map.put("bowei", "泊位：……");
+                                Log.i("Main",fence.get("fenceName").toString() + " : 无berthAmount");
+                            }
 
-                    for(int i = 0; i < dataArray.length(); i++) {
-                        JSONObject fence = (JSONObject) dataArray.get(i);
-                        Map<String, Object> map = new Hashtable<>();
-                        map.put("fenceName", "港口名：" + fence.get("fenceName"));
-                        Integer bowei = (Integer) fence.get("shipAmount");
-                        bowei = bowei * 10;
-                        map.put("bowei", "泊位：" + bowei + "%");
-                        map.put("fenceID", fence.get("fenceNo"));
-                        map.put("shipNumber", fence.get("shipAmount"));
-                        map.put("fenceType", fence.get("fenceLevel"));
-                        dataList.add(map);
+                            map.put("fenceID", fence.get("fenceNo"));
+                            map.put("shipNumber", fence.get("inShipAmount"));
+                            map.put("fenceType", fence.get("fenceLevel"));
+                            dataList.add(map);
+                        }
+                        simpleAdapter.notifyDataSetChanged();
                     }
-                    simpleAdapter.notifyDataSetChanged();
 
                     toast.setText("获取成功");
                     toast.show();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    toast.setText("获取失败");
+                    toast.show();
                 }
 
                 new Handler().postDelayed(new Runnable(){

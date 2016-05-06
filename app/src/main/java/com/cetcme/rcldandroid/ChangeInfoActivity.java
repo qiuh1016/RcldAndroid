@@ -1,6 +1,7 @@
 package com.cetcme.rcldandroid;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
@@ -156,10 +157,12 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         SharedPreferences user = getSharedPreferences("user",0);
         String shipNumber = user.getString("shipNumber","");
         String password = user.getString("password","");
+        String serverIP = user.getString("serverIP", "120.27.149.252");
+        password = new PrivateEncode().b64_md5(password);
 
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", password);
+        params.put("password", new PrivateEncode().b64_md5(password));
         if (!toChangePicName.equals(originalPicName)) {
             params.put("picName", toChangePicName);
         }
@@ -167,7 +170,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
             params.put("picTelNo",toChangePicTelNo);
         }
 
-        String urlBody = "http://120.27.149.252/api/app/ship/update.json";
+        String urlBody = "http://"+serverIP+"/api/app/ship/update.json";
         String url = urlBody + "?userName="+shipNumber+"&password="+password+"&picName="+toChangePicName+"&picTelNo="+toChangePicTelNo;
         AsyncHttpClient client = new AsyncHttpClient();
         //TODO: 拼接url问题

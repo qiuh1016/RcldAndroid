@@ -1,6 +1,7 @@
 package com.cetcme.rcldandroid;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -95,6 +96,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.loginButton:
+
+                String shipName = shipNumberEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+
+
+                //设置
+                if (shipName.equals("setserverip") && !password.equals("")) {
+                    //setServerIP
+                    Boolean isIP =  new PrivateEncode().ipCheck(password);
+                    if (isIP) {
+                        SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = user.edit();
+                        editor.putString("serverIP", password);
+                        editor.apply();
+                        Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + password, LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "IP格式错误", LENGTH_SHORT).show();
+                    }
+                    return;
+                } else if (shipName.equals("showserverip")) {
+                    //showserverip
+                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                    String serverIP = user.getString("serverIP", "120.27.149.252");
+                    Toast.makeText(getApplicationContext(), "当前服务器IP：" + serverIP, LENGTH_SHORT).show();
+                    return;
+                } else if (shipName.equals("setserveripdefault")) {
+                    //setServerIP
+                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = user.edit();
+                    editor.putString("serverIP", "120.27.149.252");
+                    editor.apply();
+                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "120.27.149.252", LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                //登录
                 loginButton.setEnabled(false);
                 kProgressHUD = KProgressHUD.create(MainActivity.this)
                         .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -103,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setDimAmount(0.3f)
                         .setSize(110, 110)
                         .show();
-                login(shipNumberEditText.getText().toString(), passwordEditText.getText().toString());
+                login(shipName, password);
                 break;
             case R.id.autofillButton:
                 shipNumberEditText.setText("16040205"); //3304001987070210   16040205  99999999
@@ -156,8 +194,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         params.put("password", new PrivateEncode().b64_md5(password));
         params.put("userType", 0);
 
-        String urlBody = "http://120.27.149.252/api/app/login.json";
+        SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+        String serverIP = user.getString("serverIP", "120.27.149.252");
+        String urlBody = "http://"+serverIP+"/api/app/login.json";
 
+
+        //TODO: json 解析 try 全部分开
         client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -195,7 +237,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
         params.put("password", new PrivateEncode().b64_md5(password));
-        String urlBody = "http://120.27.149.252/api/app/ship/get.json";
+
+        SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+        String serverIP = user.getString("serverIP", "120.27.149.252");
+        String urlBody = "http://"+serverIP+"/api/app/ship/get.json";
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -235,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     void ReadSharedPreferences() {
         String strName, strPassword;
-        SharedPreferences user = getSharedPreferences("user", 0);
+        SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         strName = user.getString("shipNumber", "");
         strPassword = user.getString("password", "");
 
@@ -245,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     void WriteSharedPreferences(String strName, String strPassword) {
-        SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
+        SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = user.edit();
         editor.putString("shipNumber", strName);
         editor.putString("password", strPassword);

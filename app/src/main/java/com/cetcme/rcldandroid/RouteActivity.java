@@ -286,10 +286,11 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     private void getRouteData() {
 
-        String shipNumber,password;
+        String shipNumber,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         shipNumber = user.getString("shipNumber","");
         password = user.getString("password","");
+        serverIP = user.getString("serverIP", "120.27.149.252");
 
         String startTimeURL = startTime.replace(" ", "%20");
         String endTimeURL = endTime.replace(" ", "%20");
@@ -302,8 +303,8 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
         String ps = new PrivateEncode().b64_md5(password);
 
-        String urlBody = "http://120.27.149.252/api/app/trail/get.json";
-        String url = "http://120.27.149.252/api/app/trail/get.json?userName=" + shipNumber +"&password="+ps+"&startTime="+startTimeURL+"&endTime=" + endTimeURL;
+        String urlBody = "http://"+serverIP+"/api/app/trail/get.json";
+        String url = urlBody+"?userName=" + shipNumber +"&password="+ps+"&startTime="+startTimeURL+"&endTime=" + endTimeURL;
         AsyncHttpClient client = new AsyncHttpClient();
 
         client.get(url, new JsonHttpResponseHandler("UTF-8"){

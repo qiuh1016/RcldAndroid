@@ -79,10 +79,12 @@ public class PunchActivity extends AppCompatActivity {
                 .show();
 
         //获取保存的用户名和密码
-        String shipNumber,password;
+        String shipNumber,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         shipNumber = user.getString("shipNumber","");
         password = user.getString("password","");
+        serverIP = user.getString("serverIP", "120.27.149.252");
+        password = new PrivateEncode().b64_md5(password);
 
         dataList = new ArrayList<>();
 
@@ -102,8 +104,8 @@ public class PunchActivity extends AppCompatActivity {
         params.put("startTime",startTime);
         params.put("endTime",endTime);
 
-        String urlBody = "http://120.27.149.252/api/app/punch/get.json";
-        String url = "http://120.27.149.252/api/app/punch/get.json?userName="+shipNumber+"&password="+password+"&startTime="+startTime+"&endTime="+endTime;
+        String urlBody = "http://"+serverIP+"/api/app/punch/get.json";
+        String url = urlBody+"?userName="+shipNumber+"&password="+password+"&startTime="+startTime+"&endTime="+endTime;
         AsyncHttpClient client = new AsyncHttpClient();
         //TODO: 待接口修改
         client.get(url, null, new JsonHttpResponseHandler("UTF-8"){
