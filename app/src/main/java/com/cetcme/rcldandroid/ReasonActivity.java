@@ -23,6 +23,8 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
     private TextView reasonTextView;
     private Button addButton;
 
+    private Button fillButton;
+
     String name;
     String id;
     String reason;
@@ -44,7 +46,9 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
         idTextView = (TextView) findViewById(R.id.idTextViewInReasonActivity);
         reasonTextView = (TextView) findViewById(R.id.reasonTextViewInReasonActivity);
         addButton = (Button) findViewById(R.id.addButtonInReasonActivity);
+        fillButton = (Button) findViewById(R.id.button111);
         addButton.setOnClickListener(this);
+        fillButton.setOnClickListener(this);
 
         //文本改变监听
         nameTextView.addTextChangedListener(textChangeWatcher);
@@ -86,7 +90,14 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
                 //TODO: 身份证 正确
-
+                if (id.length() > 18) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ReasonActivity.this);
+                    builder.setMessage("身份证长度错误");
+                    builder.setTitle("错误");
+                    builder.setPositiveButton("OK", null);
+                    builder.create().show();
+                    return;
+                }
 
 
                 //增加
@@ -102,6 +113,11 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                 changeButtonState(false);
 //                dialog(name,id,reason);
 
+                break;
+            case R.id.button111:
+                nameTextView.setText("测试人员");
+                idTextView.setText("330283198811240000");
+                reasonTextView.setText("添加原因");
                 break;
         }
     }

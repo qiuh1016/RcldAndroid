@@ -32,8 +32,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:singleLine="true"
-            android:textSize="15dp"
-            android:text="裘鸿" />
+            android:textSize="15dp" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -48,8 +47,7 @@
             android:layout_marginRight="20dp"
             android:singleLine="true"
             android:textSize="15dp"
-            android:inputType="phone"
-            android:text="330283198811240134" />
+            android:inputType="phone" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -64,8 +62,7 @@
             android:layout_alignStart="@+id/textView25"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:inputType="number"
-            android:text="测试添加" />
+            android:inputType="number" />
 
         <TextView
             android:gravity="center_vertical|start"
@@ -148,7 +145,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="Fill"
         android:id="@+id/button111"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

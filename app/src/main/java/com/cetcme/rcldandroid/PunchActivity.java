@@ -50,7 +50,7 @@ public class PunchActivity extends AppCompatActivity {
     KProgressHUD kProgressHUD;
     int iofFlag;
     ArrayList<String> ids = new ArrayList<>();
-    ArrayList<Integer> uploadOKList = new ArrayList<>();
+    ArrayList<Integer> uploadOKList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -305,7 +305,7 @@ public class PunchActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     String input = et.getText().toString();
                                     if (input.equals("")) {
-                                        Toast.makeText(getApplicationContext(), "搜索内容不能为空！" + input, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "删除原因不能为空", Toast.LENGTH_SHORT).show();
                                     }
                                     else {
                                         //操作
@@ -344,6 +344,8 @@ public class PunchActivity extends AppCompatActivity {
             .setSize(110, 110)
             .show();
 
+        uploadOKList = new ArrayList<>();
+        Log.i("Main" , "一共" + dataList.size() + "个数据");
         for (int i = 0; i < dataList.size(); i++) {
             uploadPunchs(i);
         }
@@ -368,7 +370,7 @@ public class PunchActivity extends AppCompatActivity {
         params.put("sailorIdNo", dataList.get(position).get("id"));
         params.put("sailorName", dataList.get(position).get("name"));
         params.put("punchTime", dataList.get(position).get("punchTime"));
-        params.put("dataType", dataList.get(position).get("punchTime"));
+        params.put("dataType", dataList.get(position).get("dataType"));
         params.put("reason", dataList.get(position).get("reason"));
 
 
@@ -398,6 +400,7 @@ public class PunchActivity extends AppCompatActivity {
                     e.printStackTrace();
                     Log.i("Main", "error");
                 }
+
                 kProgressHUD.dismiss();
                 toast.setText("上传失败");
                 toast.show();
@@ -410,6 +413,16 @@ public class PunchActivity extends AppCompatActivity {
                 toast.setText("网络连接失败");
                 toast.show();
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                Log.i("Main", response);
+                kProgressHUD.dismiss();
+                toast.setText("网络连接失败");
+                toast.show();
+            }
+
+
         });
     }
 
