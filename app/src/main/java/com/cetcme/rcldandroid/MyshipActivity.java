@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.*;
 import com.baidu.mapapi.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
@@ -65,8 +66,8 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_myship);
-
         setTitle("本船信息");
 
         mapView = (MapView) findViewById(R.id.baiduMapInMyShipActivity);
@@ -152,12 +153,14 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         MenuItem changeInfo = menu.add(0, 0, 0, "修改信息");
         MenuItem oConfirm = menu.add(0, 0, 0, "出海确认");
         MenuItem iConfirm = menu.add(0, 0, 0, "回港确认");
+        MenuItem punch = menu.add(0, 0, 0, "打卡记录");
         MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
         antiThiefMenuItem = menu.add(0, 0, 0, antiThiefIsOpen? "关闭防盗" : "开启防盗");
 
         changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         oConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         iConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        punch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         antiThiefMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
@@ -217,8 +220,6 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
             public boolean onMenuItemClick(MenuItem item) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("iofFlag", 2);
-//                bundle.putString("title", "出海确认");
-
                 Intent intent = new Intent();
                 intent.setClass(getApplicationContext(), PunchActivity.class);
                 intent.putExtras(bundle);
@@ -233,11 +234,23 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
             public boolean onMenuItemClick(MenuItem item) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("iofFlag", 1);
-//                bundle.putString("title", "回港确认");
-
                 Intent intent = new Intent();
                 intent.setClass(getApplicationContext(), PunchActivity.class);
                 intent.putExtras(bundle);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+                return false;
+            }
+        });
+
+        punch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("iofFlag", 1);
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), PunchHistoryActivity.class);
+//                intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                 return false;
@@ -334,7 +347,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         baiduMap.clear();
-        //TODO: 修改半径后重新绘制
+        //修改半径后重新绘制
         modifyAntiThiefRadius();
 
         if (isGeoConved) {

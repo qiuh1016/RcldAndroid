@@ -63,7 +63,15 @@
         <activity
             android:name=".PunchActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ReasonActivity"></activity>
+        <activity
+            android:name=".ReasonActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PunchHistoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".splashScreen"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

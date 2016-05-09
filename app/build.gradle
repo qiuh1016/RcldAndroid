@@ -3,19 +3,20 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
     defaultConfig {
         applicationId "com.cetcme.rcldandroid"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
@@ -28,8 +29,11 @@ dependencies {
     compile files('libs/BaiduLBS_Android.jar')
     compile 'com.kaopiz:kprogresshud:1.0.5'
     compile 'com.github.jjobes:slideDateTimePicker:1.0.2'
-    compile 'com.github.lzyzsd:jsbridge:1.0.4'
-    compile(name:'AndroidJSCore-2.2-pre1-release', ext:'aar')
+    compile(name: 'AndroidJSCore-2.2-pre1-release', ext: 'aar')
+    //    compile 'com.android.support:recyclerview-v7:21.0.0'
+    //    compile 'com.nineoldandroids:library:2.4.0'
+    //    compile 'cn.bingoogolapple:bga-refreshlayout:1.1.4@aar'
+    compile project(':pullToRefresh')
 }
 
 allprojects {
