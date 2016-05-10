@@ -88,16 +88,37 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
             JSONArray data = myShipInfoJSON.getJSONArray("data");
             JSONObject data0 = data.getJSONObject(0);
 
-            String shipName = data0.getString("shipName");
+            String shipName;
+            try {
+                shipName = data0.getString("shipName");
+            } catch (JSONException e) {
+                shipName = "无";
+            }
+
             String shipNumber = data0.getString("shipNo");
             String ownerName = data0.getString("ownerName");
             String deviceNo = data0.getString("deviceNo");
             String ownerTelNo = data0.getString("ownerTelNo");
             Boolean offlineFlag = data0.getBoolean("offlineFlag");
-            String cfsStartDate = data0.getString("cfsStartDate");
-            String cfsEndDate = data0.getString("cfsEndDate");
-            picName = data0.getString("picName");
-            picTelNo = data0.getString("picTelNo");
+
+            String cfsStartDate;
+            String cfsEndDate;
+            try {
+                cfsStartDate = data0.getString("cfsStartDate");
+                cfsEndDate = data0.getString("cfsEndDate");
+            } catch (JSONException e) {
+                cfsStartDate = "无";
+                cfsEndDate = "无";
+            }
+
+            try {
+                picName = data0.getString("picName");
+                picTelNo = data0.getString("picTelNo");
+            } catch (JSONException e) {
+                picName = "无";
+                picTelNo = "无";
+            }
+
 
             String atFence;
             String onLine;
@@ -154,17 +175,17 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         MenuItem oConfirm = menu.add(0, 0, 0, "出海确认");
         MenuItem iConfirm = menu.add(0, 0, 0, "回港确认");
         MenuItem punch = menu.add(0, 0, 0, "打卡记录");
-        MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
+//        MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
         antiThiefMenuItem = menu.add(0, 0, 0, antiThiefIsOpen? "关闭防盗" : "开启防盗");
 
         changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         oConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         iConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         punch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+//        iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         antiThiefMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-        changeInfo.setIcon(R.drawable.menuicon);
+//        changeInfo.setIcon(R.drawable.menuicon);
         changeInfo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {

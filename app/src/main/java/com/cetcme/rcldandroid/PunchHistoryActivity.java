@@ -45,13 +45,17 @@ public class PunchHistoryActivity extends AppCompatActivity {
 
     PullToRefreshListView listView;
 
-    List<Map<String, Object>> dataList;
+    List<Map<String, Object>> dataList = new ArrayList<>();
     Toast toast;
     SimpleAdapter simpleAdapter;
 
     int sum; //总数
     int totalPage;
-    int currentPage = 1;
+    int currentPage = 0;
+    Boolean isFirstTimeToGet = true;
+
+    KProgressHUD kProgressHUD;
+    private int pageSize = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +72,6 @@ public class PunchHistoryActivity extends AppCompatActivity {
         listView.getLoadingLayoutProxy(false,true).setRefreshingLabel("加载中");
         listView.getLoadingLayoutProxy(false,true).setReleaseLabel("松开立即加载");
         listView.getLoadingLayoutProxy(false,true).setPullLabel("上拉可以加载");
-
-//        listView.setRefreshing();
 
         simpleAdapter = new SimpleAdapter(PunchHistoryActivity.this, getPunchData(true), R.layout.punchlistview,
                 new String[]{"name", "id", "punchTime", "null"},
@@ -116,15 +118,18 @@ public class PunchHistoryActivity extends AppCompatActivity {
                 R.anim.push_right_out_no_alpha);
     }
 
-    private List<Map<String, Object>> getPunchData(Boolean isRefresh) {
+    private List<Map<String, Object>> getPunchData(final Boolean isRefresh) {
 
-//        final KProgressHUD kProgressHUD = KProgressHUD.create(PunchHistoryActivity.this)
-//                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-//                .setLabel("获取中")
-//                .setAnimationSpeed(1)
-//                .setDimAmount(0.3f)
-//                .setSize(110, 110)
-//                .show();
+        if (isFirstTimeToGet) {
+            kProgressHUD = KProgressHUD.create(PunchHistoryActivity.this)
+                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                    .setLabel("获取中")
+                    .setAnimationSpeed(1)
+                    .setDimAmount(0.3f)
+                    .setSize(110, 110)
+                    .setCancellable(false)
+                    .show();
+        }
 
         //获取保存的用户名和密码
         String shipNumber,password,serverIP;
@@ -136,8 +141,9 @@ public class PunchHistoryActivity extends AppCompatActivity {
 
         //刷新则清空
         if (isRefresh) {
-            dataList = new ArrayList<>();
-            currentPage = 1;
+            dataList.clear();
+            currentPage = 0;
+            Log.i("Main", "isRefresh");
             listView.getLoadingLayoutProxy(false,true).setRefreshingLabel("加载中");
             listView.getLoadingLayoutProxy(false,true).setReleaseLabel("松开立即加载");
             listView.getLoadingLayoutProxy(false,true).setPullLabel("上拉可以加载");
@@ -148,7 +154,7 @@ public class PunchHistoryActivity extends AppCompatActivity {
         params.put("userName", shipNumber);
         params.put("password", password);
         params.put("pageNum", currentPage + 1);
-        params.put("pageSize", 20);
+        params.put("pageSize", pageSize);
 
         String urlBody = "http://"+serverIP+"/api/app/punch/allByPage.json";
         String url = urlBody+"?userName="+shipNumber+"&password="+password+"&pageNum=0"+"&pageSize=20";
@@ -166,8 +172,23 @@ public class PunchHistoryActivity extends AppCompatActivity {
                         toast.show();
                     } else if (msg.equals("成功")) {
                         JSONArray dataArray = response.getJSONArray("data");
-                        sum = response.getInt("total");  //获取总数
-                        totalPage = sum / 20 + 1;
+
+                        //刷新的时候 重置总数和总页数
+                        if (isRefresh) {
+                            sum = response.getInt("total");  //获取总数
+                            totalPage = sum / pageSize + 1;
+                        } else {
+                            //加载的时候检测总数是否变化 如变化 重新刷新
+                            int sumToget = response.getInt("total");
+                            if (sumToget != sum) {
+                                getPunchData(true);
+                                Toast.makeText(getApplicationContext(),"总数有变，已刷新数据",LENGTH_SHORT).show();
+                                return;
+                            }
+
+                        }
+
+                        currentPage += 1;
 
                         for(int i = 0; i < dataArray.length(); i++) {
                             JSONObject punch = (JSONObject) dataArray.get(i);
@@ -176,26 +197,31 @@ public class PunchHistoryActivity extends AppCompatActivity {
                             map.put("id", punch.getString("sailorIdNo"));
                             map.put("name", punch.getString("sailorName"));
                             map.put("punchTime", punch.getString("punchTime"));
-                            map.put("null", "");
-                            for (int j = 0; j < currentPage; j++) {
-                                dataList.add(map);
-                            }
+                            map.put("null", "第"+currentPage+"页");
 
+                            dataList.add(map);
                         }
-                        simpleAdapter.notifyDataSetChanged();
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     toast.setText("数据解析失败");
                     toast.show();
                 }
-//                kProgressHUD.dismiss();
+                if (isFirstTimeToGet) {
+                    kProgressHUD.dismiss();
+                    isFirstTimeToGet = false;
+                }
+                simpleAdapter.notifyDataSetChanged();
                 listView.onRefreshComplete();
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-//                kProgressHUD.dismiss();
+                if (isFirstTimeToGet) {
+                    kProgressHUD.dismiss();
+                    isFirstTimeToGet = false;
+                }
                 listView.onRefreshComplete();
                 toast.setText("网络连接失败");
                 toast.show();

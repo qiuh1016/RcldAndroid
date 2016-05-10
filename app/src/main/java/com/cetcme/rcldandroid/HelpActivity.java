@@ -3,6 +3,7 @@ package com.cetcme.rcldandroid;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.SystemClock;
@@ -49,6 +50,21 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         mapView = (MapView) findViewById(R.id.baiduMapInHelpActivity);
         baiduMap = mapView.getMap();
 
+
+//        TextView location = new TextView(getApplicationContext());
+//        location.setBackgroundResource(R.drawable.boder);
+//        location.setPadding(15, 15, 8, 35);
+//        location.setTextColor(Color.DKGRAY);
+//        location.setText("定位时间：");
+//        location.setTextSize(12);
+//
+//        InfoWindow infoWindow = new InfoWindow(location, companyLatlng,0);
+//        baiduMap.showInfoWindow(infoWindow);
+
+
+
+
+
         telTextView = (TextView) findViewById(R.id.telTextViewInHelpActivity);
         telTextView.setOnClickListener(this);
         telTextView.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG ); //下划线
@@ -58,6 +74,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         addressTextView.setOnClickListener(this);
 
         mapMark(companyLatlng);
+//        showInfoWindow();
     }
 
 //    @Override
@@ -176,6 +193,63 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
         //显示InfoWindow
         baiduMap.showInfoWindow(mInfoWindow);
+
+    }
+
+    boolean isShow = false;
+
+    private void showInfoWindow() {
+
+
+        //创建InfoWindow展示的view
+        Button button = new Button(getApplicationContext());
+//        button.setBackgroundResource(R.drawable.mapinfoview);
+        button.setBackgroundResource(R.drawable.boder);
+        button.setBackgroundColor(0x88FFFFFF);
+        button.setTextSize(15);
+        button.setGravity(Gravity.CENTER);
+        button.setPadding(20,20,20,20);
+        button.setText("中电科（宁波）海洋电子研究院有限公司");
+        button.setTextColor(0xFF7D7D7D);
+        button.setGravity(Gravity.CENTER);
+
+        TextView textView = new TextView(getApplicationContext());
+        textView.setBackgroundResource(R.drawable.boder);
+//        textView.setBackgroundColor(0x88FFFFFF);
+        textView.setTextSize(15);
+        textView.setGravity(Gravity.CENTER);
+        textView.setPadding(20,20,20,20);
+        textView.setText("中电科（宁波）海洋电子研究院有限公司");
+        textView.setTextColor(0xFF7D7D7D);
+        textView.setGravity(Gravity.CENTER);
+        //定义用于显示该InfoWindow的坐标点
+//        LatLng pt = new LatLng(Lat, Lng);
+        //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
+        final InfoWindow mInfoWindow = new InfoWindow(textView, companyLatlng, -75);
+
+        //显示InfoWindow
+
+
+
+        //bitmap
+        BitmapDescriptor bitmap = BitmapDescriptorFactory
+                .fromResource(R.drawable.mapmakericon);
+        final InfoWindow infoWindow =  new InfoWindow(bitmap, companyLatlng, 0, new InfoWindow.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick() {
+                Log.i("Main","tapped");
+            }
+        });
+        baiduMap.showInfoWindow(infoWindow);
+
+        MapStatus mapStatus = new MapStatus.Builder().target(companyLatlng).zoom(15) //15
+                .build();
+        MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
+                .newMapStatus(mapStatus);
+        baiduMap.setMapStatus(mapStatusUpdate);
+
+
+
 
     }
 

@@ -40,7 +40,7 @@ public class FenceActivity extends AppCompatActivity {
 
     private ListView fenceListView;
     private SimpleAdapter simpleAdapter;
-    private List<Map<String, Object>> dataList;
+    private List<Map<String, Object>> dataList = new ArrayList<>();
     private KProgressHUD kProgressHUD;
 
     private Toast toast;
@@ -56,7 +56,7 @@ public class FenceActivity extends AppCompatActivity {
         toast = Toast.makeText(FenceActivity.this, "获取成功!", LENGTH_SHORT);
 
         simpleAdapter = new SimpleAdapter(this, getFenceData(), R.layout.fencelistview,
-                new String[]{"fenceName", "bowei", "fenceID", "shipNumber", "fenceLevel"},
+                new String[]{"fenceName", "berthAmount", "fenceNo", "inShipAmount", "fenceLevel"},
                 new int[]{
                         R.id.fenceNameTextViewInFenceListView,
                         R.id.boweiTextViewInFenceListView,
@@ -139,6 +139,7 @@ public class FenceActivity extends AppCompatActivity {
                 .setAnimationSpeed(1)
                 .setDimAmount(0.3f)
                 .setSize(110, 110)
+                .setCancellable(false)
                 .show();
 
         final String shipNumber,password,serverIP;
@@ -147,7 +148,7 @@ public class FenceActivity extends AppCompatActivity {
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
 
-        dataList = new ArrayList<>();
+        dataList.clear();
 
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
@@ -162,18 +163,18 @@ public class FenceActivity extends AppCompatActivity {
                 Log.i("Main", response.toString());
                 try {
                     //TODO: 120.27.149.252 服务器更新后换成新的
-                    if (serverIP.equals("120.27.149.252")) {
+                    if (serverIP.equals("120.27.149.252") && false) {
                         //原
                         JSONArray dataArray = response.getJSONArray("data");
                         for(int i = 0; i < dataArray.length(); i++) {
                             JSONObject fence = (JSONObject) dataArray.get(i);
                             Map<String, Object> map = new Hashtable<>();
                             map.put("fenceName", "港口名：" + fence.get("fenceName"));
-                            Integer bowei = (Integer) fence.get("shipAmount");
-                            bowei = bowei * 10;
-                            map.put("bowei", "泊位：" + bowei + "%");
-                            map.put("fenceID", fence.get("fenceNo"));
-                            map.put("shipNumber", fence.get("shipAmount"));
+                            Integer berthAmount = (Integer) fence.get("shipAmount");
+                            berthAmount = berthAmount * 10;
+                            map.put("berthAmount", "泊位：" + berthAmount + "%");
+                            map.put("fenceNo", fence.get("fenceNo"));
+                            map.put("inShipAmount", fence.get("inShipAmount"));
                             map.put("fenceType", fence.get("fenceLevel"));
                             dataList.add(map);
                         }
@@ -184,16 +185,19 @@ public class FenceActivity extends AppCompatActivity {
                         for(int i = 0; i < dataArray.length(); i++) {
                             JSONObject fence = (JSONObject) dataArray.get(i);
                             Map<String, Object> map = new Hashtable<>();
+
                             map.put("fenceName", fence.get("fenceName"));
+
                             try {
-                                map.put("bowei", "泊位：" + fence.getString("berthAmount"));
+                                map.put("berthAmount", "泊位：" + fence.getString("berthAmount"));
                             } catch (JSONException e) {
-                                map.put("bowei", "泊位：……");
+                                map.put("berthAmount", "泊位：无");
                                 Log.i("Main",fence.get("fenceName").toString() + " : 无berthAmount");
                             }
 
-                            map.put("fenceID", fence.get("fenceNo"));
-                            map.put("shipNumber", fence.get("inShipAmount"));
+
+                            map.put("fenceNo", fence.get("fenceNo"));
+                            map.put("inShipAmount", fence.get("inShipAmount"));
                             map.put("fenceLevel", fence.get("fenceLevel"));
 
 //                            map.put("city",fence.getString("city"));
@@ -211,7 +215,7 @@ public class FenceActivity extends AppCompatActivity {
                     toast.show();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    toast.setText("获取失败");
+                    toast.setText("解析失败");
                     toast.show();
                 }
 

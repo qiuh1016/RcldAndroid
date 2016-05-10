@@ -342,6 +342,7 @@ public class PunchActivity extends AppCompatActivity {
             .setAnimationSpeed(1)
             .setDimAmount(0.3f)
             .setSize(110, 110)
+            .setCancellable(false)
             .show();
 
         uploadOKList = new ArrayList<>();

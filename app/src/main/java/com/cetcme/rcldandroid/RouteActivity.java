@@ -137,6 +137,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                             .setAnimationSpeed(1)
                             .setDimAmount(0.3f)
                             .setSize(110, 110)
+                            .setCancellable(false)
                             .show();
                     getRouteData();
                 }

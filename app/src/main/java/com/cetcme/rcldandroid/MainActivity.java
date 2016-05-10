@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setAnimationSpeed(1)
                         .setDimAmount(0.3f)
                         .setSize(110, 110)
+                        .setCancellable(false)
                         .show();
                 login(shipName, password);
                 break;
@@ -280,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         finish();
 
                     }
-                }, 500);
+                }, 300);
             }
 
             @Override
@@ -312,12 +313,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor.apply();
     }
 
-    //TODO: kprogress 按返回键的情况
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //client.cancelAllRequests(true);
-//        client.cancelRequests(getApplicationContext(), true);
-//        Log.i("******************main", "123");
-    }
 }

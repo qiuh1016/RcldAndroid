@@ -89,6 +89,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
                 .setLabel("修改中")
                 .setAnimationSpeed(1)
                 .setDimAmount(0.3f)
+                .setCancellable(false)
                 .setSize(110, 110);
 
     }

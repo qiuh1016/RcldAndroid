@@ -62,10 +62,15 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             JSONArray data = myShipInfoJSON.getJSONArray("data");
             JSONObject data0 = data.getJSONObject(0);
             String ownerName = data0.getString("ownerName");
-            welcomeTextView.setText(ownerName + "，欢迎您使用本软件！");
+            if (ownerName.isEmpty()) {
+                welcomeTextView.setText("欢迎使用本软件！");
+            } else {
+                welcomeTextView.setText(ownerName + "，欢迎使用本软件！");
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
-            welcomeTextView.setText("欢迎您使用本软件！");
+            welcomeTextView.setText("欢迎使用本软件！");
         }
 
     }
@@ -112,7 +117,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    void logout() {
+    private void logout() {
         Intent loginIntent = new Intent();
         loginIntent.setClass(getApplicationContext(), MainActivity.class);
         startActivity(loginIntent);
@@ -120,7 +125,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
-    protected void logoutDialog() {
+    private void logoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
         builder.setIcon(R.mipmap.ic_launcher);
         builder.setMessage("是否继续?");
@@ -149,7 +154,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         builder.create().show();
     }
 
-    protected void finishDialog() {
+    private void finishDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
         builder.setIcon(R.mipmap.ic_launcher);
         builder.setMessage("是否继续?");
