@@ -104,7 +104,10 @@ public class PunchActivity extends AppCompatActivity {
                 addIntent.setClass(getApplicationContext(), ReasonActivity.class);
                 addIntent.putExtras(bundle);
                 startActivity(addIntent);
-//                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+//                overridePendingTransition(R.anim.zoom_in,R.anim.zoom_out);
+
+//                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                 return false;
             }
         });
@@ -115,11 +118,15 @@ public class PunchActivity extends AppCompatActivity {
 
                 String punchInfo = "";
                 for (Map<String, Object> map: dataList) {
-                    punchInfo += "姓名：" + map.get("name") + "，身份证：" + map.get("id") + "\n";
+                    punchInfo += "姓    名：" + map.get("name") + ",\n身份证：" + map.get("id") + ";\n";
                 }
+
+                punchInfo = punchInfo.substring(0,punchInfo.length() - 2);
+                punchInfo += ".";
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(PunchActivity.this);
                 builder.setMessage(punchInfo);
-                builder.setTitle("确认上传");
+                builder.setTitle("共" + dataList.size() + "人,确认上传?");
                 builder.setNegativeButton("取消", null);
                 builder.setPositiveButton("好的", new DialogInterface.OnClickListener() {
                     @Override
@@ -203,7 +210,7 @@ public class PunchActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();//日历对象
         calendar.setTime(endDate);//设置当前日期
         //TODO:完成后改回小时减5
-        calendar.add(Calendar.YEAR, -5);//小时减5
+        calendar.add(Calendar.HOUR, -5);//小时减5
         String startTime = df.format(calendar.getTime());//输出格式化的日期
 
         //设置输入参数
@@ -270,7 +277,7 @@ public class PunchActivity extends AppCompatActivity {
         return dataList;
     }
 
-    protected void dialog(final Map<String,Object> map, final int position) {
+    private void dialog(final Map<String,Object> map, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(PunchActivity.this);
         builder.setMessage(
                 "姓名：" + map.get("name") + "\n" +

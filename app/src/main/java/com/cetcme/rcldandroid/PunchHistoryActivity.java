@@ -105,8 +105,6 @@ public class PunchHistoryActivity extends AppCompatActivity {
         });
     }
 
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -177,6 +175,13 @@ public class PunchHistoryActivity extends AppCompatActivity {
                         if (isRefresh) {
                             sum = response.getInt("total");  //获取总数
                             totalPage = sum / pageSize + 1;
+
+                            //如果只有1页
+                            if (totalPage == 1) {
+                                listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                            } else {
+                                listView.setMode(PullToRefreshBase.Mode.BOTH);
+                            }
                         } else {
                             //加载的时候检测总数是否变化 如变化 重新刷新
                             int sumToget = response.getInt("total");

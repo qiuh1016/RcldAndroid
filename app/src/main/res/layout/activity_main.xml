@@ -15,7 +15,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/loginTitle"
         android:id="@+id/textView"
-        android:textSize="26dp"
+        android:textSize="25sp"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/relativeLayout2"
         android:layout_marginBottom="30dp" />
@@ -23,7 +23,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Auto Fill"
+        android:text="Fill"
         android:id="@+id/autofillButton"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -57,7 +57,7 @@
             android:id="@+id/textView8"
             android:textColor="#ffffff"
             android:background="#3562bd"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -106,7 +106,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -121,7 +122,8 @@
             android:layout_alignParentStart="true"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:textSize="16sp" />
 
         <Button
             android:layout_width="wrap_content"
@@ -130,7 +132,7 @@
             android:id="@+id/loginButton"
             android:textColor="#ffffff"
             android:background="#3562bd"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:layout_below="@+id/savePasswordCheckBox"
             android:layout_alignLeft="@+id/savePasswordCheckBox"
             android:layout_alignStart="@+id/savePasswordCheckBox"
@@ -150,7 +152,8 @@
             android:textColor="#797979"
             android:checked="false"
             android:layout_alignRight="@+id/passwordEditText"
-            android:layout_alignEnd="@+id/passwordEditText" />
+            android:layout_alignEnd="@+id/passwordEditText"
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
@@ -163,6 +166,6 @@
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:textSize="12dp" />
+        android:textSize="10dp" />
 
 </RelativeLayout>

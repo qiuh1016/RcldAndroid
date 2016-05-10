@@ -457,8 +457,8 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         antiThiefPolygonOption = new CircleOptions()
                 .center(latLng)
                 .radius(Integer.parseInt(antiThiefRadius) * 1852)
-                .stroke(new Stroke(3, 0xAA167CF3))
-                .fillColor(0x552884EF);
+                .stroke(new Stroke(2, 0x77167CF3))
+                .fillColor(0x222884EF);
         //在地图上添加多边形Option，用于显示
         if (antiThiefIsOpen) {
             baiduMap.addOverlay(antiThiefPolygonOption);

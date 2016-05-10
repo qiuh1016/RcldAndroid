@@ -8,6 +8,19 @@ import org.liquidplayer.webkit.javascriptcore.JSValue;
  */
 public class PrivateEncode {
 
+
+    public Boolean isCard(String text)
+    {
+        String reg15 = "^[1-9]\\d{7}((0\\[1-9])|(1[0-2]))(([0\\[1-9]|1\\d|2\\d])|3[0-1])\\d{2}([0-9]|x|X){1}$";
+//        String reg18 = "^[1-9]\\d{5}[1-9]\\d{3}((0\\[1-9]))|((1[0-2]))(([0\\[1-9]|1\\d|2\\d])|3[0-1])\\d{3}([0-9]|x|X){1}$";
+        String reg18 = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$";
+//        if (text.matches(reg15) || text.matches(reg18)) {
+        if (text.matches(reg18)) {
+            return true;
+        }
+        return false;
+    }
+
     public Boolean ipCheck(String text) {
         if (text != null && !text.isEmpty()) {
             // 定义正则表达式

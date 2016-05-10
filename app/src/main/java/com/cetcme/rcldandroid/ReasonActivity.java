@@ -50,6 +50,13 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
         addButton.setOnClickListener(this);
         fillButton.setOnClickListener(this);
 
+        SharedPreferences user = getSharedPreferences("user", 0);
+        if (user.getBoolean("debugMode", false)) {
+            fillButton.setVisibility(View.VISIBLE);
+        } else {
+            fillButton.setVisibility(View.INVISIBLE);
+        }
+
         //文本改变监听
         nameTextView.addTextChangedListener(textChangeWatcher);
         idTextView.addTextChangedListener(textChangeWatcher);
@@ -64,8 +71,10 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
 
     public void onBackPressed() {
         super.onBackPressed();
-//        overridePendingTransition(R.anim.push_right_in_no_alpha,
-//                R.anim.push_right_out_no_alpha);
+//        overridePendingTransition(R.anim.zoom_in_back,R.anim.zoom_out_back);
+//        overridePendingTransition(R.anim.zoom_out,R.anim.zoom_in);
+        //        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        overridePendingTransition(R.anim.push_right_in_no_alpha,R.anim.push_right_out_no_alpha);
     }
 
     @Override
@@ -90,9 +99,9 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
                 //TODO: 身份证 正确
-                if (id.length() > 18) {
+                if (id.length() != 18 /*&& new PrivateEncode().isCard(id)*/) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReasonActivity.this);
-                    builder.setMessage("身份证长度错误");
+                    builder.setMessage("身份证错误");
                     builder.setTitle("错误");
                     builder.setPositiveButton("OK", null);
                     builder.create().show();

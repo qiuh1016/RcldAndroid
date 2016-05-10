@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button closeButton;
     private CheckBox savePasswordCheckBox;
 
+    private Button fillButton;
+
     private JSONObject myShipInfo;
     private KProgressHUD kProgressHUD;
 
@@ -94,8 +96,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-        Button autofillButton = (Button) findViewById(R.id.autofillButton);
-        autofillButton.setOnClickListener(this);
+        fillButton = (Button) findViewById(R.id.autofillButton);
+        fillButton.setOnClickListener(this);
+        if (user.getBoolean("debugMode", false)) {
+            fillButton.setVisibility(View.VISIBLE);
+        } else {
+            fillButton.setVisibility(View.INVISIBLE);
+        }
+
 
     }
 
@@ -108,13 +116,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String password = passwordEditText.getText().toString();
 
 
+                SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = user.edit();
+
                 //设置
                 if (shipName.equals("setserverip") && !password.equals("")) {
                     //setServerIP
                     Boolean isIP =  new PrivateEncode().ipCheck(password);
                     if (isIP) {
-                        SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = user.edit();
                         editor.putString("serverIP", password);
                         editor.apply();
                         Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + password, LENGTH_SHORT).show();
@@ -124,28 +133,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 } else if (shipName.equals("showserverip")) {
                     //showserverip
-                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
                     String serverIP = user.getString("serverIP", "120.27.149.252");
                     Toast.makeText(getApplicationContext(), "当前服务器IP：" + serverIP, LENGTH_SHORT).show();
                     return;
                 } else if (shipName.equals("setserveripdefault")) {
                     //setServerIP
-                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = user.edit();
                     editor.putString("serverIP", "120.27.149.252");
                     editor.apply();
                     Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "120.27.149.252", LENGTH_SHORT).show();
                     return;
                 }  else if (shipName.equals("setserveripdefault2")) {
                     //setServerIP2
-                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = user.edit();
                     editor.putString("serverIP", "114.55.101.20");
                     editor.apply();
                     Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "114.55.101.20", LENGTH_SHORT).show();
                     return;  //114.55.101.20
+                } else if (shipName.equals("debugmodeon") && password.equals("admin")) {
+                    //debug mode on 显示fill button
+                    editor.putBoolean("debugMode", true);
+                    editor.apply();
+                    Toast.makeText(getApplicationContext(), "Debug Mode: ON", LENGTH_SHORT).show();
+                    fillButton.setVisibility(View.VISIBLE);
+                    return;
+                } else if (shipName.equals("debugmodeoff") && password.equals("admin")) {
+                    //debug mode off 不显示fill button
+                    editor.putBoolean("debugMode", false);
+                    editor.apply();
+                    Toast.makeText(getApplicationContext(), "Debug Mode: OFF", LENGTH_SHORT).show();
+                    fillButton.setVisibility(View.INVISIBLE);
+                    return;
                 }
-
 
                 //登录
                 loginButton.setEnabled(false);

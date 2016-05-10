@@ -85,6 +85,20 @@ public class RouteDisplayActivity extends AppCompatActivity {
             //如果只有一个点 画标注 多于一个点 则画轨迹
             if (latLngs.size() == 1) {
 
+                MapStatus mapStatus = new MapStatus.Builder().target(latLngs.get(0)).zoom(14) //15
+                        .build();
+                MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
+                        .newMapStatus(mapStatus);
+                baiduMap.setMapStatus(mapStatusUpdate);
+
+                BitmapDescriptor endBitmap = BitmapDescriptorFactory
+                        .fromResource(R.drawable.routeendiconsmall);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions endMaker = new MarkerOptions()
+                        .position(latLngs.get(0))
+                        .icon(endBitmap);
+                baiduMap.addOverlay(endMaker);
+
             } else {
                 drawRoute(latLngs);
             }
@@ -118,7 +132,6 @@ public class RouteDisplayActivity extends AppCompatActivity {
         List<Integer> colors = new ArrayList<>();
         colors.add(0xAA167CF3);
 
-
         OverlayOptions ooPolyline = new PolylineOptions()
                 .points(points)
                 .width(5)
@@ -137,9 +150,9 @@ public class RouteDisplayActivity extends AppCompatActivity {
         //起点终点标注
         //构建Marker图标
         BitmapDescriptor startBitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.routestarticon);
+                .fromResource(R.drawable.routestarticonsmall);
         BitmapDescriptor endBitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.routeendicon);
+                .fromResource(R.drawable.routeendiconsmall);
         //构建MarkerOption，用于在地图上添加Marker
         OverlayOptions startMaker = new MarkerOptions()
                 .position(latLngs.get(0))

@@ -40,7 +40,6 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
     LatLng companyLatlng = new LatLng(29.891853,121.64414);
 
-    //TODO: help View
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

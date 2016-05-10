@@ -27,7 +27,7 @@
             android:background="@drawable/myshipbutton"
             android:contextClickable="false"
             android:textColor="#ffffff"
-            android:textSize="17dp"
+            android:textSize="16sp"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="false"
@@ -42,7 +42,7 @@
             android:background="@drawable/fencebutton"
             android:contextClickable="false"
             android:textColor="#ffffff"
-            android:textSize="17dp"
+            android:textSize="16sp"
             android:layout_alignTop="@+id/myShipButton"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="false"
@@ -57,7 +57,7 @@
             android:background="@drawable/routebutton"
             android:contextClickable="false"
             android:textColor="#ffffff"
-            android:textSize="17dp"
+            android:textSize="16sp"
             android:layout_below="@+id/myShipButton"
             android:layout_alignLeft="@+id/myShipButton"
             android:layout_alignStart="@+id/myShipButton" />
@@ -70,7 +70,7 @@
             android:background="@drawable/helpbutton"
             android:contextClickable="false"
             android:textColor="#ffffff"
-            android:textSize="17dp"
+            android:textSize="16sp"
             android:layout_alignTop="@+id/routeButton"
             android:layout_alignLeft="@+id/fenceButton"
             android:layout_alignStart="@+id/fenceButton" />
@@ -83,6 +83,7 @@
             android:id="@+id/welcomeTextView"
             android:layout_alignParentTop="false"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="40dp" />
+            android:layout_marginBottom="40dp"
+            android:textSize="16sp" />
     </RelativeLayout>
 </RelativeLayout>

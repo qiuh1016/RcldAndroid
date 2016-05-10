@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -38,22 +40,27 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class FenceActivity extends AppCompatActivity {
 
-    private ListView fenceListView;
+    private PullToRefreshListView fenceListView;
     private SimpleAdapter simpleAdapter;
     private List<Map<String, Object>> dataList = new ArrayList<>();
     private KProgressHUD kProgressHUD;
 
     private Toast toast;
-    Boolean refreshEnable = true;
+//    Boolean refreshEnable = true;
+    Boolean isFirstTimeToGet = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fence);
-        fenceListView = (ListView) findViewById(R.id.fenceListView);
 
         setTitle("港口信息");
         toast = Toast.makeText(FenceActivity.this, "获取成功!", LENGTH_SHORT);
+
+        fenceListView = (PullToRefreshListView) findViewById(R.id.fenceListView);
+        fenceListView.getLoadingLayoutProxy(true,false).setRefreshingLabel("刷新中");
+        fenceListView.getLoadingLayoutProxy(true,false).setReleaseLabel("松开立即刷新");
+        fenceListView.getLoadingLayoutProxy(true,false).setPullLabel("下拉可以刷新");
 
         simpleAdapter = new SimpleAdapter(this, getFenceData(), R.layout.fencelistview,
                 new String[]{"fenceName", "berthAmount", "fenceNo", "inShipAmount", "fenceLevel"},
@@ -64,12 +71,19 @@ public class FenceActivity extends AppCompatActivity {
                         R.id.shipNumberTextViewInFenceListView,
                         R.id.fenceTypeTextViewInFenceListView});
 
-//        simpleAdapter = new SimpleAdapter(this, getFenceData(), R.layout.fencelistviewsingleline,
-//                new String[]{"fenceName", "bowei"},
-//                new int[]{R.id.fenceNameTextViewInFenceListViewSingleLine,
-//                        R.id.boweiTextViewInFenceListViewSingleLine});
-
         fenceListView.setAdapter(simpleAdapter);
+
+        fenceListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getFenceData();
+                    }
+                },1000);
+            }
+        });
 
         fenceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -90,29 +104,28 @@ public class FenceActivity extends AppCompatActivity {
 
     //TODO: 点击扩展Cell 显示详细内容
     //TODO: 点击显示港口地图
-    //TODO: 下拉刷新
 
     //TODO: 泊位api更改 拿到下面一栏
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        MenuItem setting = menu.add(0, 0, 0, "刷新");
-        setting.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        setting.setIcon(R.drawable.refresh1);
-        setting.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                //toast结束之前 不许刷新
-                if (refreshEnable) {
-                    getFenceData();
-                }
-                return false;
-            }
-        });
-
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        super.onCreateOptionsMenu(menu);
+//
+//        MenuItem setting = menu.add(0, 0, 0, "刷新");
+//        setting.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        setting.setIcon(R.drawable.refresh1);
+//        setting.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//                //toast结束之前 不许刷新
+//                if (refreshEnable) {
+//                    getFenceData();
+//                }
+//                return false;
+//            }
+//        });
+//
+//        return true;
+//    }
 
     void ReadSharedPreferences(){
         String strName,strPassword;
@@ -132,15 +145,18 @@ public class FenceActivity extends AppCompatActivity {
     private List<Map<String, Object>> getFenceData() {
 
         toast.cancel();
-        refreshEnable = false;
-        kProgressHUD = KProgressHUD.create(FenceActivity.this)
-                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setLabel("获取中")
-                .setAnimationSpeed(1)
-                .setDimAmount(0.3f)
-                .setSize(110, 110)
-                .setCancellable(false)
-                .show();
+//        refreshEnable = false;
+        if (isFirstTimeToGet) {
+            kProgressHUD = KProgressHUD.create(FenceActivity.this)
+                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                    .setLabel("获取中")
+                    .setAnimationSpeed(1)
+                    .setDimAmount(0.3f)
+                    .setSize(110, 110)
+                    .setCancellable(false)
+                    .show();
+        }
+
 
         final String shipNumber,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
@@ -219,25 +235,34 @@ public class FenceActivity extends AppCompatActivity {
                     toast.show();
                 }
 
-                new Handler().postDelayed(new Runnable(){
-                    public void run() {
-                        kProgressHUD.dismiss();
-                    }
-                }, 300);
+                if (isFirstTimeToGet) {
+                    new Handler().postDelayed(new Runnable(){
+                        public void run() {
+                            kProgressHUD.dismiss();
+                        }
+                    }, 300);
+                    isFirstTimeToGet = false;
+                }
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshEnable = true;
-                    }
-                }, 2000);
+                fenceListView.onRefreshComplete();
+
+
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        refreshEnable = true;
+//                    }
+//                }, 2000);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                kProgressHUD.dismiss();
+                if (isFirstTimeToGet) {
+                    kProgressHUD.dismiss();
+                }
                 toast.setText("网络连接失败");
                 toast.show();
+                fenceListView.onRefreshComplete();
             }
         });
 

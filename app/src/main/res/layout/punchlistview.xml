@@ -16,7 +16,8 @@
             android:id="@+id/nameTextViewInPunchListView"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp" />
+            android:layout_marginBottom="15dp"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,7 +28,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp" />
+            android:layout_marginTop="15dp"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +41,8 @@
             android:layout_alignLeft="@+id/nameTextViewInPunchListView"
             android:layout_alignStart="@+id/nameTextViewInPunchListView"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp" />
+            android:layout_marginBottom="15dp"
+            android:textSize="13sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -51,7 +54,8 @@
             android:layout_alignRight="@+id/idTextViewInPunchListView"
             android:layout_alignEnd="@+id/idTextViewInPunchListView"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp" />
+            android:layout_marginBottom="15dp"
+            android:textSize="13sp" />
 
     </RelativeLayout>
 

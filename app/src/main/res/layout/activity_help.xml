@@ -28,11 +28,12 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="0dp"
             android:textColor="#000000"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="中电科（宁波）海洋电子研究院有限公司"
             android:id="@+id/textView20"
@@ -42,8 +43,10 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="0dp"
-            android:gravity="center_vertical" />
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:layout_marginBottom="2dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -55,11 +58,12 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textColor="#000000"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="0574-55712322"
             android:id="@+id/telTextViewInHelpActivity"
@@ -71,7 +75,10 @@
             android:layout_marginLeft="20dp"
             android:clickable="true"
             android:textColor="#3050ad"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -83,11 +90,12 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textColor="#000000"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="王先生"
             android:id="@+id/textView23"
@@ -96,7 +104,10 @@
             android:layout_alignStart="@+id/telTextViewInHelpActivity"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -108,11 +119,12 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textColor="#000000"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="宁波高新区扬帆路999弄研发园A区17楼"
             android:id="@+id/addressTextViewInHelpActivity"
@@ -121,9 +133,11 @@
             android:layout_alignStart="@+id/textView23"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="12dp"
             android:gravity="center_vertical"
-            android:clickable="true" />
+            android:clickable="true"
+            android:textSize="16sp"
+            android:layout_marginTop="2dp" />
     </RelativeLayout>
 
     <com.baidu.mapapi.map.MapView
