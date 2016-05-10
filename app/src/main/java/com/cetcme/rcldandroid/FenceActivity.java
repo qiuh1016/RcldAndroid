@@ -88,15 +88,15 @@ public class FenceActivity extends AppCompatActivity {
         fenceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Map<String, Object> map = dataList.get(i);
-//                String fenceName = (String) map.get("fenceName");
-//                String city = (String) map.get("city");
-//                String country = (String) map.get("country");
-//                String fenceAddr = (String) map.get("fenceAddr");
-//                String fenceTypeName = (String) map.get("fenceTypeName");
-//                int fenceType = (int) map.get("fenceType");
-//
-//                fenceInfodialog(fenceName, city, country, fenceAddr, fenceType, fenceTypeName);
+                Map<String, Object> map = dataList.get(i-1);
+                String fenceName = (String) map.get("fenceName");
+                String city = (String) map.get("city");
+                String country = (String) map.get("country");
+                String fenceAddr = (String) map.get("fenceAddr");
+                String fenceTypeName = (String) map.get("fenceTypeName");
+                int fenceType = (int) map.get("fenceType");
+
+                fenceInfodialog(fenceName, city, country, fenceAddr, fenceType, fenceTypeName);
             }
         });
 
@@ -145,7 +145,6 @@ public class FenceActivity extends AppCompatActivity {
     private List<Map<String, Object>> getFenceData() {
 
         toast.cancel();
-//        refreshEnable = false;
         if (isFirstTimeToGet) {
             kProgressHUD = KProgressHUD.create(FenceActivity.this)
                     .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -202,25 +201,65 @@ public class FenceActivity extends AppCompatActivity {
                             JSONObject fence = (JSONObject) dataArray.get(i);
                             Map<String, Object> map = new Hashtable<>();
 
-                            map.put("fenceName", fence.get("fenceName"));
+                            try {
+                                map.put("fenceName", fence.get("fenceName"));
+                            } catch (JSONException e) {
+                                map.put("fenceName", "无");
+                            }
 
                             try {
                                 map.put("berthAmount", "泊位：" + fence.getString("berthAmount"));
                             } catch (JSONException e) {
                                 map.put("berthAmount", "泊位：无");
-                                Log.i("Main",fence.get("fenceName").toString() + " : 无berthAmount");
                             }
 
+                            try {
+                                map.put("fenceNo", fence.get("fenceNo"));
+                            } catch (JSONException e) {
+                                map.put("fenceNo","无");
+                            }
 
-                            map.put("fenceNo", fence.get("fenceNo"));
-                            map.put("inShipAmount", fence.get("inShipAmount"));
-                            map.put("fenceLevel", fence.get("fenceLevel"));
+                            try {
+                                map.put("inShipAmount", fence.get("inShipAmount"));
+                            } catch (JSONException e) {
+                                map.put("inShipAmount",0);
+                            }
 
-//                            map.put("city",fence.getString("city"));
-//                            map.put("country",fence.getString("country"));
-//                            map.put("fenceAddr",fence.getString("fenceAddr"));
-//                            map.put("fenceType",fence.getInt("fenceType"));
-//                            map.put("fenceTypeName",fence.getString("fenceTypeName"));
+                            try {
+                                map.put("fenceLevel", fence.get("fenceLevel"));
+                            } catch (JSONException e) {
+                                map.put("fenceLevel","无");
+                            }
+
+                            try {
+                                map.put("city",fence.getString("city"));
+                            } catch (JSONException e) {
+                                map.put("city","无");
+                            }
+
+                            try {
+                                map.put("country",fence.getString("country"));
+                            } catch (JSONException e) {
+                                map.put("country","无");
+                            }
+
+                            try {
+                                map.put("fenceAddr",fence.getString("fenceAddr"));
+                            } catch (JSONException e) {
+                                map.put("fenceAddr","无");
+                            }
+
+                            try {
+                                map.put("fenceType",fence.getInt("fenceType"));
+                            } catch (JSONException e) {
+                                map.put("fenceType","无");
+                            }
+
+                            try {
+                                map.put("fenceTypeName",fence.getString("fenceTypeName"));
+                            } catch (JSONException e) {
+                                map.put("fenceTypeName","无");
+                            }
 
                             dataList.add(map);
                         }
@@ -246,13 +285,6 @@ public class FenceActivity extends AppCompatActivity {
 
                 fenceListView.onRefreshComplete();
 
-
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        refreshEnable = true;
-//                    }
-//                }, 2000);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class PunchActivity extends AppCompatActivity {
 
     ListView listView;
     SimpleAdapter simpleAdapter;
-    List<Map<String, Object>> dataList;
+    List<Map<String, Object>> dataList = new LinkedList<>();
     Toast toast;
     KProgressHUD kProgressHUD;
     int iofFlag;
@@ -115,6 +116,10 @@ public class PunchActivity extends AppCompatActivity {
         confirm.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+
+                if (dataList.isEmpty()) {
+                    return false;
+                }
 
                 String punchInfo = "";
                 for (Map<String, Object> map: dataList) {
@@ -209,7 +214,7 @@ public class PunchActivity extends AppCompatActivity {
         String endTime = df.format(endDate);
         Calendar calendar = Calendar.getInstance();//日历对象
         calendar.setTime(endDate);//设置当前日期
-        //TODO:完成后改回小时减5
+        //
         calendar.add(Calendar.HOUR, -5);//小时减5
         String startTime = df.format(calendar.getTime());//输出格式化的日期
 

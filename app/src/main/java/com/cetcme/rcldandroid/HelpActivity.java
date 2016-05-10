@@ -124,7 +124,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
                 //用intent启动拨打电话
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:0574-55712322"));
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
+                    // Consider calling
                     //    ActivityCompat#requestPermissions
                     // here to request the missing permissions, and then overriding
                     //   public void onRequestPermissionsResult(int requestCode, String[] permissions,

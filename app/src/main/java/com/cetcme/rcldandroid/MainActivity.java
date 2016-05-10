@@ -2,12 +2,14 @@ package com.cetcme.rcldandroid;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,13 +44,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button closeButton;
     private CheckBox savePasswordCheckBox;
 
-    private Button fillButton;
-
     private JSONObject myShipInfo;
     private KProgressHUD kProgressHUD;
 
     AsyncHttpClient client;
     Boolean savePassword;
+
+    //debug button
+    private Button ipButton;
+    private Button ip1Button;
+    private Button ip2Button;
+    private Button fillButton;
+    private Button nullButton;
+    private Button quitButton;
+
+    Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         client = new AsyncHttpClient();
+        toast = Toast.makeText(getApplicationContext(),"",LENGTH_SHORT);
 
         shipNumberEditText = (EditText) findViewById(R.id.shipNumberEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
@@ -96,71 +107,113 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
+        //debug
+        ipButton = (Button) findViewById(R.id.ipButton);
+        ip1Button = (Button) findViewById(R.id.ip1Button);
+        ip2Button = (Button) findViewById(R.id.ip2Button);
         fillButton = (Button) findViewById(R.id.autofillButton);
+        nullButton = (Button) findViewById(R.id.nullButton);
+        quitButton = (Button) findViewById(R.id.quitButton);
+
+        ipButton.setOnClickListener(this);
+        ip1Button.setOnClickListener(this);
+        ip2Button.setOnClickListener(this);
         fillButton.setOnClickListener(this);
+        nullButton.setOnClickListener(this);
+        quitButton.setOnClickListener(this);
+
         if (user.getBoolean("debugMode", false)) {
-            fillButton.setVisibility(View.VISIBLE);
+            debugModeEnable(true);
         } else {
-            fillButton.setVisibility(View.INVISIBLE);
+            debugModeEnable(false);
         }
 
 
     }
 
+    private void debugModeEnable(Boolean enable) {
+        if (enable) {
+            ipButton.setVisibility(View.VISIBLE);
+            ip1Button.setVisibility(View.VISIBLE);
+            ip2Button.setVisibility(View.VISIBLE);
+            fillButton.setVisibility(View.VISIBLE);
+            nullButton.setVisibility(View.VISIBLE);
+            quitButton.setVisibility(View.VISIBLE);
+        } else {
+            ipButton.setVisibility(View.INVISIBLE);
+            ip1Button.setVisibility(View.INVISIBLE);
+            ip2Button.setVisibility(View.INVISIBLE);
+            fillButton.setVisibility(View.INVISIBLE);
+            nullButton.setVisibility(View.INVISIBLE);
+            quitButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Override
     public void onClick(View v) {
+
+        String shipName = shipNumberEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+
+        SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = user.edit();
         switch (v.getId()) {
             case R.id.loginButton:
 
-                String shipName = shipNumberEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-
-
-                SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = user.edit();
-
                 //设置
-                if (shipName.equals("setserverip") && !password.equals("")) {
-                    //setServerIP
-                    Boolean isIP =  new PrivateEncode().ipCheck(password);
-                    if (isIP) {
-                        editor.putString("serverIP", password);
-                        editor.apply();
-                        Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + password, LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "IP格式错误", LENGTH_SHORT).show();
-                    }
-                    return;
-                } else if (shipName.equals("showserverip")) {
-                    //showserverip
-                    String serverIP = user.getString("serverIP", "120.27.149.252");
-                    Toast.makeText(getApplicationContext(), "当前服务器IP：" + serverIP, LENGTH_SHORT).show();
-                    return;
-                } else if (shipName.equals("setserveripdefault")) {
-                    //setServerIP
-                    editor.putString("serverIP", "120.27.149.252");
-                    editor.apply();
-                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "120.27.149.252", LENGTH_SHORT).show();
-                    return;
-                }  else if (shipName.equals("setserveripdefault2")) {
-                    //setServerIP2
-                    editor.putString("serverIP", "114.55.101.20");
-                    editor.apply();
-                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "114.55.101.20", LENGTH_SHORT).show();
-                    return;  //114.55.101.20
-                } else if (shipName.equals("debugmodeon") && password.equals("admin")) {
+//                if (shipName.equals("setserverip") && !password.equals("")) {
+//                    //setServerIP
+//                    Boolean isIP =  new PrivateEncode().ipCheck(password);
+//                    if (isIP) {
+//                        editor.putString("serverIP", password);
+//                        editor.apply();
+//                        Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + password, LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(getApplicationContext(), "IP格式错误", LENGTH_SHORT).show();
+//                    }
+//                    return;
+//                } else if (shipName.equals("showserverip")) {
+//                    //showserverip
+//                    String serverIP = user.getString("serverIP", "120.27.149.252");
+//                    Toast.makeText(getApplicationContext(), "当前服务器IP：" + serverIP, LENGTH_SHORT).show();
+//                    return;
+//                } else if (shipName.equals("setserveripdefault")) {
+//                    //setServerIP
+//                    editor.putString("serverIP", "120.27.149.252");
+//                    editor.apply();
+//                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "120.27.149.252", LENGTH_SHORT).show();
+//                    return;
+//                }  else if (shipName.equals("setserveripdefault2")) {
+//                    //setServerIP2
+//                    editor.putString("serverIP", "114.55.101.20");
+//                    editor.apply();
+//                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "114.55.101.20", LENGTH_SHORT).show();
+//                    return;  //114.55.101.20
+//                } else if (shipName.equals("debugmodeon") && password.equals("admin")) {
+//                    //debug mode on 显示fill button
+//                    editor.putBoolean("debugMode", true);
+//                    editor.apply();
+//                    Toast.makeText(getApplicationContext(), "Debug Mode: ON", LENGTH_SHORT).show();
+//                    debugModeEnable(true);
+//                    return;
+//                } else if (shipName.equals("debugmodeoff") && password.equals("admin")) {
+//                    //debug mode off 不显示fill button
+//                    editor.putBoolean("debugMode", false);
+//                    editor.apply();
+//                    Toast.makeText(getApplicationContext(), "Debug Mode: OFF", LENGTH_SHORT).show();
+//                    fillButton.setVisibility(View.INVISIBLE);
+//                    return;
+//                }
+
+                //打开debug mode
+                if (shipName.equals("debugmodeon") && password.equals("admin")) {
                     //debug mode on 显示fill button
                     editor.putBoolean("debugMode", true);
                     editor.apply();
-                    Toast.makeText(getApplicationContext(), "Debug Mode: ON", LENGTH_SHORT).show();
-                    fillButton.setVisibility(View.VISIBLE);
-                    return;
-                } else if (shipName.equals("debugmodeoff") && password.equals("admin")) {
-                    //debug mode off 不显示fill button
-                    editor.putBoolean("debugMode", false);
-                    editor.apply();
-                    Toast.makeText(getApplicationContext(), "Debug Mode: OFF", LENGTH_SHORT).show();
-                    fillButton.setVisibility(View.INVISIBLE);
+                    toast.setText("Debug Mode: ON");
+                    toast.show();
+//                    Toast.makeText(getApplicationContext(), "Debug Mode: ON", LENGTH_SHORT).show();
+                    debugModeEnable(true);
                     return;
                 }
 
@@ -176,34 +229,80 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .show();
                 login(shipName, password);
                 break;
-            case R.id.autofillButton:
-                shipNumberEditText.setText("3304001987070210"); //3304001987070210   16040205  99999999
-                passwordEditText.setText("123"); //ICy5YqxZB1uWSwcVLSNLcA==
-//TODO: OKView
-//                ImageView imageView = new ImageView(MainActivity.this);
-//                imageView.setImageResource(R.drawable.checkmark);
-////                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-////                params.height = 30;
-////                params.width = 30;
-////                imageView.setLayoutParams(params);
-//
-//
-//                final KProgressHUD textHud = KProgressHUD.create(MainActivity.this)
-//                        .setCustomView(imageView)
-//                        .setLabel("登录成功")
-//                        .setSize(110,110)
-//                        .show();
-//
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        textHud.dismiss();
-//                    }
-//                }, 1000);
-                break;
             case R.id.closeButton:
                 finish();
                 break;
+            case R.id.autofillButton:
+                shipNumberEditText.setText("3304001987070210"); //3304001987070210   16040205  99999999
+                passwordEditText.setText("123"); //ICy5YqxZB1uWSwcVLSNLcA==
+                break;
+            case R.id.ipButton:
+
+                final EditText editText = new EditText(MainActivity.this);
+                editText.setSingleLine();
+
+                new AlertDialog.Builder(MainActivity.this).setTitle("服务器IP")
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setView(editText)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String input = editText.getText().toString();
+                                Boolean ipCheck = new PrivateEncode().ipCheck(input);
+                                if (!ipCheck) {
+                                    toast.setText("IP地址格式错误");
+                                    toast.show();
+//                                    Toast.makeText(getApplicationContext(), "IP地址格式错误", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //操作
+                                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = user.edit();
+                                    editor.putString("serverIP", input);
+                                    editor.apply();
+                                    toast.setText("服务器IP修改成功：" + input);
+                                    toast.show();
+//                                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + input, LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+
+
+//                Toast.makeText(getApplicationContext(), "请在船号", LENGTH_SHORT).show();
+//                Boolean isIP =  new PrivateEncode().ipCheck(password);
+//                if (isIP) {
+//                    editor.putString("serverIP", password);
+//                    editor.apply();
+//                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + password, LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "IP格式错误", LENGTH_SHORT).show();
+//                }
+                break;
+            case R.id.ip1Button:
+                editor.putString("serverIP", "120.27.149.252");
+                editor.apply();
+                toast.setText("服务器IP修改成功：" + "120.27.149.252");
+                toast.show();
+//                Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "120.27.149.252", LENGTH_SHORT).show();
+                return;
+            case R.id.ip2Button:
+                editor.putString("serverIP", "114.55.101.20");
+                editor.apply();
+                toast.setText("服务器IP修改成功：" + "114.55.101.20");
+                toast.show();
+//                Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "114.55.101.20", LENGTH_SHORT).show();
+                return;
+            case R.id.nullButton:
+                break;
+            case R.id.quitButton:
+                editor.putBoolean("debugMode", false);
+                editor.apply();
+                toast.setText("Debug Mode: OFF");
+                toast.show();
+//                Toast.makeText(getApplicationContext(), "Debug Mode: OFF", LENGTH_SHORT).show();
+                debugModeEnable(false);
+                break;
+
         }
     }
 
@@ -231,7 +330,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String serverIP = user.getString("serverIP", "120.27.149.252");
         String urlBody = "http://"+serverIP+"/api/app/login.json";
 
-
         //TODO: json 解析 try 全部分开
         client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8") {
             @Override
@@ -250,7 +348,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Login Failed!", LENGTH_SHORT).show();
+                    toast.setText("Login Failed!");
+                    toast.show();
+//                    Toast.makeText(getApplicationContext(), "Login Failed!", LENGTH_SHORT).show();
                 }
                 kProgressHUD.dismiss();
                 loginButton.setEnabled(true);
@@ -261,7 +361,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 kProgressHUD.dismiss();
                 loginButton.setEnabled(true);
-                Toast.makeText(getApplicationContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
+                toast.setText("网络连接失败");
+                toast.show();
+//                Toast.makeText(getApplicationContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -283,7 +385,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 myShipInfo = response;
                 kProgressHUD.dismiss();
                 WriteSharedPreferences(shipNumber, password);
-                Toast.makeText(MainActivity.this, "登录成功!", LENGTH_SHORT).show();
+                toast.setText("登录成功!");
+                toast.show();
+//                Toast.makeText(MainActivity.this, "登录成功!", LENGTH_SHORT).show();
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
                         Bundle bundle = new Bundle();
@@ -306,7 +410,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 kProgressHUD.dismiss();
                 loginButton.setEnabled(true);
-                Toast.makeText(getApplicationContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
+                toast.setText("网络连接失败");
+                toast.show();
+//                Toast.makeText(getApplicationContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
             }
         });
     }
