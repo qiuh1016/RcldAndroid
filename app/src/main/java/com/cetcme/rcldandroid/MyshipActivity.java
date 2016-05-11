@@ -37,7 +37,7 @@ import cz.msebera.android.httpclient.Header;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class MyshipActivity extends AppCompatActivity implements View.OnClickListener{
+public class MyshipActivity extends AppCompatActivity implements View.OnClickListener, BaiduMap.OnMarkerClickListener{
 
     private JSONObject myShipInfoJSON;
 
@@ -62,6 +62,9 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
 
     Toast toast;
 
+    InfoWindow mInfoWindow;
+    boolean infoWindowIsShow = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         showShipLocationImageButton.setOnClickListener(this);
 
         baiduMap = mapView.getMap();
+        baiduMap.setOnMarkerClickListener(this);
 
         toast =  Toast.makeText(MyshipActivity.this, "", LENGTH_SHORT);
 
@@ -98,6 +102,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
             String shipNumber = data0.getString("shipNo");
             String ownerName = data0.getString("ownerName");
             String deviceNo = data0.getString("deviceNo");
+
             String ownerTelNo = data0.getString("ownerTelNo");
             Boolean offlineFlag = data0.getBoolean("offlineFlag");
 
@@ -122,7 +127,6 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
 
             String atFence;
             String onLine;
-
             try {
                 String fenceNo = data0.getString("fenceNo");
                 atFence = "是";
@@ -145,6 +149,8 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
             shipInfoString = shipName + "\n" +
                     "船东：" + ownerName + "\n" +
                     "电话：" + ownerTelNo + "\n" +
+                    "负责人：" + picName + "\n" +
+                    "电话：" + picTelNo + "\n" +
                     "终端序号：" + deviceNo + "\n" +
                     "是否在线：" + onLine + "\n" +
                     "是否在港：" + atFence + "\n" +
@@ -415,7 +421,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
 //        button.setBackgroundResource(R.drawable.mapinfoview);
         button.setBackgroundResource(R.drawable.boder);
 //        button.setBackgroundColor(0x88FFFFFF);
-        button.setTextSize(15);
+        button.setTextSize(13);
         button.setGravity(Gravity.CENTER);
         button.setPadding(20,20,20,20);
         button.setText(shipInfoString);
@@ -424,10 +430,11 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         //定义用于显示该InfoWindow的坐标点
 //        LatLng pt = new LatLng(Lat, Lng);
         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
-        InfoWindow mInfoWindow = new InfoWindow(button, point, -75);
+        mInfoWindow = new InfoWindow(button, point, -100);
 
         //显示InfoWindow
         baiduMap.showInfoWindow(mInfoWindow);
+        infoWindowIsShow = true;
 
     }
 
@@ -464,6 +471,17 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
             baiduMap.addOverlay(antiThiefPolygonOption);
         }
 
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (infoWindowIsShow) {
+            baiduMap.hideInfoWindow();
+        } else {
+            baiduMap.showInfoWindow(mInfoWindow);
+        }
+        infoWindowIsShow = !infoWindowIsShow;
+        return false;
     }
 
 

@@ -92,6 +92,7 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                         AlertDialog.Builder builder = new AlertDialog.Builder(ReasonActivity.this);
                         builder.setMessage("身份证有重复");
                         builder.setTitle("错误");
+                        builder.setIcon(android.R.drawable.ic_delete);
                         builder.setPositiveButton("OK", null);
                         builder.create().show();
                         return;
@@ -103,6 +104,7 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReasonActivity.this);
                     builder.setMessage("身份证错误");
                     builder.setTitle("错误");
+                    builder.setIcon(android.R.drawable.ic_delete);
                     builder.setPositiveButton("OK", null);
                     builder.create().show();
                     return;

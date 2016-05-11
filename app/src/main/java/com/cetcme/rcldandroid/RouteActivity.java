@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LongSparseArray;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JsResult;
@@ -57,9 +58,14 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     private String startTime;
     private String endTime;
+    private Date startDate;
+    private Date endDate;
+
     private String dataString;
 
-    List<LatLng> route;
+    private List<LatLng> route;
+
+    Boolean reducePointBySize = true;  //根据轨迹点数量 来减少距离较近的点
 
     private SlideDateTimeListener listener = new SlideDateTimeListener() {
 
@@ -71,14 +77,16 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             if (isStartTime) {
+                startDate = date;
                 startTime = df.format(date);
                 startTimePickButton.setText(startTime);
             } else {
+                endDate = date;
                 endTime = df.format(date);
                 endTimePickButton.setText(endTime);
             }
 
-            Log.i("Datetime",df.format(date));
+//            Log.i("Datetime",df.format(date));
         }
 
         @Override
@@ -120,32 +128,38 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
             case R.id.startTimePickButton:
                 isStartTime = true;
                 slideDateTimeListener.show();
-//                pickTime(startTimePickButton);
                 break;
             case R.id.endTimePickButton:
                 isStartTime = false;
                 slideDateTimeListener.show();
-//                pickTime(endTimePickButton);
                 break;
             case R.id.routeSearchButton:
                 if (startTime == null || endTime == null) {
-                    dialog();
+                    dialog("起始时间或结束时间不能为空！");
                 } else {
-                    kProgressHUD = KProgressHUD.create(RouteActivity.this)
-                            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                            .setLabel("查询中")
-                            .setAnimationSpeed(1)
-                            .setDimAmount(0.3f)
-                            .setSize(110, 110)
-                            .setCancellable(false)
-                            .show();
-                    getRouteData();
+                    //1天时间
+                    Long ms = endDate.getTime() - startDate.getTime();
+                    if (ms > 1000 * 3600 * 24) {
+                        dialog("时间差不能超过1天！");
+                    } else {
+                        kProgressHUD = KProgressHUD.create(RouteActivity.this)
+                                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                                .setLabel("查询中")
+                                .setAnimationSpeed(1)
+                                .setDimAmount(0.3f)
+                                .setSize(110, 110)
+                                .setCancellable(false)
+                                .show();
+                        getRouteData();
+                    }
                 }
+                break;
+            default:
                 break;
         }
     }
 
-    public void showDisplayIntent() {
+    private void showDisplayIntent() {
         Bundle bundle = new Bundle();
         bundle.putString("startTime", startTime);
         bundle.putString("endTime", endTime);
@@ -166,78 +180,79 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                 R.anim.push_right_out_no_alpha);
     }
 
-    protected void dialog() {
+    protected void dialog(String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(RouteActivity.this);
-        builder.setMessage("起始时间或结束时间不能为空！");
-        builder.setTitle("Error");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                Log.i("Main", "dialog dismiss ok");
-
-            }
-        });
+        builder.setIcon(android.R.drawable.ic_delete);
+        builder.setMessage(msg);
+        builder.setTitle("错误");
+        builder.setPositiveButton("OK", null);
         builder.create().show();
     }
 
     private void getRouteData() {
 
-        String shipNumber,password,serverIP;
+        String shipNumber,password,serverIP,deviceNo;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         shipNumber = user.getString("shipNumber","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
+        deviceNo = user.getString("deviceNo","");
 
         String startTimeURL = startTime.replace(" ", "%20");
         String endTimeURL = endTime.replace(" ", "%20");
 
+        //加密
+        String ps = new PrivateEncode().b64_md5(password);
+
+        //设置参数
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", new PrivateEncode().b64_md5(password));
+        params.put("password", ps);
+        params.put("deviceNo", deviceNo);
         params.put("startTime", startTimeURL);
         params.put("endTime", endTimeURL);
 
-        String ps = new PrivateEncode().b64_md5(password);
-
         String urlBody = "http://"+serverIP+"/api/app/trail/get.json";
-        String url = urlBody+"?userName=" + shipNumber +"&password="+ps+"&startTime="+startTimeURL+"&endTime=" + endTimeURL;
+        String url = urlBody+"?userName=" + shipNumber +"&password="+ps+"&deviceNo=" + deviceNo+"&startTime="+startTimeURL+"&endTime=" + endTimeURL;
         AsyncHttpClient client = new AsyncHttpClient();
 
         client.get(url, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-                Log.i("Main", response.toString());
+//                Log.i("Main", response.toString());
                 route = new ArrayList<>();
-
-                //TODO: 有问题
+                //TODO:
                 try {
                     String msg = response.getString("msg");
-                    Log.i("Main", msg);
-                    if (msg.equals("没有符合条件的数据")) {
-                        toast.setText("没有符合条件的数据");
-                        toast.show();
-                        kProgressHUD.dismiss();
-                    } else if (msg.equals("成功")) {
+
+                    if (msg.equals("成功")) {
                         JSONArray data = response.getJSONArray("data");
                         for (int i = 0; i < data.length(); i++) {
-                            JSONObject point = data.getJSONObject(i);
-                            Double lat = point.getDouble("latitude");
-                            Double lng = point.getDouble("longitude");
-                            LatLng latLng = new LatLng(lat,lng);
-                            route.add(latLng);
+                            try {
+                                JSONObject point = data.getJSONObject(i);
+                                Double lat = point.getDouble("latitude");
+                                Double lng = point.getDouble("longitude");
+                                LatLng latLng = new LatLng(lat,lng);
+                                route.add(latLng);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            dataString = response.toString();
                         }
                         Log.i("Main", "getRouteArray");
                         geoconv(route);
-//                        showDisplayIntent();
+                    } else {
+                        //显示失败信息
+                        toast.setText(msg);
+                        toast.show();
+                        kProgressHUD.dismiss();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     kProgressHUD.dismiss();
                     toast.setText("获取失败");
                     toast.show();
-
                 }
             }
 
@@ -252,34 +267,49 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    public void geoconv(List<LatLng> list) {
+    private void geoconv(List<LatLng> list) {
 
         String urlBody = "http://api.map.baidu.com/geoconv/v1/";
         String ak = "stfZ8nXV0rvMfTLuAAY9SX2AqgLGLuOQ";
         RequestParams params = new RequestParams();
         String coords = "";
+
+        int sum = list.size();
+
+//        Log.i("Main", list.toString());
+
+        //减少点
+        if (list.size() > 100 || true) {
+            list = reducePointByDistance(list);
+            Log.i("Main", sum + "--->" + list.size());
+        }
+
+        //把坐标array转成字符串
         for (LatLng latLng :list) {
             coords += latLng.longitude + "," + latLng.latitude + ";";
         }
         coords = coords.substring(0, coords.length() - 1); //去掉最后一个分号
+
+        //设置参数
         params.put("coords", coords);
         params.put("ak", ak);
 
         //TODO: 一次最多100个点
-        //TODO: 纠偏失败 显示原来的点
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-                Log.i("Main", response.toString());
+//                Log.i("Main", response.toString());
                 Integer status;
                 try {
                     status = response.getInt("status");
                     if (status == 0) {
                         dataString = response.toString();
-                        showDisplayIntent();
+                    } else {
+                        toast.setText("纠偏失败");
+                        toast.show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -287,16 +317,63 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                     toast.show();
                 }
                 kProgressHUD.dismiss();
-
+                showDisplayIntent();
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 kProgressHUD.dismiss();
-                toast.setText("纠偏失败");
+                toast.setText("纠偏服务器连接失败");
                 toast.show();
+                //纠偏失败时显示原来的轨迹
+                showDisplayIntent();
             }
         });
+    }
+
+    private List<LatLng> reducePointByDistance(List<LatLng> list) {
+        int pointNumber = list.size();
+
+        if (pointNumber <= 1) {
+            return list;
+        }
+
+        Double defaultDistance = 0.0;
+
+
+        if (reducePointBySize) {
+            if (pointNumber > 100 && pointNumber <= 200) {
+                defaultDistance = 10.0;
+            } else if (pointNumber > 200 && pointNumber <= 500) {
+                defaultDistance = 30.0;
+            } else if (pointNumber > 500) {
+                defaultDistance = 50.0;
+            }
+        }
+
+        Log.i("Main", "defaultDistance:"+defaultDistance.toString());
+
+        List<LatLng> noDuplicateList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if (i != 0 && i!= list.size() -1) {
+                Double lat1 = list.get(i).latitude;
+                Double lat2 = list.get(i - 1).latitude;
+                Double lng1 = list.get(i).longitude;
+                Double lng2 = list.get(i - 1).longitude;
+
+                Double distance = new PrivateEncode().GetDistance(lat1,lng1,lat2,lng2);
+
+                //去掉重复点
+                if (distance != 0.0 && distance > defaultDistance) {
+                    noDuplicateList.add(list.get(i));
+//                    Log.i("Main", distance.toString());
+                }
+
+            } else {
+                noDuplicateList.add(list.get(i)); //添加第一个和最后一个点
+            }
+        }
+        return noDuplicateList;
     }
 
 }

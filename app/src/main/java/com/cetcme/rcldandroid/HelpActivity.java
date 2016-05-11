@@ -27,11 +27,12 @@ import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 
-public class HelpActivity extends AppCompatActivity implements View.OnClickListener {
+public class HelpActivity extends AppCompatActivity implements View.OnClickListener , BaiduMap.OnMarkerClickListener{
 
     TextView telTextView;
     TextView addressTextView;
@@ -39,6 +40,9 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
     BaiduMap baiduMap;
 
     LatLng companyLatlng = new LatLng(29.891853,121.64414);
+
+    InfoWindow mInfoWindow;
+    boolean infoWindowIsShow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
         mapView = (MapView) findViewById(R.id.baiduMapInHelpActivity);
         baiduMap = mapView.getMap();
+        baiduMap.setOnMarkerClickListener(this);
 
 
 //        TextView location = new TextView(getApplicationContext());
@@ -142,17 +147,15 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void mapMark(LatLng latLng){
+    private void mapMark(LatLng point){
 
         //设置中心点 和显示范围
-        MapStatus mapStatus = new MapStatus.Builder().target(latLng).zoom(15) //15
+        MapStatus mapStatus = new MapStatus.Builder().target(point).zoom(15) //15
                 .build();
         MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                 .newMapStatus(mapStatus);
         baiduMap.setMapStatus(mapStatusUpdate);
 
-        //定义Maker坐标点
-        LatLng point = latLng;
         //构建Marker图标
         BitmapDescriptor bitmap = BitmapDescriptorFactory
                 .fromResource(R.drawable.mapmakericon);
@@ -165,16 +168,6 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //创建InfoWindow展示的view
-        Button button = new Button(getApplicationContext());
-//        button.setBackgroundResource(R.drawable.mapinfoview);
-        button.setBackgroundResource(R.drawable.boder);
-        button.setBackgroundColor(0x88FFFFFF);
-        button.setTextSize(15);
-        button.setGravity(Gravity.CENTER);
-        button.setPadding(20,20,20,20);
-        button.setText("中电科（宁波）海洋电子研究院有限公司");
-        button.setTextColor(0xFF7D7D7D);
-        button.setGravity(Gravity.CENTER);
 
         TextView textView = new TextView(getApplicationContext());
         textView.setBackgroundResource(R.drawable.boder);
@@ -185,17 +178,17 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         textView.setText("中电科（宁波）海洋电子研究院有限公司");
         textView.setTextColor(0xFF7D7D7D);
         textView.setGravity(Gravity.CENTER);
-        //定义用于显示该InfoWindow的坐标点
-//        LatLng pt = new LatLng(Lat, Lng);
+
         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
-        InfoWindow mInfoWindow = new InfoWindow(textView, point, -75);
+        mInfoWindow = new InfoWindow(textView, point, -100);
 
         //显示InfoWindow
         baiduMap.showInfoWindow(mInfoWindow);
+        infoWindowIsShow = true;
 
     }
 
-    boolean isShow = false;
+
 
     private void showInfoWindow() {
 
@@ -252,4 +245,14 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (infoWindowIsShow) {
+            baiduMap.hideInfoWindow();
+        } else {
+            baiduMap.showInfoWindow(mInfoWindow);
+        }
+        infoWindowIsShow = !infoWindowIsShow;
+        return false;
+    }
 }

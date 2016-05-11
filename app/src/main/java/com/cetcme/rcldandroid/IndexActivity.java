@@ -127,7 +127,8 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
     private void logoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
-        builder.setIcon(R.mipmap.ic_launcher);
+//        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setIcon(android.R.drawable.ic_menu_myplaces);
         builder.setMessage("是否继续?");
         builder.setTitle("即将退出登录");
         builder.setPositiveButton("是", new DialogInterface.OnClickListener() {

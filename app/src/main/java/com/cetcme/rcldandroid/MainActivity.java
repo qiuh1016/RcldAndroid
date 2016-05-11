@@ -29,6 +29,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             PackageInfo pi = pm.getPackageInfo(getApplicationContext().getPackageName(), 0);
             TextView versionNumber = (TextView) findViewById(R.id.versionTextViewInMainActivity);
-            versionNumber.setText("©2016 CETCME " + pi.versionName);
+            versionNumber.setText("©2016 CETCME V" + pi.versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -381,23 +382,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
                 Log.i("Main", response.toString());
-
                 myShipInfo = response;
-                kProgressHUD.dismiss();
+
+                //保存deviceNo 供轨迹查询
+                try {
+                    JSONArray data = response.getJSONArray("data");
+                    JSONObject data0 = data.getJSONObject(0);
+                    String deviceNo = data0.getString("deviceNo");
+
+                    //保存deviceNo
+                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = user.edit();
+                    editor.putString("deviceNo", deviceNo);
+                    editor.apply();
+                    Log.i("Main", "deviceNo saved:" + deviceNo);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 WriteSharedPreferences(shipNumber, password);
+
+                //指示器
+                kProgressHUD.dismiss();
                 toast.setText("登录成功!");
                 toast.show();
-//                Toast.makeText(MainActivity.this, "登录成功!", LENGTH_SHORT).show();
+
+                //页面切换
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
                         Bundle bundle = new Bundle();
                         bundle.putString("myShipInfo", myShipInfo.toString());
-
                         Intent indexIntent = new Intent();
                         indexIntent.setClass(getApplicationContext(), IndexActivity.class);
                         indexIntent.putExtras(bundle);
                         startActivity(indexIntent);
-                        //overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
                         overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                         finish();
 
@@ -412,7 +430,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 loginButton.setEnabled(true);
                 toast.setText("网络连接失败");
                 toast.show();
-//                Toast.makeText(getApplicationContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -422,10 +439,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         strName = user.getString("shipNumber", "");
         strPassword = user.getString("password", "");
-
+        //填充EditText
         shipNumberEditText.setText(strName);
         passwordEditText.setText(strPassword);
-
     }
 
     void WriteSharedPreferences(String strName, String strPassword) {
