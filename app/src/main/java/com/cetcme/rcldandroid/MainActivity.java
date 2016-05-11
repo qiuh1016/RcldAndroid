@@ -252,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 if (!ipCheck) {
                                     toast.setText("IP地址格式错误");
                                     toast.show();
-//                                    Toast.makeText(getApplicationContext(), "IP地址格式错误", Toast.LENGTH_SHORT).show();
                                 } else {
                                     //操作
                                     SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -261,37 +260,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     editor.apply();
                                     toast.setText("服务器IP修改成功：" + input);
                                     toast.show();
-//                                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + input, LENGTH_SHORT).show();
                                 }
                             }
                         })
                         .setNegativeButton("取消", null)
                         .show();
-
-
-//                Toast.makeText(getApplicationContext(), "请在船号", LENGTH_SHORT).show();
-//                Boolean isIP =  new PrivateEncode().ipCheck(password);
-//                if (isIP) {
-//                    editor.putString("serverIP", password);
-//                    editor.apply();
-//                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + password, LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "IP格式错误", LENGTH_SHORT).show();
-//                }
                 break;
             case R.id.ip1Button:
                 editor.putString("serverIP", "120.27.149.252");
                 editor.apply();
                 toast.setText("服务器IP修改成功：" + "120.27.149.252");
                 toast.show();
-//                Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "120.27.149.252", LENGTH_SHORT).show();
                 return;
             case R.id.ip2Button:
                 editor.putString("serverIP", "114.55.101.20");
                 editor.apply();
                 toast.setText("服务器IP修改成功：" + "114.55.101.20");
                 toast.show();
-//                Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "114.55.101.20", LENGTH_SHORT).show();
                 return;
             case R.id.nullButton:
                 break;
@@ -300,7 +285,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 editor.apply();
                 toast.setText("Debug Mode: OFF");
                 toast.show();
-//                Toast.makeText(getApplicationContext(), "Debug Mode: OFF", LENGTH_SHORT).show();
                 debugModeEnable(false);
                 break;
 

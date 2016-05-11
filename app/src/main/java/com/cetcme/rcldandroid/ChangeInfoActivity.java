@@ -163,7 +163,8 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
 
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", new PrivateEncode().b64_md5(password));
+        params.put("password", password);
+
         if (!toChangePicName.equals(originalPicName)) {
             params.put("picName", toChangePicName);
         }
@@ -171,10 +172,13 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
             params.put("picTelNo",toChangePicTelNo);
         }
 
+//        Log.i("Main",params.toString());
+
         String urlBody = "http://"+serverIP+"/api/app/ship/update.json";
         String url = urlBody + "?userName="+shipNumber+"&password="+password+"&picName="+toChangePicName+"&picTelNo="+toChangePicTelNo;
         AsyncHttpClient client = new AsyncHttpClient();
         //TODO: 拼接url问题
+        client.setURLEncodingEnabled(true);
         client.put(url, null, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

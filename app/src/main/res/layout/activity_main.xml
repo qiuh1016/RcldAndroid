@@ -66,7 +66,7 @@
 
         <EditText
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:id="@+id/shipNumberEditText"
             android:layout_below="@+id/textView2"
             android:layout_alignParentLeft="true"
@@ -76,11 +76,14 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:singleLine="true"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:background="@android:drawable/editbox_background_normal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
 
         <EditText
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:id="@+id/passwordEditText"
             android:layout_below="@+id/textView3"
             android:layout_alignParentLeft="true"
@@ -91,7 +94,10 @@
             android:layout_marginRight="20dp"
             android:password="true"
             android:singleLine="true"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:background="@android:drawable/editbox_background_normal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -143,7 +149,7 @@
 
         <CheckBox
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="35dp"
             android:text="记住密码"
             android:id="@+id/savePasswordCheckBox"
             android:layout_below="@+id/passwordEditText"

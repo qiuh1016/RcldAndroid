@@ -198,9 +198,6 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         serverIP = user.getString("serverIP", "120.27.149.252");
         deviceNo = user.getString("deviceNo","");
 
-        String startTimeURL = startTime.replace(" ", "%20");
-        String endTimeURL = endTime.replace(" ", "%20");
-
         //加密
         String ps = new PrivateEncode().b64_md5(password);
 
@@ -209,14 +206,14 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         params.put("userName", shipNumber);
         params.put("password", ps);
         params.put("deviceNo", deviceNo);
-        params.put("startTime", startTimeURL);
-        params.put("endTime", endTimeURL);
+        params.put("startTime", startTime);
+        params.put("endTime", endTime);
 
         String urlBody = "http://"+serverIP+"/api/app/trail/get.json";
-        String url = urlBody+"?userName=" + shipNumber +"&password="+ps+"&deviceNo=" + deviceNo+"&startTime="+startTimeURL+"&endTime=" + endTimeURL;
+        String url = urlBody+"?userName=" + shipNumber +"&password="+ps+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;
         AsyncHttpClient client = new AsyncHttpClient();
-
-        client.get(url, new JsonHttpResponseHandler("UTF-8"){
+        client.setURLEncodingEnabled(true);
+        client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
@@ -276,10 +273,8 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
         int sum = list.size();
 
-//        Log.i("Main", list.toString());
-
-        //减少点
-        if (list.size() > 100 || true) {
+        //减少重复点
+        if (list.size() > 100) {
             list = reducePointByDistance(list);
             Log.i("Main", sum + "--->" + list.size());
         }
@@ -307,6 +302,8 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                     status = response.getInt("status");
                     if (status == 0) {
                         dataString = response.toString();
+                        toast.setText("获取成功");
+                        toast.show();
                     } else {
                         toast.setText("纠偏失败");
                         toast.show();
@@ -351,8 +348,6 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
             }
         }
 
-        Log.i("Main", "defaultDistance:"+defaultDistance.toString());
-
         List<LatLng> noDuplicateList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             if (i != 0 && i!= list.size() -1) {
@@ -366,7 +361,6 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                 //去掉重复点
                 if (distance != 0.0 && distance > defaultDistance) {
                     noDuplicateList.add(list.get(i));
-//                    Log.i("Main", distance.toString());
                 }
 
             } else {

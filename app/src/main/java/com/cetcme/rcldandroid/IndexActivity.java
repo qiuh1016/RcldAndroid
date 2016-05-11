@@ -157,7 +157,8 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
     private void finishDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
-        builder.setIcon(R.mipmap.ic_launcher);
+//        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setIcon(android.R.drawable.ic_lock_power_off);
         builder.setMessage("是否继续?");
         builder.setTitle("即将关闭程序");
         builder.setNeutralButton("关闭", new DialogInterface.OnClickListener() {
