@@ -51,10 +51,10 @@
             android:layout_marginRight="20dp"
             android:singleLine="true"
             android:textSize="15dp"
-            android:inputType="phone"
             android:background="@android:drawable/editbox_background_normal"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:inputType="text" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -69,10 +69,10 @@
             android:layout_alignStart="@+id/textView25"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:inputType="number"
             android:background="@android:drawable/editbox_background_normal"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:inputType="text" />
 
         <TextView
             android:gravity="center_vertical|start"
@@ -163,4 +163,13 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID Check: ON"
+        android:id="@+id/idCheckButton"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/button111"
+        android:layout_toEndOf="@+id/button111" />
 </RelativeLayout>

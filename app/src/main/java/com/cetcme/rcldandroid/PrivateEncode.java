@@ -1,5 +1,7 @@
 package com.cetcme.rcldandroid;
 
+import android.util.Log;
+
 import org.liquidplayer.webkit.javascriptcore.JSContext;
 import org.liquidplayer.webkit.javascriptcore.JSValue;
 
@@ -27,14 +29,33 @@ public class PrivateEncode {
 
     public Boolean isCard(String text)
     {
-        String reg15 = "^[1-9]\\d{7}((0\\[1-9])|(1[0-2]))(([0\\[1-9]|1\\d|2\\d])|3[0-1])\\d{2}([0-9]|x|X){1}$";
-//        String reg18 = "^[1-9]\\d{5}[1-9]\\d{3}((0\\[1-9]))|((1[0-2]))(([0\\[1-9]|1\\d|2\\d])|3[0-1])\\d{3}([0-9]|x|X){1}$";
-        String reg18 = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$";
-//        if (text.matches(reg15) || text.matches(reg18)) {
-        if (text.matches(reg18)) {
-            return true;
+//        String reg15 = "^[1-9]\\d{7}((0\\[1-9])|(1[0-2]))(([0\\[1-9]|1\\d|2\\d])|3[0-1])\\d{2}([0-9]|x|X){1}$";
+
+        if (text.length() != 18 ) {
+            return false;
         }
-        return false;
+
+        String reg18 = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X|x)$";
+        if (!text.matches(reg18)) {
+            return false;
+        }
+
+        int summary =
+                Integer.parseInt(String.valueOf(text.charAt(0))) * 7 + Integer.parseInt(String.valueOf(text.charAt(1))) * 9 +
+                Integer.parseInt(String.valueOf(text.charAt(2))) * 10 + Integer.parseInt(String.valueOf(text.charAt(3))) * 5 +
+                Integer.parseInt(String.valueOf(text.charAt(4))) * 8 + Integer.parseInt(String.valueOf(text.charAt(5))) * 4 +
+                Integer.parseInt(String.valueOf(text.charAt(6))) * 2 + Integer.parseInt(String.valueOf(text.charAt(7))) +
+                Integer.parseInt(String.valueOf(text.charAt(8))) * 6 + Integer.parseInt(String.valueOf(text.charAt(9))) * 3 +
+                Integer.parseInt(String.valueOf(text.charAt(10))) * 7 + Integer.parseInt(String.valueOf(text.charAt(11))) * 9 +
+                Integer.parseInt(String.valueOf(text.charAt(12))) * 10 + Integer.parseInt(String.valueOf(text.charAt(13))) * 5 +
+                Integer.parseInt(String.valueOf(text.charAt(14))) * 8 + Integer.parseInt(String.valueOf(text.charAt(15))) * 4 +
+                Integer.parseInt(String.valueOf(text.charAt(16))) * 2;
+        int remainder = summary % 11;
+        String checkString = "10X98765432";
+        String checkBit = String.valueOf(checkString.charAt(remainder));
+        Boolean match = checkBit.equals(String.valueOf(text.charAt(17)).toUpperCase());
+        return match;
+
     }
 
     public Boolean ipCheck(String text) {

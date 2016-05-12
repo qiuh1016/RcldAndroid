@@ -207,6 +207,11 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                 break;
             case R.id.routeButton:
+//                Intent recordIntent = new Intent();
+//                recordIntent.setClass(getApplicationContext(), RecordActivity.class);
+//                startActivity(recordIntent);
+//                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+
                 Intent routeIntent = new Intent();
                 routeIntent.setClass(getApplicationContext(), RouteActivity.class);
                 startActivity(routeIntent);

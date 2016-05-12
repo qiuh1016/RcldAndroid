@@ -133,7 +133,7 @@ public class PunchActivity extends AppCompatActivity {
                 builder.setMessage(punchInfo);
                 builder.setTitle("共" + dataList.size() + "人,确认上传?");
                 builder.setNegativeButton("取消", null);
-                builder.setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("上传", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         upload();

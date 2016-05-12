@@ -24,10 +24,15 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
     private Button addButton;
 
     private Button fillButton;
+    private Button idCheckButton;
+
+    private Toast toast;
 
     String name;
     String id;
     String reason;
+
+    SharedPreferences user;
 
     ArrayList<String> ids = new ArrayList<>();
 
@@ -42,20 +47,17 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
         ids = bundle.getStringArrayList("ids");
         Log.i("Main",ids.toString());
 
+        toast = Toast.makeText(getApplicationContext(),"",Toast.LENGTH_SHORT);
+
         nameTextView = (TextView) findViewById(R.id.nameTextViewInReasonActivity);
         idTextView = (TextView) findViewById(R.id.idTextViewInReasonActivity);
         reasonTextView = (TextView) findViewById(R.id.reasonTextViewInReasonActivity);
         addButton = (Button) findViewById(R.id.addButtonInReasonActivity);
         fillButton = (Button) findViewById(R.id.button111);
+        idCheckButton = (Button) findViewById(R.id.idCheckButton);
         addButton.setOnClickListener(this);
         fillButton.setOnClickListener(this);
-
-        SharedPreferences user = getSharedPreferences("user", 0);
-        if (user.getBoolean("debugMode", false)) {
-            fillButton.setVisibility(View.VISIBLE);
-        } else {
-            fillButton.setVisibility(View.INVISIBLE);
-        }
+        idCheckButton.setOnClickListener(this);
 
         //文本改变监听
         nameTextView.addTextChangedListener(textChangeWatcher);
@@ -67,6 +69,19 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
         reason = reasonTextView.getText().toString();
 
         changeButtonState(false);
+
+        //debugMode
+        user = getSharedPreferences("user", 0);
+        fillButton.setVisibility(user.getBoolean("debugMode", false) ? View.VISIBLE : View.INVISIBLE);
+        idCheckButton.setVisibility(user.getBoolean("debugMode", false) ? View.VISIBLE : View.INVISIBLE);
+        idCheckButton.setText(user.getBoolean("idCheck", true)? "ID CHECK: ON" : "ID CHECK: OFF");
+
+//        if (user.getBoolean("debugMode", false)) {
+//            fillButton.setVisibility(View.VISIBLE);
+//        } else {
+//            fillButton.setVisibility(View.INVISIBLE);
+//        }
+
     }
 
     public void onBackPressed() {
@@ -79,6 +94,9 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        Boolean debugModeON = user.getBoolean("debugMode", false);
+        Boolean idCheckON   = user.getBoolean("idCheck"  , true );
+
         switch (v.getId()) {
             case R.id.addButtonInReasonActivity:
 
@@ -99,8 +117,11 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 }
 
-                //TODO: 身份证 正确
-                if (id.length() != 18 /*&& new PrivateEncode().isCard(id)*/) {
+
+                //身份证校验
+                Boolean needCheck = !(debugModeON && !idCheckON);
+                Boolean isCard = needCheck ? new PrivateEncode().isCard(id) : (id.length() == 18);
+                if (!isCard) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReasonActivity.this);
                     builder.setMessage("身份证错误");
                     builder.setTitle("错误");
@@ -110,26 +131,34 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                     return;
                 }
 
-
                 //增加
-                SharedPreferences user = getSharedPreferences("punchToAdd", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = user.edit();
+                SharedPreferences punchToAdd = getSharedPreferences("punchToAdd", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = punchToAdd.edit();
                 editor.putString("name", name);
                 editor.putString("id", id);
                 editor.putString("reason", reason);
                 editor.putBoolean("toAdd", true);
                 editor.apply();
 
-                Toast.makeText(getApplicationContext(),"添加成功",Toast.LENGTH_SHORT).show();
+                toast.setText("添加成功");
+                toast.show();
                 changeButtonState(false);
-//                dialog(name,id,reason);
-
                 break;
+
             case R.id.button111:
                 nameTextView.setText("测试人员");
-                idTextView.setText("330283198811240000");
+                idTextView.setText("330283198811240134");
                 reasonTextView.setText("添加原因");
                 break;
+            case R.id.idCheckButton:
+                idCheckON = !idCheckON;
+                SharedPreferences.Editor userEditor = user.edit();
+                userEditor.putBoolean("idCheck", idCheckON);
+                userEditor.apply();
+                idCheckButton.setText(idCheckON? "ID CHECK: ON" : "ID CHECK: OFF");
+                toast.setText(idCheckON? "ID CHECK: ON" : "ID CHECK: OFF");
+                toast.show();
+
         }
     }
 

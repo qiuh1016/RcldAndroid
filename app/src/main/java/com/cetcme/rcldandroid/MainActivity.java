@@ -52,9 +52,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private JSONObject myShipInfo;
     private KProgressHUD kProgressHUD;
+    private KProgressHUD okHUD;
 
-    AsyncHttpClient client;
-    Boolean savePassword;
+    private AsyncHttpClient client;
+    private Boolean savePassword;
+
+    private Toast toast;
 
     //debug button
     private Button ipButton;
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button nullButton;
     private Button quitButton;
 
-    Toast toast;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +136,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             debugModeEnable(false);
         }
+
+        //hudView
+        kProgressHUD = KProgressHUD.create(MainActivity.this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel("登录中")
+                .setAnimationSpeed(1)
+                .setDimAmount(0.3f)
+                .setSize(110, 110)
+                .setCancellable(false);
+        ImageView imageView = new ImageView(MainActivity.this);
+        imageView.setBackgroundResource(R.drawable.checkmark);
+        okHUD  =  KProgressHUD.create(MainActivity.this)
+                .setCustomView(imageView)
+                .setLabel("登录成功")
+                .setCancellable(false)
+                .setSize(110,110)
+                .setDimAmount(0.3f);
 
 
     }
@@ -294,39 +314,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 toast.show();
                 return;
             case R.id.nullButton:
-                //TODO: kprogress okView
-//                ImageView imageView = new ImageView(this);
-//
-//
-//                Drawable drawable = getResources().getDrawable(R.drawable.checkmark);
-//                drawable.setBounds(0,0,30,30);
-////                imageView.setCompoundDrawablesRelativeWithIntrinsicBounds(null,all,null,null);
-////                imageView.setImageResource(drawable);
-//                imageView.setImageDrawable(drawable);
-////                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams();
-////                params.width = 40;
-////                params.height = 40;
-////                imageView.setLayoutParams(params);
-//
-//
-////                ViewGroup.LayoutParams params = mBackgroundLayout.getLayoutParams();
-////                params.width = Helper.dpToPixel(mWidth, getContext());
-////                params.height = Helper.dpToPixel(mHeight, getContext());
-////                mBackgroundLayout.setLayoutParams(params);
-//                final KProgressHUD k =  KProgressHUD.create(MainActivity.this)
-//                        .setCustomView(imageView)
-//                        .setLabel("登录成功")
-//                        .setCancellable(false)
-//                        .setSize(110,110)
-//                        .setDimAmount(0.3f)
-//                        .show();
-//
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        k.dismiss();
-//                    }
-//                },2000);
+
+                kProgressHUD.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        kProgressHUD.dismiss();
+                        okHUD.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                okHUD.dismiss();
+                            }
+                        },2000);
+                    }
+                },3000);
 
                 break;
             case R.id.quitButton:
@@ -354,11 +356,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    public void login(final String shipNumber, final String password) {
+    private void login(final String shipNumber, final String password) {
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
         params.put("password", new PrivateEncode().b64_md5(password));
-        params.put("userType", 0);
+        params.put("userType", 2);
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", "120.27.149.252");
@@ -402,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    public void getShipInfo(final String shipNumber, final String password) {
+    private void getShipInfo(final String shipNumber, final String password) {
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
         params.put("password", new PrivateEncode().b64_md5(password));
@@ -437,12 +439,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //指示器
                 kProgressHUD.dismiss();
-                toast.setText("登录成功!");
-                toast.show();
+                okHUD.show();
+//                toast.setText("登录成功!");
+//                toast.show();
 
                 //页面切换
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
+                        okHUD.dismiss();
+
                         Bundle bundle = new Bundle();
                         bundle.putString("myShipInfo", myShipInfo.toString());
                         Intent indexIntent = new Intent();
@@ -453,7 +458,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         finish();
 
                     }
-                }, 300);
+                }, 1200);
             }
 
             @Override
@@ -467,7 +472,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    void ReadSharedPreferences() {
+    private void ReadSharedPreferences() {
         String strName, strPassword;
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         strName = user.getString("shipNumber", "");
@@ -477,12 +482,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         passwordEditText.setText(strPassword);
     }
 
-    void WriteSharedPreferences(String strName, String strPassword) {
+    private void WriteSharedPreferences(String strName, String strPassword) {
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = user.edit();
         editor.putString("shipNumber", strName);
         editor.putString("password", strPassword);
         editor.apply();
     }
+
 
 }
