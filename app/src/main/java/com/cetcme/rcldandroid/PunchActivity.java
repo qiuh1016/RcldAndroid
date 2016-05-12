@@ -311,7 +311,7 @@ public class PunchActivity extends AppCompatActivity {
                     final EditText et = new EditText(PunchActivity.this);
 
                     new AlertDialog.Builder(PunchActivity.this).setTitle("删除原因")
-                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .setIcon(android.R.drawable.ic_menu_info_details)
                             .setView(et)
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -360,12 +360,12 @@ public class PunchActivity extends AppCompatActivity {
         uploadOKList = new ArrayList<>();
         Log.i("Main" , "一共" + dataList.size() + "个数据");
         for (int i = 0; i < dataList.size(); i++) {
-            uploadPunchs(i);
+            uploadPunch(i);
         }
 
     }
 
-    private void uploadPunchs(final int position) {
+    private void uploadPunch(final int position) {
 
         //获取保存的用户名和密码
         String shipNumber,password,serverIP;

@@ -47,23 +47,23 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
     private BaiduMap baiduMap;
 
     private LatLng shipLocation;
+    private String shipInfoString;
 
-    String shipInfoString;
+    private String picName;
+    private String picTelNo;
 
-    String picName;
-    String picTelNo;
+    private Boolean antiThiefIsOpen = false;
+    private String antiThiefRadius;
+    private OverlayOptions antiThiefPolygonOption;
+    private Boolean isGeoConved = false;
 
-    Boolean antiThiefIsOpen = false;
-    String antiThiefRadius;
-    OverlayOptions antiThiefPolygonOption;
-    Boolean isGeoConved = false;
+    private  MenuItem antiThiefMenuItem;
 
-    MenuItem antiThiefMenuItem;
+    private  Toast toast;
 
-    Toast toast;
-
-    InfoWindow mInfoWindow;
-    boolean infoWindowIsShow = false;
+    private Marker comMarker;
+    private InfoWindow mInfoWindow;
+    private Boolean infoWindowIsShow = false;
 
 
     @Override
@@ -413,8 +413,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
                 .position(point)
                 .icon(bitmap);
         //在地图上添加Marker，并显示
-        baiduMap.addOverlay(option);
-
+        comMarker = (Marker) baiduMap.addOverlay(option);
 
         //创建InfoWindow展示的view
         Button button = new Button(getApplicationContext());
@@ -430,7 +429,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         //定义用于显示该InfoWindow的坐标点
 //        LatLng pt = new LatLng(Lat, Lng);
         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
-        mInfoWindow = new InfoWindow(button, point, -100);
+        mInfoWindow = new InfoWindow(button, point, -bitmap.getBitmap().getHeight());
 
         //显示InfoWindow
         baiduMap.showInfoWindow(mInfoWindow);
@@ -475,15 +474,17 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if (infoWindowIsShow) {
-            baiduMap.hideInfoWindow();
-        } else {
-            baiduMap.showInfoWindow(mInfoWindow);
+        if (marker.equals(comMarker)) {
+            if (infoWindowIsShow) {
+                baiduMap.hideInfoWindow();
+            } else {
+                baiduMap.showInfoWindow(mInfoWindow);
+            }
+            infoWindowIsShow = !infoWindowIsShow;
         }
-        infoWindowIsShow = !infoWindowIsShow;
+
         return false;
     }
-
 
 
 }

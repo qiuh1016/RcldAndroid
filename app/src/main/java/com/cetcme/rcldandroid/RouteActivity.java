@@ -219,7 +219,6 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                 // If the response is JSONObject instead of expected JSONArray
 //                Log.i("Main", response.toString());
                 route = new ArrayList<>();
-                //TODO:
                 try {
                     String msg = response.getString("msg");
 

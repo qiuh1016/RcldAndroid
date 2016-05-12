@@ -131,7 +131,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         builder.setIcon(android.R.drawable.ic_menu_myplaces);
         builder.setMessage("是否继续?");
         builder.setTitle("即将退出登录");
-        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 final KProgressHUD kProgressHUD = KProgressHUD.create(IndexActivity.this)
@@ -151,14 +151,15 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
                 },1000);
             }
         });
-        builder.setNegativeButton("否", null);
+        builder.setNegativeButton("取消", null);
         builder.create().show();
     }
 
     private void finishDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
 //        builder.setIcon(R.mipmap.ic_launcher);
-        builder.setIcon(android.R.drawable.ic_lock_power_off);
+        builder.setIcon(android.R.drawable.ic_delete);
+
         builder.setMessage("是否继续?");
         builder.setTitle("即将关闭程序");
         builder.setNeutralButton("关闭", new DialogInterface.OnClickListener() {

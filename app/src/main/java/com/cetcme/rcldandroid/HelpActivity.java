@@ -3,8 +3,10 @@ package com.cetcme.rcldandroid;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
@@ -34,15 +36,18 @@ import com.baidu.mapapi.model.LatLng;
 
 public class HelpActivity extends AppCompatActivity implements View.OnClickListener , BaiduMap.OnMarkerClickListener{
 
-    TextView telTextView;
-    TextView addressTextView;
-    MapView mapView;
-    BaiduMap baiduMap;
+    private TextView telTextView;
+    private TextView addressTextView;
+    private MapView mapView;
+    private BaiduMap baiduMap;
 
-    LatLng companyLatlng = new LatLng(29.891853,121.64414);
+    private LatLng companyLatlng = new LatLng(29.891853,121.64414);
 
-    InfoWindow mInfoWindow;
+    private Marker comMarker;
+    private InfoWindow mInfoWindow;
     boolean infoWindowIsShow = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,21 +59,6 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         baiduMap = mapView.getMap();
         baiduMap.setOnMarkerClickListener(this);
 
-
-//        TextView location = new TextView(getApplicationContext());
-//        location.setBackgroundResource(R.drawable.boder);
-//        location.setPadding(15, 15, 8, 35);
-//        location.setTextColor(Color.DKGRAY);
-//        location.setText("定位时间：");
-//        location.setTextSize(12);
-//
-//        InfoWindow infoWindow = new InfoWindow(location, companyLatlng,0);
-//        baiduMap.showInfoWindow(infoWindow);
-
-
-
-
-
         telTextView = (TextView) findViewById(R.id.telTextViewInHelpActivity);
         telTextView.setOnClickListener(this);
         telTextView.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG ); //下划线
@@ -78,7 +68,6 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         addressTextView.setOnClickListener(this);
 
         mapMark(companyLatlng);
-//        showInfoWindow();
     }
 
 //    @Override
@@ -147,6 +136,8 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+
     private void mapMark(LatLng point){
 
         //设置中心点 和显示范围
@@ -164,14 +155,11 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
                 .position(point)
                 .icon(bitmap);
         //在地图上添加Marker，并显示
-        baiduMap.addOverlay(option);
-
+        comMarker = (Marker) baiduMap.addOverlay(option);
 
         //创建InfoWindow展示的view
-
         TextView textView = new TextView(getApplicationContext());
         textView.setBackgroundResource(R.drawable.boder);
-//        textView.setBackgroundColor(0x88FFFFFF);
         textView.setTextSize(15);
         textView.setGravity(Gravity.CENTER);
         textView.setPadding(20,20,20,20);
@@ -179,8 +167,8 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         textView.setTextColor(0xFF7D7D7D);
         textView.setGravity(Gravity.CENTER);
 
-        //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
-        mInfoWindow = new InfoWindow(textView, point, -100);
+        //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量(maker 的高度)
+        mInfoWindow = new InfoWindow(textView, point, -bitmap.getBitmap().getHeight());
 
         //显示InfoWindow
         baiduMap.showInfoWindow(mInfoWindow);
@@ -247,12 +235,15 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if (infoWindowIsShow) {
-            baiduMap.hideInfoWindow();
-        } else {
-            baiduMap.showInfoWindow(mInfoWindow);
+        if (marker.equals(comMarker)) {
+            if (infoWindowIsShow) {
+                baiduMap.hideInfoWindow();
+            } else {
+                baiduMap.showInfoWindow(mInfoWindow);
+            }
+            infoWindowIsShow = !infoWindowIsShow;
         }
-        infoWindowIsShow = !infoWindowIsShow;
+
         return false;
     }
 }

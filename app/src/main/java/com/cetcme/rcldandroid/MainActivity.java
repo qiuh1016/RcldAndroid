@@ -7,18 +7,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,19 +114,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //debug
-        ipButton = (Button) findViewById(R.id.ipButton);
-        ip1Button = (Button) findViewById(R.id.ip1Button);
-        ip2Button = (Button) findViewById(R.id.ip2Button);
-        fillButton = (Button) findViewById(R.id.autofillButton);
-        nullButton = (Button) findViewById(R.id.nullButton);
-        quitButton = (Button) findViewById(R.id.quitButton);
+        ipButton    = (Button) findViewById(R.id.ipButton       );
+        ip1Button   = (Button) findViewById(R.id.ip1Button      );
+        ip2Button   = (Button) findViewById(R.id.ip2Button      );
+        fillButton  = (Button) findViewById(R.id.autofillButton );
+        nullButton  = (Button) findViewById(R.id.nullButton     );
+        quitButton  = (Button) findViewById(R.id.quitButton     );
 
-        ipButton.setOnClickListener(this);
-        ip1Button.setOnClickListener(this);
-        ip2Button.setOnClickListener(this);
-        fillButton.setOnClickListener(this);
-        nullButton.setOnClickListener(this);
-        quitButton.setOnClickListener(this);
+        ipButton    .setOnClickListener(this);
+        ip1Button   .setOnClickListener(this);
+        ip2Button   .setOnClickListener(this);
+        fillButton  .setOnClickListener(this);
+        nullButton  .setOnClickListener(this);
+        quitButton  .setOnClickListener(this);
 
         if (user.getBoolean("debugMode", false)) {
             debugModeEnable(true);
@@ -133,21 +138,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void debugModeEnable(Boolean enable) {
-        if (enable) {
-            ipButton.setVisibility(View.VISIBLE);
-            ip1Button.setVisibility(View.VISIBLE);
-            ip2Button.setVisibility(View.VISIBLE);
-            fillButton.setVisibility(View.VISIBLE);
-            nullButton.setVisibility(View.VISIBLE);
-            quitButton.setVisibility(View.VISIBLE);
-        } else {
-            ipButton.setVisibility(View.INVISIBLE);
-            ip1Button.setVisibility(View.INVISIBLE);
-            ip2Button.setVisibility(View.INVISIBLE);
-            fillButton.setVisibility(View.INVISIBLE);
-            nullButton.setVisibility(View.INVISIBLE);
-            quitButton.setVisibility(View.INVISIBLE);
-        }
+//        if (enable) {
+//            ipButton.setVisibility(View.VISIBLE);
+//            ip1Button.setVisibility(View.VISIBLE);
+//            ip2Button.setVisibility(View.VISIBLE);
+//            fillButton.setVisibility(View.VISIBLE);
+//            nullButton.setVisibility(View.VISIBLE);
+//            quitButton.setVisibility(View.VISIBLE);
+//        } else {
+//            ipButton.setVisibility(View.INVISIBLE);
+//            ip1Button.setVisibility(View.INVISIBLE);
+//            ip2Button.setVisibility(View.INVISIBLE);
+//            fillButton.setVisibility(View.INVISIBLE);
+//            nullButton.setVisibility(View.INVISIBLE);
+//            quitButton.setVisibility(View.INVISIBLE);
+//        }
+        ipButton    .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
+        ip1Button   .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
+        ip2Button   .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
+        fillButton  .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
+        nullButton  .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
+        quitButton  .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
+
+        shipNumberEditText.clearFocus();
+        passwordEditText.clearFocus();
     }
 
     @Override
@@ -213,8 +227,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     editor.apply();
                     toast.setText("Debug Mode: ON");
                     toast.show();
-//                    Toast.makeText(getApplicationContext(), "Debug Mode: ON", LENGTH_SHORT).show();
                     debugModeEnable(true);
+                    passwordEditText.setText("");
+                    shipNumberEditText.setText("");
                     return;
                 }
 
@@ -243,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 editText.setSingleLine();
 
                 new AlertDialog.Builder(MainActivity.this).setTitle("服务器IP")
-                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setIcon(android.R.drawable.ic_menu_info_details)
                         .setView(editText)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -279,6 +294,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 toast.show();
                 return;
             case R.id.nullButton:
+                //TODO: kprogress okView
+//                ImageView imageView = new ImageView(this);
+//
+//
+//                Drawable drawable = getResources().getDrawable(R.drawable.checkmark);
+//                drawable.setBounds(0,0,30,30);
+////                imageView.setCompoundDrawablesRelativeWithIntrinsicBounds(null,all,null,null);
+////                imageView.setImageResource(drawable);
+//                imageView.setImageDrawable(drawable);
+////                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams();
+////                params.width = 40;
+////                params.height = 40;
+////                imageView.setLayoutParams(params);
+//
+//
+////                ViewGroup.LayoutParams params = mBackgroundLayout.getLayoutParams();
+////                params.width = Helper.dpToPixel(mWidth, getContext());
+////                params.height = Helper.dpToPixel(mHeight, getContext());
+////                mBackgroundLayout.setLayoutParams(params);
+//                final KProgressHUD k =  KProgressHUD.create(MainActivity.this)
+//                        .setCustomView(imageView)
+//                        .setLabel("登录成功")
+//                        .setCancellable(false)
+//                        .setSize(110,110)
+//                        .setDimAmount(0.3f)
+//                        .show();
+//
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        k.dismiss();
+//                    }
+//                },2000);
+
                 break;
             case R.id.quitButton:
                 editor.putBoolean("debugMode", false);
