@@ -230,7 +230,7 @@ public class PunchActivity extends AppCompatActivity {
         String urlBody = "http://"+serverIP+"/api/app/punch/get.json";
         String url = urlBody+"?userName="+shipNumber+"&password="+password+"&startTime="+startTime+"&endTime="+endTime;
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
+        client.get(url, null, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray

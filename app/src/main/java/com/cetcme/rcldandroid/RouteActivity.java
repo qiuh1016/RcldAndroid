@@ -6,6 +6,9 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -65,7 +68,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     private List<LatLng> route;
 
-    Boolean reducePointBySize = true;  //根据轨迹点数量 来减少距离较近的点
+    Boolean reducePointBySize = false;  //根据轨迹点数量 来减少距离较近的点
 
     private SlideDateTimeListener listener = new SlideDateTimeListener() {
 
@@ -202,7 +205,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         String ps = new PrivateEncode().b64_md5(password);
 
         //设置参数
-        RequestParams params = new RequestParams();
+        final RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
         params.put("password", ps);
         params.put("deviceNo", deviceNo);
@@ -215,15 +218,17 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         client.setURLEncodingEnabled(true);
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            public void onSuccess(int statusCode, Header[] headers, final JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
 //                Log.i("Main", response.toString());
+                dataString = response.toString();
                 route = new ArrayList<>();
                 try {
                     String msg = response.getString("msg");
 
                     if (msg.equals("成功")) {
                         JSONArray data = response.getJSONArray("data");
+
                         for (int i = 0; i < data.length(); i++) {
                             try {
                                 JSONObject point = data.getJSONObject(i);
@@ -234,10 +239,14 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            dataString = response.toString();
                         }
-                        Log.i("Main", "getRouteArray");
-                        geoconv(route);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                geoconv(route);
+                            }
+                        },1000);
+
                     } else {
                         //显示失败信息
                         toast.setText(msg);
@@ -251,7 +260,6 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                     toast.show();
                 }
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
@@ -261,6 +269,16 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+    }
+
+    private class getJSONDataTask extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            Log.i("Main", "task:" + params.toString());
+            return null;
+        }
     }
 
     private void geoconv(List<LatLng> list) {
@@ -273,10 +291,10 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         int sum = list.size();
 
         //减少重复点
-        if (list.size() > 100) {
-            list = reducePointByDistance(list);
-            Log.i("Main", sum + "--->" + list.size());
-        }
+//        if (list.size() > 100) {
+//            list = reducePointByDistance(list);
+//            Log.i("Main", sum + "--->" + list.size());
+//        }
 
         //把坐标array转成字符串
         for (LatLng latLng :list) {
@@ -328,6 +346,8 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private List<LatLng> reducePointByDistance(List<LatLng> list) {
+
+        Log.i("Main", list.toString());
         int pointNumber = list.size();
 
         if (pointNumber <= 1) {
@@ -361,6 +381,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                 if (distance != 0.0 && distance > defaultDistance) {
                     noDuplicateList.add(list.get(i));
                 }
+                Log.i("Main",distance + "");
 
             } else {
                 noDuplicateList.add(list.get(i)); //添加第一个和最后一个点

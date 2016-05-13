@@ -2,21 +2,17 @@ package com.cetcme.rcldandroid;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
-import android.provider.Settings;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +50,32 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         routeButton.setOnClickListener(this);
         helpButton.setOnClickListener(this);
 
+        //set button size
+//        Display display = getWindowManager().getDefaultDisplay();
+//        int buttonSize = display.getWidth() * 14 / 48;
+//
+//        RelativeLayout.LayoutParams myShipButtonParams = (RelativeLayout.LayoutParams) myShipButton.getLayoutParams();
+//        myShipButtonParams.height = buttonSize;
+//        myShipButtonParams.width = buttonSize;
+//        myShipButton.setLayoutParams(myShipButtonParams);
+//
+//        RelativeLayout.LayoutParams fenceButtonParams = (RelativeLayout.LayoutParams) fenceButton.getLayoutParams();
+//        fenceButtonParams.height = buttonSize;
+//        fenceButtonParams.width = buttonSize;
+//        fenceButton.setLayoutParams(fenceButtonParams);
+//
+//        RelativeLayout.LayoutParams routeButtonParams = (RelativeLayout.LayoutParams) routeButton.getLayoutParams();
+//        routeButtonParams.height = buttonSize;
+//        routeButtonParams.width = buttonSize;
+////        routeButtonParams.setMargins(0,buttonSize / 2,0,0);
+//        routeButton.setLayoutParams(routeButtonParams);
+//
+//        RelativeLayout.LayoutParams helpButtonParams = (RelativeLayout.LayoutParams) helpButton.getLayoutParams();
+//        helpButtonParams.height = buttonSize;
+//        helpButtonParams.width = buttonSize;
+//        helpButton.setLayoutParams(helpButtonParams);
+
+        //获取上一个Activity的数据
         Bundle bundle = this.getIntent().getExtras();
         String str = bundle.getString("myShipInfo");
         //str = "{\"code\":0,\"data\":[{\"deviceNo\":\"10000001\",\"latitude\":30.782284,\"latitudeDisp\":\"N30°46′56.22\\\"\",\"longitude\":120.669029,\"longitudeDisp\":\"E120°40′8.50\\\"\",\"offlineFlag\":true,\"ownerName\":\"船东\",\"ownerTelNo\":\"18877779999\",\"picName\":\"qhhhhhTest\",\"picTelNo\":\"123456789900009\",\"shipName\":\"浙嘉渔0415\",\"shipNo\":\"3304001987070210\"}],\"msg\":\"成功\",\"success\":true,\"total\":0}";
@@ -80,7 +102,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         super.onCreateOptionsMenu(menu);
 
         MenuItem qrcode = menu.add(0,0,0,"二维码");
-        qrcode.setIcon(R.drawable.qrcode);
+        qrcode.setIcon(R.drawable.qrcodeicon);
         qrcode.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         qrcode.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -93,7 +115,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
         MenuItem setting = menu.add(0, 0, 0, "退出");
         setting.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        setting.setIcon(R.drawable.setting);
+        setting.setIcon(R.drawable.user);
         setting.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -194,10 +216,10 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             case R.id.myShipButton:
                 Bundle bundle = new Bundle();
                 bundle.putString("myShipInfo", myShipInfoJSON.toString());
-                Intent myshipIntent = new Intent();
-                myshipIntent.setClass(getApplicationContext(), MyshipActivity.class);
-                myshipIntent.putExtras(bundle);
-                startActivity(myshipIntent);
+                Intent myShipIntent = new Intent();
+                myShipIntent.setClass(getApplicationContext(), MyShipActivity.class);
+                myShipIntent.putExtras(bundle);
+                startActivity(myShipIntent);
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                 break;
             case R.id.fenceButton:

@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -41,7 +42,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
     private MapView mapView;
     private BaiduMap baiduMap;
 
-    private LatLng companyLatlng = new LatLng(29.891853,121.64414);
+    private LatLng companyPosition = new LatLng(29.891853,121.64414);
 
     private Marker comMarker;
     private InfoWindow mInfoWindow;
@@ -52,6 +53,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_help);
         setTitle("帮助");
 
@@ -67,7 +69,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         addressTextView = (TextView) findViewById(R.id.addressTextViewInHelpActivity);
         addressTextView.setOnClickListener(this);
 
-        mapMark(companyLatlng);
+        mapMark(companyPosition);
     }
 
 //    @Override
@@ -114,7 +116,6 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.telTextViewInHelpActivity:
-                Log.i("Main", "call");
                 //用intent启动拨打电话
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:0574-55712322"));
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -130,7 +131,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.addressTextViewInHelpActivity:
-                mapMark(companyLatlng);
+                mapMark(companyPosition);
                 break;
 
         }
@@ -147,7 +148,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
         //构建Marker图标
         BitmapDescriptor bitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.mapmakericon);
+                .fromResource(R.drawable.icon_point);
         //构建MarkerOption，用于在地图上添加Marker
         OverlayOptions option = new MarkerOptions()
                 .position(point)
@@ -157,16 +158,16 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
         //创建InfoWindow展示的view
         TextView textView = new TextView(getApplicationContext());
-        textView.setBackgroundResource(R.drawable.boder);
-        textView.setTextSize(15);
+        textView.setBackgroundResource(R.drawable.infowindow);
+        textView.setTextSize(13);
         textView.setGravity(Gravity.CENTER);
-        textView.setPadding(20,20,20,20);
+        textView.setPadding(20,10,20,20);
         textView.setText("中电科（宁波）海洋电子研究院有限公司");
         textView.setTextColor(0xFF7D7D7D);
         textView.setGravity(Gravity.CENTER);
 
         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量(maker 的高度)
-        mInfoWindow = new InfoWindow(textView, point, -bitmap.getBitmap().getHeight());
+        mInfoWindow = new InfoWindow(textView, point, (int) (-bitmap.getBitmap().getHeight() * 1.1));
 
         //显示InfoWindow
         baiduMap.showInfoWindow(mInfoWindow);
@@ -178,13 +179,12 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showInfoWindow() {
 
-
         //创建InfoWindow展示的view
         Button button = new Button(getApplicationContext());
 //        button.setBackgroundResource(R.drawable.mapinfoview);
         button.setBackgroundResource(R.drawable.boder);
         button.setBackgroundColor(0x88FFFFFF);
-        button.setTextSize(15);
+        button.setTextSize(13);
         button.setGravity(Gravity.CENTER);
         button.setPadding(20,20,20,20);
         button.setText("中电科（宁波）海洋电子研究院有限公司");
@@ -203,7 +203,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         //定义用于显示该InfoWindow的坐标点
 //        LatLng pt = new LatLng(Lat, Lng);
         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
-        final InfoWindow mInfoWindow = new InfoWindow(textView, companyLatlng, -75);
+        final InfoWindow mInfoWindow = new InfoWindow(textView, companyPosition, -75);
 
         //显示InfoWindow
 
@@ -212,7 +212,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         //bitmap
         BitmapDescriptor bitmap = BitmapDescriptorFactory
                 .fromResource(R.drawable.mapmakericon);
-        final InfoWindow infoWindow =  new InfoWindow(bitmap, companyLatlng, 0, new InfoWindow.OnInfoWindowClickListener() {
+        final InfoWindow infoWindow =  new InfoWindow(bitmap, companyPosition, 0, new InfoWindow.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick() {
                 Log.i("Main","tapped");
@@ -220,7 +220,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         });
         baiduMap.showInfoWindow(infoWindow);
 
-        MapStatus mapStatus = new MapStatus.Builder().target(companyLatlng).zoom(15) //15
+        MapStatus mapStatus = new MapStatus.Builder().target(companyPosition).zoom(15) //15
                 .build();
         MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                 .newMapStatus(mapStatus);

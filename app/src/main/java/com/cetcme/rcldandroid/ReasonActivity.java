@@ -3,6 +3,7 @@ package com.cetcme.rcldandroid;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -143,6 +144,14 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                 toast.setText("添加成功");
                 toast.show();
                 changeButtonState(false);
+
+                //返回上一页
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        onBackPressed();
+                    }
+                },1500);
                 break;
 
             case R.id.button111:

@@ -9,27 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.cetcme.rcldandroid.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/loginTitle"
-        android:id="@+id/textView"
-        android:textSize="25sp"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/relativeLayout2"
-        android:layout_marginBottom="30dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fill"
-        android:id="@+id/autofillButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:visibility="visible" />
-
     <Button
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -38,130 +17,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:background="@drawable/closewindow" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/boder"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/relativeLayout2">
-
-        <TextView
-            android:gravity="center_vertical|start"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="  用户登录"
-            android:id="@+id/textView8"
-            android:textColor="#ffffff"
-            android:background="#3562bd"
-            android:textSize="16sp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:id="@+id/shipNumberEditText"
-            android:layout_below="@+id/textView2"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:singleLine="true"
-            android:textSize="15dp"
-            android:background="@android:drawable/editbox_background_normal"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:id="@+id/passwordEditText"
-            android:layout_below="@+id/textView3"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:password="true"
-            android:singleLine="true"
-            android:textSize="15dp"
-            android:background="@android:drawable/editbox_background_normal"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/shipNumber"
-            android:id="@+id/textView2"
-            android:layout_marginTop="55dp"
-            android:layout_below="@+id/textView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/password"
-            android:id="@+id/textView3"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/shipNumberEditText"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
-            android:textSize="16sp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="登录"
-            android:id="@+id/loginButton"
-            android:textColor="#ffffff"
-            android:background="#3562bd"
-            android:textSize="15sp"
-            android:layout_below="@+id/savePasswordCheckBox"
-            android:layout_alignLeft="@+id/savePasswordCheckBox"
-            android:layout_alignStart="@+id/savePasswordCheckBox"
-            android:layout_alignRight="@+id/passwordEditText"
-            android:layout_alignEnd="@+id/passwordEditText"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:text="记住密码"
-            android:id="@+id/savePasswordCheckBox"
-            android:layout_below="@+id/passwordEditText"
-            android:layout_alignLeft="@+id/passwordEditText"
-            android:layout_alignStart="@+id/passwordEditText"
-            android:textColor="#797979"
-            android:checked="false"
-            android:layout_alignRight="@+id/passwordEditText"
-            android:layout_alignEnd="@+id/passwordEditText"
-            android:textSize="14sp" />
-
-    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -174,54 +29,221 @@
         android:layout_centerHorizontal="true"
         android:textSize="10sp" />
 
-    <Button
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="null"
-        android:id="@+id/nullButton"
-        android:visibility="visible"
-        android:layout_alignTop="@+id/autofillButton"
-        android:layout_toRightOf="@+id/autofillButton"
-        android:layout_toEndOf="@+id/autofillButton" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Quit"
-        android:id="@+id/quitButton"
-        android:visibility="visible"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/nullButton"
-        android:layout_toEndOf="@+id/nullButton" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="IP"
-        android:id="@+id/ipButton"
-        android:visibility="visible"
-        android:layout_below="@+id/autofillButton"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/relativeLayout7">
 
-    <Button
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fill"
+            android:id="@+id/autofillButton"
+            android:visibility="visible"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="null"
+            android:id="@+id/nullButton"
+            android:visibility="visible"
+            android:layout_alignTop="@+id/autofillButton"
+            android:layout_toRightOf="@+id/autofillButton"
+            android:layout_toEndOf="@+id/autofillButton" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quit"
+            android:id="@+id/quitButton"
+            android:visibility="visible"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/nullButton"
+            android:layout_toEndOf="@+id/nullButton" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IP"
+            android:id="@+id/ipButton"
+            android:visibility="visible"
+            android:layout_below="@+id/autofillButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="5dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IP1"
+            android:id="@+id/ip1Button"
+            android:visibility="visible"
+            android:layout_alignTop="@+id/ipButton"
+            android:layout_toRightOf="@+id/ipButton"
+            android:layout_toEndOf="@+id/ipButton" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ip2"
+            android:id="@+id/ip2Button"
+            android:visibility="visible"
+            android:layout_alignTop="@+id/ip1Button"
+            android:layout_toRightOf="@+id/ip1Button"
+            android:layout_toEndOf="@+id/ip1Button" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="IP1"
-        android:id="@+id/ip1Button"
-        android:visibility="visible"
-        android:layout_alignTop="@+id/ipButton"
-        android:layout_toRightOf="@+id/ipButton"
-        android:layout_toEndOf="@+id/ipButton" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ip2"
-        android:id="@+id/ip2Button"
-        android:visibility="visible"
-        android:layout_alignTop="@+id/ip1Button"
-        android:layout_toRightOf="@+id/ip1Button"
-        android:layout_toEndOf="@+id/ip1Button" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/loginTitle"
+            android:id="@+id/textView"
+            android:textSize="25sp"
+            android:textAlignment="center"
+            android:singleLine="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="5dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/boder"
+            android:id="@+id/relativeLayout8"
+            android:layout_below="@+id/textView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="5dp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="登录"
+                android:id="@+id/loginButton"
+                android:textColor="#ffffff"
+                android:background="#3562bd"
+                android:textSize="15sp"
+                android:layout_below="@+id/savePasswordCheckBox"
+                android:layout_alignLeft="@+id/savePasswordCheckBox"
+                android:layout_alignStart="@+id/savePasswordCheckBox"
+                android:layout_alignRight="@+id/passwordEditText"
+                android:layout_alignEnd="@+id/passwordEditText"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="20dp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:id="@+id/shipNumberEditText"
+                android:layout_below="@+id/textView30"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:singleLine="true"
+                android:textSize="15dp"
+                android:background="@android:drawable/editbox_background_normal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:id="@+id/passwordEditText"
+                android:layout_below="@+id/textView31"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:password="true"
+                android:singleLine="true"
+                android:textSize="15dp"
+                android:background="@android:drawable/editbox_background_normal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:gravity="center_vertical|start"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="  用户登录"
+                android:id="@+id/textView29"
+                android:textColor="#ffffff"
+                android:background="#3562bd"
+                android:textSize="16sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/shipNumber"
+                android:id="@+id/textView30"
+                android:layout_marginTop="55dp"
+                android:layout_below="@+id/textView"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/password"
+                android:id="@+id/textView31"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/shipNumberEditText"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:textSize="16sp" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="记住密码"
+                android:id="@+id/savePasswordCheckBox"
+                android:layout_below="@+id/passwordEditText"
+                android:layout_alignLeft="@+id/passwordEditText"
+                android:layout_alignStart="@+id/passwordEditText"
+                android:textColor="#797979"
+                android:checked="false"
+                android:layout_alignRight="@+id/passwordEditText"
+                android:layout_alignEnd="@+id/passwordEditText"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

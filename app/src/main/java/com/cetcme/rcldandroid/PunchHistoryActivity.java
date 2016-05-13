@@ -202,7 +202,8 @@ public class PunchHistoryActivity extends AppCompatActivity {
                             map.put("id", punch.getString("sailorIdNo"));
                             map.put("name", punch.getString("sailorName"));
                             map.put("punchTime", punch.getString("punchTime"));
-                            map.put("null", "第"+currentPage+"页");
+                            map.put("null", "");
+//                            map.put("null", "第"+currentPage+"页");
 
                             dataList.add(map);
                         }

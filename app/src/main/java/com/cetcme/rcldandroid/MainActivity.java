@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //百度地图初始化
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().hide();
 
         client = new AsyncHttpClient();
         toast = Toast.makeText(getApplicationContext(),"",LENGTH_SHORT);
@@ -157,6 +161,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        MenuItem close = menu.add(0,0,0,"二维码");
+        close.setIcon(R.drawable.icon_close_window);
+        close.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        close.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                finish();
+                return false;
+            }
+        });
+
+        return true;
+
+    }
+
     private void debugModeEnable(Boolean enable) {
 //        if (enable) {
 //            ipButton.setVisibility(View.VISIBLE);
@@ -195,52 +218,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.loginButton:
 
-                //设置
-//                if (shipName.equals("setserverip") && !password.equals("")) {
-//                    //setServerIP
-//                    Boolean isIP =  new PrivateEncode().ipCheck(password);
-//                    if (isIP) {
-//                        editor.putString("serverIP", password);
-//                        editor.apply();
-//                        Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + password, LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(getApplicationContext(), "IP格式错误", LENGTH_SHORT).show();
-//                    }
-//                    return;
-//                } else if (shipName.equals("showserverip")) {
-//                    //showserverip
-//                    String serverIP = user.getString("serverIP", "120.27.149.252");
-//                    Toast.makeText(getApplicationContext(), "当前服务器IP：" + serverIP, LENGTH_SHORT).show();
-//                    return;
-//                } else if (shipName.equals("setserveripdefault")) {
-//                    //setServerIP
-//                    editor.putString("serverIP", "120.27.149.252");
-//                    editor.apply();
-//                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "120.27.149.252", LENGTH_SHORT).show();
-//                    return;
-//                }  else if (shipName.equals("setserveripdefault2")) {
-//                    //setServerIP2
-//                    editor.putString("serverIP", "114.55.101.20");
-//                    editor.apply();
-//                    Toast.makeText(getApplicationContext(), "服务器IP修改成功：" + "114.55.101.20", LENGTH_SHORT).show();
-//                    return;  //114.55.101.20
-//                } else if (shipName.equals("debugmodeon") && password.equals("admin")) {
-//                    //debug mode on 显示fill button
-//                    editor.putBoolean("debugMode", true);
-//                    editor.apply();
-//                    Toast.makeText(getApplicationContext(), "Debug Mode: ON", LENGTH_SHORT).show();
-//                    debugModeEnable(true);
-//                    return;
-//                } else if (shipName.equals("debugmodeoff") && password.equals("admin")) {
-//                    //debug mode off 不显示fill button
-//                    editor.putBoolean("debugMode", false);
-//                    editor.apply();
-//                    Toast.makeText(getApplicationContext(), "Debug Mode: OFF", LENGTH_SHORT).show();
-//                    fillButton.setVisibility(View.INVISIBLE);
-//                    return;
-//                }
-
-                //打开debug mode
                 if (shipName.equals("debugmodeon") && password.equals("admin")) {
                     //debug mode on 显示fill button
                     editor.putBoolean("debugMode", true);
@@ -438,27 +415,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 WriteSharedPreferences(shipNumber, password);
 
                 //指示器
-                kProgressHUD.dismiss();
-                okHUD.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        kProgressHUD.dismiss();
+                        okHUD.show();
+
+                        //页面切换
+                        new Handler().postDelayed(new Runnable() {
+                            public void run() {
+
+
+                                Bundle bundle = new Bundle();
+                                bundle.putString("myShipInfo", myShipInfo.toString());
+                                Intent indexIntent = new Intent();
+                                indexIntent.setClass(getApplicationContext(), IndexActivity.class);
+                                indexIntent.putExtras(bundle);
+                                startActivity(indexIntent);
+                                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+                                finish();
+//                                okHUD.dismiss();
+
+                            }
+                        }, 800);
+                    }
+                }, 1000);
+
+
 //                toast.setText("登录成功!");
 //                toast.show();
 
-                //页面切换
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        okHUD.dismiss();
 
-                        Bundle bundle = new Bundle();
-                        bundle.putString("myShipInfo", myShipInfo.toString());
-                        Intent indexIntent = new Intent();
-                        indexIntent.setClass(getApplicationContext(), IndexActivity.class);
-                        indexIntent.putExtras(bundle);
-                        startActivity(indexIntent);
-                        overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
-                        finish();
-
-                    }
-                }, 1200);
             }
 
             @Override

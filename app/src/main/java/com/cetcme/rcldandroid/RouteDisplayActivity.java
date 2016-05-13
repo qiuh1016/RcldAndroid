@@ -49,6 +49,8 @@ public class RouteDisplayActivity extends AppCompatActivity {
 
     Boolean isConverted;
 
+    int maxMediaPointMarkerNum = 1000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class RouteDisplayActivity extends AppCompatActivity {
         baiduMap = mapView.getMap();
         baiduMap.clear();
 
+        //获取上个Activity给的数据
         Bundle bundle = this.getIntent().getExtras();
         String startTime = bundle.getString("startTime");
         String endTime = bundle.getString("endTime");
@@ -102,6 +105,8 @@ public class RouteDisplayActivity extends AppCompatActivity {
                 Double lng = data.getDouble("longitude");
                 LatLng latLng = new LatLng(lat, lng);
                 latLngs.add(latLng);
+                latLngs.add(latLng);
+                latLngs.add(latLng);
             }
             isConverted = false;
         } catch (JSONException e) {
@@ -132,9 +137,11 @@ public class RouteDisplayActivity extends AppCompatActivity {
         //构建分段颜色索引数组
         List<Integer> colors = new ArrayList<>();
         if (isConverted) {
+//            colors.add(R.color.colorRouteConved);
             colors.add(0xFF167CF3); //纠偏成功显示蓝色
         } else {
-            colors.add(0xFFE27575); //纠偏成功显示红色
+//            colors.add(R.color.colorRouteunConved);
+            colors.add(0xFFE27575); //纠偏失败显示红色
         }
 
         OverlayOptions ooPolyline = new PolylineOptions()
@@ -156,9 +163,9 @@ public class RouteDisplayActivity extends AppCompatActivity {
         //起点终点标注
         //构建Marker图标
         BitmapDescriptor startBitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.routestarticonsmall);
+                .fromResource(R.drawable.icon_start);
         BitmapDescriptor endBitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.routeendiconsmall);
+                .fromResource(R.drawable.icon_end);
         //构建MarkerOption，用于在地图上添加Marker
         OverlayOptions startMaker = new MarkerOptions()
                 .position(latLngs.get(0))
@@ -171,11 +178,11 @@ public class RouteDisplayActivity extends AppCompatActivity {
         baiduMap.addOverlay(endMaker);
 
         //showMediaPoint
-        if (showMediaPoint && latLngs.size() < 100) {
+        if (showMediaPoint && latLngs.size() < maxMediaPointMarkerNum) {
 
             BitmapDescriptor mediaBitmap = BitmapDescriptorFactory
-//                    .fromResource(R.drawable.mapmakericon);
-                        .fromResource(android.R.drawable.ic_notification_overlay);
+                    .fromResource(R.drawable.icon_point);
+//                        .fromResource(android.R.drawable.ic_notification_overlay);
             for (int i = 1; i < latLngs.size() - 1; i++) {
                 OverlayOptions mediaMaker = new MarkerOptions()
                         .position(latLngs.get(i))
@@ -220,6 +227,8 @@ public class RouteDisplayActivity extends AppCompatActivity {
     }
 
     private int zoomLevel(Double d) {
+
+        //TODO: 测试有问题  3302261997120005  5月13日 12点到14点
         int zoomLevel = 14;
         int i = 20;
 //        if (d < 50 * i) {

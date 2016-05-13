@@ -1,10 +1,8 @@
 package com.cetcme.rcldandroid;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,13 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.*;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.platform.comapi.map.L;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -30,14 +27,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cz.msebera.android.httpclient.Header;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class MyshipActivity extends AppCompatActivity implements View.OnClickListener, BaiduMap.OnMarkerClickListener{
+public class MyShipActivity extends AppCompatActivity implements View.OnClickListener, BaiduMap.OnMarkerClickListener{
 
     private JSONObject myShipInfoJSON;
 
@@ -80,7 +74,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         baiduMap = mapView.getMap();
         baiduMap.setOnMarkerClickListener(this);
 
-        toast =  Toast.makeText(MyshipActivity.this, "", LENGTH_SHORT);
+        toast =  Toast.makeText(MyShipActivity.this, "", LENGTH_SHORT);
 
         //mapSet();
 
@@ -99,20 +93,47 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
                 shipName = "无";
             }
 
-            String shipNumber = data0.getString("shipNo");
-            String ownerName = data0.getString("ownerName");
-            String deviceNo = data0.getString("deviceNo");
+//            String shipNumber = data0.getString("shipNo");
 
-            String ownerTelNo = data0.getString("ownerTelNo");
-            Boolean offlineFlag = data0.getBoolean("offlineFlag");
+            String ownerName;
+            try {
+                ownerName = data0.getString("ownerName");
+            } catch (JSONException e) {
+                ownerName = "无";
+            }
+
+            String deviceNo;
+            try {
+                deviceNo = data0.getString("deviceNo");
+            } catch (JSONException e) {
+                deviceNo = "无";
+            }
+
+            String ownerTelNo;
+            try {
+                ownerTelNo = data0.getString("ownerTelNo");
+            } catch (JSONException e) {
+                ownerTelNo = "无";
+            }
+
+            Boolean offlineFlag;
+            try {
+                offlineFlag = data0.getBoolean("offlineFlag");
+            } catch (JSONException e) {
+                offlineFlag = false;
+            }
 
             String cfsStartDate;
-            String cfsEndDate;
             try {
                 cfsStartDate = data0.getString("cfsStartDate");
-                cfsEndDate = data0.getString("cfsEndDate");
             } catch (JSONException e) {
                 cfsStartDate = "无";
+            }
+
+            String cfsEndDate;
+            try {
+                cfsEndDate = data0.getString("cfsEndDate");
+            } catch (JSONException e) {
                 cfsEndDate = "无";
             }
 
@@ -141,8 +162,18 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
                 onLine = "否";
             }
 
-            Double Lat = data0.getDouble("latitude");
-            Double Lng = data0.getDouble("longitude");
+            Double Lat;
+            Double Lng;
+            try {
+                Lat = data0.getDouble("latitude");
+            } catch (JSONException e) {
+                Lat = 0.0;
+            }
+            try {
+                Lng = data0.getDouble("longitude");
+            } catch (JSONException e) {
+                Lng = 0.0;
+            }
 
             shipLocation = new LatLng(Lat, Lng);
 
@@ -407,7 +438,7 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
         LatLng point = latLng;
         //构建Marker图标
         BitmapDescriptor bitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.mapmakericon);
+                .fromResource(R.drawable.icon_point);
         //构建MarkerOption，用于在地图上添加Marker
         OverlayOptions option = new MarkerOptions()
                 .position(point)
@@ -417,19 +448,18 @@ public class MyshipActivity extends AppCompatActivity implements View.OnClickLis
 
         //创建InfoWindow展示的view
         Button button = new Button(getApplicationContext());
-//        button.setBackgroundResource(R.drawable.mapinfoview);
-        button.setBackgroundResource(R.drawable.boder);
+//        button.setBackgroundResource(android.R.drawable.map_image_border_white);
+        button.setBackgroundResource(R.drawable.infowindow);
 //        button.setBackgroundColor(0x88FFFFFF);
         button.setTextSize(13);
         button.setGravity(Gravity.CENTER);
-        button.setPadding(20,20,20,20);
+        button.setPadding(20,20,20,40);
         button.setText(shipInfoString);
         button.setTextColor(0xFF7D7D7D);
         button.setGravity(Gravity.LEFT);
         //定义用于显示该InfoWindow的坐标点
-//        LatLng pt = new LatLng(Lat, Lng);
         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
-        mInfoWindow = new InfoWindow(button, point, -bitmap.getBitmap().getHeight());
+        mInfoWindow = new InfoWindow(button, point, (int) (-bitmap.getBitmap().getHeight() * 1.1));
 
         //显示InfoWindow
         baiduMap.showInfoWindow(mInfoWindow);
