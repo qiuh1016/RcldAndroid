@@ -152,8 +152,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .setSize(110,110)
                 .setDimAmount(0.3f);
 
-
-        Log.i("Main", new PrivateEncode().B64_md5("123"));
     }
 
     @Override
@@ -324,6 +322,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         params.put("userName", shipNumber);
         params.put("password", new PrivateEncode().b64_md5(password));
         params.put("userType", 2);
+
+        Log.i("Main", new PrivateEncode().b64_md5(password));
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", "120.27.149.252");
