@@ -271,16 +271,6 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private class getJSONDataTask extends AsyncTask {
-
-        @Override
-        protected Object doInBackground(Object[] params) {
-
-            Log.i("Main", "task:" + params.toString());
-            return null;
-        }
-    }
-
     private void geoconv(List<LatLng> list) {
 
         String urlBody = "http://api.map.baidu.com/geoconv/v1/";

@@ -74,7 +74,7 @@
         <activity
             android:name=".splashScreen"
             android:screenOrientation="portrait" />
-        <activity android:name=".ioLogActivity"></activity>
+        <activity android:name=".ioLogActivity" />
     </application>
 
 </manifest>

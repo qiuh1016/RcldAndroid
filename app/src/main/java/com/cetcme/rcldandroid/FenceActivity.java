@@ -1,19 +1,13 @@
 package com.cetcme.rcldandroid;
 
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -62,12 +56,11 @@ public class FenceActivity extends AppCompatActivity {
         fenceListView.getLoadingLayoutProxy(true,false).setReleaseLabel("松开立即刷新");
         fenceListView.getLoadingLayoutProxy(true,false).setPullLabel("下拉可以刷新");
 
-        simpleAdapter = new SimpleAdapter(this, getFenceData(), R.layout.fencelistview,
-                new String[]{"fenceName", "berthAmount", "fenceNo", "inShipAmount", "fenceLevel"},
+        simpleAdapter = new SimpleAdapter(this, getFenceData(), R.layout.fence_list_cell,
+                new String[]{"fenceName", "berthAmount", "inShipAmount", "fenceLevel"},
                 new int[]{
                         R.id.fenceNameTextViewInFenceListView,
                         R.id.boweiTextViewInFenceListView,
-                        R.id.fenceIDTextViewInFenceListView,
                         R.id.shipNumberTextViewInFenceListView,
                         R.id.fenceTypeTextViewInFenceListView});
 
@@ -105,7 +98,6 @@ public class FenceActivity extends AppCompatActivity {
     //TODO: 点击扩展Cell 显示详细内容
     //TODO: 点击显示港口地图
 
-    //TODO: 泊位api更改 拿到下面一栏
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        super.onCreateOptionsMenu(menu);
@@ -191,9 +183,9 @@ public class FenceActivity extends AppCompatActivity {
                         }
 
                         try {
-                            map.put("berthAmount", "泊位：" + fence.getString("berthAmount"));
+                            map.put("berthAmount", fence.getString("berthAmount"));
                         } catch (JSONException e) {
-                            map.put("berthAmount", "泊位：无");
+                            map.put("berthAmount", "无");
                         }
 
                         try {

@@ -208,8 +208,8 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreateOptionsMenu(menu);
 
         MenuItem changeInfo = menu.add(0, 0, 0, "修改信息");
-        MenuItem oConfirm = menu.add(0, 0, 0, "出海确认");
-        MenuItem iConfirm = menu.add(0, 0, 0, "回港确认");
+        MenuItem oConfirm = menu.add(0, 0, 0, R.string.oConfirm);
+        MenuItem iConfirm = menu.add(0, 0, 0, R.string.iConfirm);
         MenuItem punch = menu.add(0, 0, 0, "打卡记录");
         MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
         antiThiefMenuItem = menu.add(0, 0, 0, antiThiefIsOpen? "关闭防盗" : "开启防盗");
@@ -315,7 +315,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), PunchActivity.class);
+                intent.setClass(getApplicationContext(), ioLogActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                 return false;
@@ -460,7 +460,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 //        button.setBackgroundColor(0x88FFFFFF);
         button.setTextSize(13);
         button.setGravity(Gravity.CENTER);
-        button.setPadding(40,40,40,60);
+        button.setPadding(20,20,20,30);
         button.setText(shipInfoString);
         button.setTextColor(0xFF7D7D7D);
         button.setGravity(Gravity.LEFT);

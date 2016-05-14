@@ -37,6 +37,8 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
 
     ArrayList<String> ids = new ArrayList<>();
 
+    private Boolean allowBackPress = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,11 +88,10 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void onBackPressed() {
-        super.onBackPressed();
-//        overridePendingTransition(R.anim.zoom_in_back,R.anim.zoom_out_back);
-//        overridePendingTransition(R.anim.zoom_out,R.anim.zoom_in);
-        //        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-        overridePendingTransition(R.anim.push_right_in_no_alpha,R.anim.push_right_out_no_alpha);
+        if (allowBackPress) {
+            super.onBackPressed();
+            overridePendingTransition(R.anim.push_right_in_no_alpha,R.anim.push_right_out_no_alpha);
+        }
     }
 
     @Override
@@ -145,13 +146,17 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                 toast.show();
                 changeButtonState(false);
 
+                //TODO: 有漏洞
+                allowBackPress = false;
+
                 //返回上一页
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        allowBackPress = true;
                         onBackPressed();
                     }
-                },1500);
+                },1000);
                 break;
 
             case R.id.button111:

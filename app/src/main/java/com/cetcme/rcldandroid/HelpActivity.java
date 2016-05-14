@@ -211,7 +211,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
         //bitmap
         BitmapDescriptor bitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.mapmakericon);
+                .fromResource(R.drawable.icon_point);
         final InfoWindow infoWindow =  new InfoWindow(bitmap, companyPosition, 0, new InfoWindow.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick() {

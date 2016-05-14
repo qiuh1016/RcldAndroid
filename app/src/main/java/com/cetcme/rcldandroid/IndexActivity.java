@@ -55,16 +55,17 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         Point pointSize = new Point();
         display.getSize(pointSize);
         int buttonSize = pointSize.x * 14 / 44;
-        int margin = buttonSize / 3;
+        int horizontalMargin = buttonSize / 3;
+        int verticalMargin = pointSize.y * 7 / 100;
 
         RelativeLayout.LayoutParams welcomeTextParams = (RelativeLayout.LayoutParams) welcomeTextView.getLayoutParams();
-        welcomeTextParams.bottomMargin = margin;
+        welcomeTextParams.bottomMargin = verticalMargin * 4 / 5;
         welcomeTextView.setLayoutParams(welcomeTextParams);
 
         RelativeLayout.LayoutParams myShipButtonParams = (RelativeLayout.LayoutParams) myShipButton.getLayoutParams();
         myShipButtonParams.height = buttonSize;
         myShipButtonParams.width = buttonSize;
-        myShipButtonParams.rightMargin = margin;
+        myShipButtonParams.rightMargin = horizontalMargin;
         myShipButton.setLayoutParams(myShipButtonParams);
 
         RelativeLayout.LayoutParams fenceButtonParams = (RelativeLayout.LayoutParams) fenceButton.getLayoutParams();
@@ -75,7 +76,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         RelativeLayout.LayoutParams routeButtonParams = (RelativeLayout.LayoutParams) routeButton.getLayoutParams();
         routeButtonParams.height = buttonSize;
         routeButtonParams.width = buttonSize;
-        routeButtonParams.topMargin = margin;
+        routeButtonParams.topMargin = verticalMargin;
 //        routeButtonParams.setMargins(0,buttonSize / 2,0,0);
         routeButton.setLayoutParams(routeButtonParams);
 
@@ -94,14 +95,14 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             JSONObject data0 = data.getJSONObject(0);
             String ownerName = data0.getString("ownerName");
             if (ownerName.isEmpty()) {
-                welcomeTextView.setText("欢迎使用本软件！");
+                welcomeTextView.setText("欢迎使用本软件!");
             } else {
-                welcomeTextView.setText(ownerName + "，欢迎使用本软件！");
+                welcomeTextView.setText(ownerName + "，欢迎使用本软件!");
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
-            welcomeTextView.setText("欢迎使用本软件！");
+            welcomeTextView.setText("欢迎使用本软件!");
         }
 
     }

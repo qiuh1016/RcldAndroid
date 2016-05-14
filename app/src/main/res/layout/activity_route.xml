@@ -104,8 +104,8 @@
             android:layout_alignRight="@+id/textView7"
             android:layout_alignEnd="@+id/textView7"
             android:layout_marginRight="20dp"
-            android:layout_alignLeft="@+id/endTimePickButton"
-            android:layout_alignStart="@+id/endTimePickButton" />
+            android:layout_toRightOf="@+id/textView11"
+            android:layout_toEndOf="@+id/textView11" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -136,5 +136,30 @@
             android:layout_alignEnd="@+id/textView7"
             android:layout_marginRight="20dp" />
     </RelativeLayout>
+
+    <RadioGroup android:id="@+id/radioGroup" android:contentDescription="类型" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/relativeLayout"
+        android:layout_alignEnd="@+id/relativeLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="轨迹记录"
+        android:id="@+id/routeRadioButton"
+        android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="出海记录"
+            android:id="@+id/ioLogRadioButton"
+            android:checked="false"
+            android:layout_marginLeft="50dp" />
+
+    </RadioGroup>
 
 </RelativeLayout>

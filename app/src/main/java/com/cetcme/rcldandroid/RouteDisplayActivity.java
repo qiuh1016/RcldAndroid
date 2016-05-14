@@ -287,7 +287,7 @@ public class RouteDisplayActivity extends AppCompatActivity {
             baiduMap.setMapStatus(mapStatusUpdate);
 
             BitmapDescriptor endBitmap = BitmapDescriptorFactory
-                    .fromResource(R.drawable.routeendicon);
+                    .fromResource(R.drawable.icon_end);
             //构建MarkerOption，用于在地图上添加Marker
             OverlayOptions endMaker = new MarkerOptions()
                     .position(latLngs.get(0))

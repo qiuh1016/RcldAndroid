@@ -10,7 +10,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -21,20 +21,10 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:textColor="#3050ad"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
-                android:id="@+id/boweiTextViewInFenceListView"
-                android:layout_alignTop="@+id/fenceNameTextViewInFenceListView"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:textSize="16sp" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -45,17 +35,17 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp" >
+            android:layout_height="wrap_content" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="港口编号"
+                android:text="泊位"
                 android:id="@+id/textView4"
-                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:layout_marginBottom="2dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,17 +78,17 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Medium Text"
-                android:id="@+id/fenceIDTextViewInFenceListView"
-                android:layout_centerVertical="true"
+                android:id="@+id/boweiTextViewInFenceListView"
                 android:layout_marginLeft="10dp"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:layout_marginBottom="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -106,7 +96,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Medium Text"
                 android:id="@+id/shipNumberTextViewInFenceListView"
-                android:layout_alignTop="@+id/fenceIDTextViewInFenceListView"
+                android:layout_alignTop="@+id/boweiTextViewInFenceListView"
                 android:layout_centerHorizontal="true"
                 android:textSize="13sp" />
 

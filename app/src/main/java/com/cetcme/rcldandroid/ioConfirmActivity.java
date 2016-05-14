@@ -51,6 +51,8 @@ public class ioConfirmActivity extends AppCompatActivity {
     ArrayList<String> ids = new ArrayList<>();
     ArrayList<Integer> uploadOKList;
 
+    private Boolean showBackDialog = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,17 +61,17 @@ public class ioConfirmActivity extends AppCompatActivity {
         Bundle bundle = this.getIntent().getExtras();
         iofFlag = bundle.getInt("iofFlag");
         if (iofFlag == 1) {
-            setTitle("出海确认");
+            setTitle(R.string.oConfirm);
         } else if (iofFlag == 2) {
-            setTitle("回港确认");
+            setTitle(R.string.iConfirm);
         }
 
         listView = (ListView) findViewById(R.id.punchListView);
-        simpleAdapter = new SimpleAdapter(this, getPunchData(), R.layout.punchlistview,
+        simpleAdapter = new SimpleAdapter(this, getPunchData(), R.layout.punch_list_cell,
                 new String[]{"name", "id", "punchTime", "dataTypeString"},
                 new int[]{
-                        R.id.nameTextViewInPunchListView,
-                        R.id.idTextViewInPunchListView,
+                        R.id.timeTextInioLogCell,
+                        R.id.ioFlagTextInioLogCell,
                         R.id.punchTimeTextViewInPunchListView,
                         R.id.dataTypeTextViewInPunchListView
                         });
@@ -146,10 +148,31 @@ public class ioConfirmActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.push_right_in_no_alpha,
-                R.anim.push_right_out_no_alpha);
-//        toast.cancel();
+
+        if (dataList.size() == 0) {
+            showBackDialog = false;
+        }
+
+        if (showBackDialog) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(ioConfirmActivity.this);
+            dialog.setIcon(android.R.drawable.ic_delete);
+            dialog.setTitle("返回将丢失现有操作");
+            dialog.setMessage("是否继续？");
+            dialog.setPositiveButton("返回", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    showBackDialog = false;
+                    onBackPressed();
+                }
+            });
+            dialog.setNegativeButton("取消",null);
+            dialog.show();
+        } else {
+            super.onBackPressed();
+            overridePendingTransition(R.anim.push_right_in_no_alpha,
+                    R.anim.push_right_out_no_alpha);
+        }
+
     }
 
     @Override
@@ -357,9 +380,99 @@ public class ioConfirmActivity extends AppCompatActivity {
 
         uploadOKList = new ArrayList<>();
         Log.i("Main" , "一共" + dataList.size() + "个数据");
-        for (int i = 0; i < dataList.size(); i++) {
-            uploadPunch(i);
+
+        JSONArray sailors = new JSONArray();
+        try {
+            for (int i = 0; i < dataList.size(); i++) {
+                JSONObject sailor = new JSONObject();
+
+                sailor.put("sailorIdNo", dataList.get(i).get("id"));
+                sailor.put("sailorName", dataList.get(i).get("name"));
+
+                int dataType = (int) dataList.get(i).get("dataType");
+                if (dataType != 1) {
+                    sailor.put("punchTime", dataList.get(i).get("punchTime"));
+                }
+
+                sailor.put("dataType", dataType);
+
+                String reason = (String) dataList.get(i).get("reason");
+                if (!reason.isEmpty()) {
+                    sailor.put("reason", dataList.get(i).get("reason"));
+                }
+
+                sailors.put(sailor);
+            }
+            Log.i("Main", sailors.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+
+
+        //获取保存的用户名和密码
+        String shipNumber,password,serverIP;
+        SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
+        shipNumber = user.getString("shipNumber","");
+        password = user.getString("password","");
+        serverIP = user.getString("serverIP", "120.27.149.252");
+        password = new PrivateEncode().b64_md5(password);
+
+        //设置输入参数
+        RequestParams params = new RequestParams();
+        params.put("userName", shipNumber);
+        params.put("password", password);
+        params.put("iofFlag", iofFlag);
+        params.put("sailors", sailors);
+
+
+        String urlBody = "http://"+serverIP+"/api/app/iof/sailor/new.json";
+//        String url = urlBody+"?userName="+shipNumber+"&password="+password+"&startTime="+startTime+"&endTime="+endTime;
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // If the response is JSONObject instead of expected JSONArray
+                Log.i("Main",response.toString());
+                try {
+                    int code = response.getInt("code");
+                    if (code == 0) {
+                        toast.setText("上传成功");
+                        toast.show();
+                    } else {
+                        toast.setText("上传失败");
+                        toast.show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.i("Main", "error");
+                    toast.setText("上传失败");
+                    toast.show();
+                }
+
+                kProgressHUD.dismiss();
+
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                kProgressHUD.dismiss();
+                toast.setText("网络连接失败");
+                toast.show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                Log.i("Main", response);
+                kProgressHUD.dismiss();
+                toast.setText("网络连接失败");
+                toast.show();
+            }
+
+
+        });
+
 
     }
 
@@ -436,5 +549,7 @@ public class ioConfirmActivity extends AppCompatActivity {
 
         });
     }
+
+
 
 }

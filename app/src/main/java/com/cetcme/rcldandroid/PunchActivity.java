@@ -62,11 +62,11 @@ public class PunchActivity extends AppCompatActivity {
         listView.getLoadingLayoutProxy(false,true).setReleaseLabel("松开立即加载");
         listView.getLoadingLayoutProxy(false,true).setPullLabel("上拉可以加载");
 
-        simpleAdapter = new SimpleAdapter(PunchActivity.this, getPunchData(true), R.layout.punchlistview,
+        simpleAdapter = new SimpleAdapter(PunchActivity.this, getPunchData(true), R.layout.punch_list_cell,
                 new String[]{"name", "id", "punchTime", "null"},
                 new int[]{
-                        R.id.nameTextViewInPunchListView,
-                        R.id.idTextViewInPunchListView,
+                        R.id.timeTextInioLogCell,
+                        R.id.ioFlagTextInioLogCell,
                         R.id.punchTimeTextViewInPunchListView,
                         R.id.dataTypeTextViewInPunchListView
                 });
