@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -152,6 +153,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .setDimAmount(0.3f);
 
 
+        Log.i("Main", new PrivateEncode().B64_md5("123"));
     }
 
     @Override

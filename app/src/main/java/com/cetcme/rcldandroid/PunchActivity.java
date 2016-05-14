@@ -50,6 +50,7 @@ public class PunchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_punch);
+        setTitle("打卡记录");
 
         toast = Toast.makeText(PunchActivity.this, "", LENGTH_SHORT);
         listView = (PullToRefreshListView) findViewById(R.id.punchHistoryListView);

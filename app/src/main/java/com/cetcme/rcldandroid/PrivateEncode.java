@@ -1,12 +1,54 @@
 package com.cetcme.rcldandroid;
 
+import android.util.Base64;
+import android.util.Log;
+
 import org.liquidplayer.webkit.javascriptcore.JSContext;
 import org.liquidplayer.webkit.javascriptcore.JSValue;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by qiuhong on 5/5/16.
  */
 public class PrivateEncode {
+
+
+    public String getMD5(String info)
+    {
+        try
+        {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(info.getBytes("UTF-8"));
+            byte[] encryption = md5.digest();
+
+            StringBuffer strBuf = new StringBuffer();
+            for (int i = 0; i < encryption.length; i++)
+            {
+                if (Integer.toHexString(0xff & encryption[i]).length() == 1)
+                {
+                    strBuf.append("0").append(Integer.toHexString(0xff & encryption[i]));
+                }
+                else
+                {
+                    strBuf.append(Integer.toHexString(0xff & encryption[i]));
+                }
+            }
+
+            return strBuf.toString();
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            return "";
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            return "";
+        }
+    }
+
 
     private static double EARTH_RADIUS = 6378.137;
     private static double rad(double d) {
@@ -71,6 +113,12 @@ public class PrivateEncode {
         }
         // 返回判断信息
         return false;
+    }
+
+
+    public String B64_md5(String s) {
+        String md5 = new PrivateEncode().getMD5(s);
+        return new String(Base64.encode(md5.getBytes(), Base64.DEFAULT));
     }
 
     public String b64_md5(String s) {
