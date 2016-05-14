@@ -225,7 +225,6 @@ public class ioConfirmActivity extends AppCompatActivity {
         shipNumber = user.getString("shipNumber","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
-        password = PrivateEncode.b64_md5(password);
 
         dataList = new ArrayList<>();
 
@@ -414,7 +413,6 @@ public class ioConfirmActivity extends AppCompatActivity {
         shipNumber = user.getString("shipNumber","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
-        password = PrivateEncode.b64_md5(password);
 
         //设置输入参数
         RequestParams params = new RequestParams();
@@ -485,7 +483,6 @@ public class ioConfirmActivity extends AppCompatActivity {
         shipNumber = user.getString("shipNumber","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
-        password = PrivateEncode.b64_md5(password);
 
         //设置输入参数
         RequestParams params = new RequestParams();

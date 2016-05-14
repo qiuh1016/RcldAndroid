@@ -123,16 +123,16 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
         //创建InfoWindow展示的view
         TextView textView = new TextView(getApplicationContext());
-        textView.setBackgroundResource(R.drawable.infowindow);
+        textView.setBackgroundResource(R.drawable.infowindow_white);
         textView.setTextSize(13);
         textView.setGravity(Gravity.CENTER);
-        textView.setPadding(20,10,20,20);
+        textView.setPadding(20,10,20,30);
         textView.setText("中电科（宁波）海洋电子研究院有限公司");
         textView.setTextColor(0xFF7D7D7D);
         textView.setGravity(Gravity.CENTER);
 
         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量(maker 的高度)
-        mInfoWindow = new InfoWindow(textView, point, (int) (-bitmap.getBitmap().getHeight() * 1.1));
+        mInfoWindow = new InfoWindow(textView, point, -bitmap.getBitmap().getHeight());
 
         //显示InfoWindow
         baiduMap.showInfoWindow(mInfoWindow);

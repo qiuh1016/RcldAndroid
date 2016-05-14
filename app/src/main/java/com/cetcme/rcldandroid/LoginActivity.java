@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -54,7 +56,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private AsyncHttpClient client;
     private Boolean savePassword;
-
     private Toast toast;
 
     //debug button
@@ -226,7 +227,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //登录
                 loginButton.setEnabled(false);
                 kProgressHUD.show();
-                login(shipName, password);
+
+
+                //与保存的密码相等 则不加密，不相等则加密
+                String savedPassword = user.getString("password", "");
+                if (password.equals(savedPassword)) {
+                    login(shipName, password);
+                } else {
+                    login(shipName,PrivateEncode.b64_md5(password));
+                }
+
                 break;
             case R.id.closeButton:
                 finish();
@@ -320,10 +330,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void login(final String shipNumber, final String password) {
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", PrivateEncode.b64_md5(password));
+        params.put("password", password);
         params.put("userType", 2);
-
-        Log.i("Main", PrivateEncode.b64_md5(password));
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", "120.27.149.252");
@@ -371,7 +379,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
         new PrivateEncode();
-        params.put("password", PrivateEncode.b64_md5(password));
+        params.put("password", password);
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", "120.27.149.252");
@@ -459,6 +467,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editor.putString("password", strPassword);
         editor.apply();
     }
-
 
 }

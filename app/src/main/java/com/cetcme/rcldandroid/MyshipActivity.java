@@ -442,7 +442,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 
         //创建InfoWindow展示的view
         Button button = new Button(getApplicationContext());
-        button.setBackgroundResource(R.drawable.infowindow);
+        button.setBackgroundResource(R.drawable.infowindow_white);
         button.setTextSize(13);
         button.setGravity(Gravity.CENTER);
         button.setPadding(20,20,20,40);
@@ -459,7 +459,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
-        mInfoWindow = new InfoWindow(button, point, (int) (-bitmap.getBitmap().getHeight() * 1.1));
+        mInfoWindow = new InfoWindow(button, point, -bitmap.getBitmap().getHeight());
 
         //显示InfoWindow
         baiduMap.showInfoWindow(mInfoWindow);

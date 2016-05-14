@@ -201,19 +201,16 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         serverIP = user.getString("serverIP", "120.27.149.252");
         deviceNo = user.getString("deviceNo","");
 
-        //加密
-        String ps = PrivateEncode.b64_md5(password);
-
         //设置参数
         final RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", ps);
+        params.put("password", password);
         params.put("deviceNo", deviceNo);
         params.put("startTime", startTime);
         params.put("endTime", endTime);
 
         String urlBody = "http://"+serverIP+"/api/app/trail/get.json";
-        String url = urlBody+"?userName=" + shipNumber +"&password="+ps+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;
+        String url = urlBody+"?userName=" + shipNumber +"&password="+password+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;
         AsyncHttpClient client = new AsyncHttpClient();
         client.setURLEncodingEnabled(true);
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){

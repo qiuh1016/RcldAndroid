@@ -165,7 +165,6 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         String shipNumber = user.getString("shipNumber","");
         String password = user.getString("password","");
         String serverIP = user.getString("serverIP", "120.27.149.252");
-        password = new PrivateEncode().b64_md5(password);
 
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
