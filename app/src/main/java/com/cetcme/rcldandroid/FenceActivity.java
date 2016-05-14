@@ -126,7 +126,7 @@ public class FenceActivity extends AppCompatActivity {
 
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", new PrivateEncode().b64_md5(password));
+        params.put("password", PrivateEncode.b64_md5(password));
         String urlBody = "http://"+serverIP+"/api/app/fence/all.json";
         AsyncHttpClient client = new AsyncHttpClient();
 

@@ -202,7 +202,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         deviceNo = user.getString("deviceNo","");
 
         //加密
-        String ps = new PrivateEncode().b64_md5(password);
+        String ps = PrivateEncode.b64_md5(password);
 
         //设置参数
         final RequestParams params = new RequestParams();

@@ -320,10 +320,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void login(final String shipNumber, final String password) {
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", new PrivateEncode().b64_md5(password));
+        params.put("password", PrivateEncode.b64_md5(password));
         params.put("userType", 2);
 
-        Log.i("Main", new PrivateEncode().b64_md5(password));
+        Log.i("Main", PrivateEncode.b64_md5(password));
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", "120.27.149.252");
@@ -370,7 +370,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void getShipInfo(final String shipNumber, final String password) {
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
-        params.put("password", new PrivateEncode().b64_md5(password));
+        new PrivateEncode();
+        params.put("password", PrivateEncode.b64_md5(password));
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", "120.27.149.252");

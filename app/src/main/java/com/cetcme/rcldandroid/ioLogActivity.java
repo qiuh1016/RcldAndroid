@@ -123,7 +123,7 @@ public class ioLogActivity extends AppCompatActivity {
         shipNumber = user.getString("shipNumber","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
-        password = new PrivateEncode().b64_md5(password);
+        password = PrivateEncode.b64_md5(password);
 
         //刷新则清空
         if (isRefresh) {
