@@ -32,8 +32,6 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class MyShipActivity extends AppCompatActivity implements View.OnClickListener, BaiduMap.OnMarkerClickListener{
 
-    private JSONObject myShipInfoJSON;
-
     private ImageButton showShipLocationImageButton;
 
     private MapView mapView;
@@ -41,23 +39,20 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 
     private LatLng shipLocation;
     private String shipInfoString;
-
     private String picName;
     private String picTelNo;
-
+    private JSONObject myShipInfoJSON;
     private Boolean antiThiefIsOpen = false;
     private String antiThiefRadius;
     private OverlayOptions antiThiefPolygonOption;
     private Boolean isGeoConved = false;
 
     private MenuItem antiThiefMenuItem;
-
     private Toast toast;
 
     private Marker comMarker;
     private InfoWindow mInfoWindow;
     private Boolean infoWindowIsShow = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -354,7 +349,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-                Log.i("JSONObject",response.toString());
+                Log.i("Main",response.toString());
                 Integer status;
                 try {
                     status = response.getInt("status");
@@ -400,14 +395,6 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
-//        mapView.onDestroy();
-//    }
-//
     @Override
     protected void onResume() {
         super.onResume();
@@ -455,16 +442,22 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 
         //创建InfoWindow展示的view
         Button button = new Button(getApplicationContext());
-//        button.setBackgroundResource(android.R.drawable.map_image_border_white);
         button.setBackgroundResource(R.drawable.infowindow);
-//        button.setBackgroundColor(0x88FFFFFF);
         button.setTextSize(13);
         button.setGravity(Gravity.CENTER);
-        button.setPadding(20,20,20,30);
+        button.setPadding(20,20,20,40);
         button.setText(shipInfoString);
         button.setTextColor(0xFF7D7D7D);
         button.setGravity(Gravity.LEFT);
-        //定义用于显示该InfoWindow的坐标点
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                baiduMap.hideInfoWindow();
+                infoWindowIsShow = false;
+            }
+        });
+
         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
         mInfoWindow = new InfoWindow(button, point, (int) (-bitmap.getBitmap().getHeight() * 1.1));
 

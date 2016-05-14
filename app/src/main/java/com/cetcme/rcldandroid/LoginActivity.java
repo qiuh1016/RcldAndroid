@@ -64,8 +64,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button nullButton;
     private Button quitButton;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -227,14 +225,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 //登录
                 loginButton.setEnabled(false);
-                kProgressHUD = KProgressHUD.create(LoginActivity.this)
-                        .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                        .setLabel("登录中")
-                        .setAnimationSpeed(1)
-                        .setDimAmount(0.3f)
-                        .setSize(110, 110)
-                        .setCancellable(false)
-                        .show();
+                kProgressHUD.show();
                 login(shipName, password);
                 break;
             case R.id.closeButton:
@@ -319,12 +310,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.passwordEditText:
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    //TODO: 回车登录
-//                    loginButton.callOnClick();
+                    loginButton.callOnClick();
                 }
                 break;
         }
-
         return false;
     }
 
@@ -402,7 +391,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     SharedPreferences.Editor editor = user.edit();
                     editor.putString("deviceNo", deviceNo);
                     editor.apply();
-                    Log.i("Main", "deviceNo saved:" + deviceNo);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -425,15 +413,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 Intent indexIntent = new Intent();
                                 indexIntent.setClass(getApplicationContext(), IndexActivity.class);
                                 indexIntent.putExtras(bundle);
-                                okHUD.dismiss();
+
                                 startActivity(indexIntent);
                                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+                                okHUD.dismiss();
                                 finish();
 
                             }
-                        }, 800);
+                        }, 500);
                     }
-                }, 1000);
+                }, 500);
 
 //                toast.setText("登录成功!");
 //                toast.show();

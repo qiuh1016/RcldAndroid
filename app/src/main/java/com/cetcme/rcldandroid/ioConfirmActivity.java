@@ -42,14 +42,14 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class ioConfirmActivity extends AppCompatActivity {
 
-    ListView listView;
-    SimpleAdapter simpleAdapter;
-    List<Map<String, Object>> dataList = new LinkedList<>();
-    Toast toast;
-    KProgressHUD kProgressHUD;
-    int iofFlag;
-    ArrayList<String> ids = new ArrayList<>();
-    ArrayList<Integer> uploadOKList;
+    private ListView listView;
+    private SimpleAdapter simpleAdapter;
+    private List<Map<String, Object>> dataList = new LinkedList<>();
+    private Toast toast;
+    private KProgressHUD kProgressHUD;
+    private int iofFlag;
+    private ArrayList<String> ids = new ArrayList<>();
+    private ArrayList<Integer> uploadOKList;
 
     private Boolean showBackDialog = true;
 
@@ -408,8 +408,6 @@ public class ioConfirmActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-
         //获取保存的用户名和密码
         String shipNumber,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
@@ -429,6 +427,7 @@ public class ioConfirmActivity extends AppCompatActivity {
         String urlBody = "http://"+serverIP+"/api/app/iof/sailor/new.json";
 //        String url = urlBody+"?userName="+shipNumber+"&password="+password+"&startTime="+startTime+"&endTime="+endTime;
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setURLEncodingEnabled(true);
         client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -439,8 +438,12 @@ public class ioConfirmActivity extends AppCompatActivity {
                     if (code == 0) {
                         toast.setText("上传成功");
                         toast.show();
+                        dataList.clear();
+                        ids.clear();
+                        simpleAdapter.notifyDataSetChanged();
                     } else {
-                        toast.setText("上传失败");
+                        String msg = response.getString("msg");
+                        toast.setText(msg);
                         toast.show();
                     }
                 } catch (JSONException e) {
@@ -451,8 +454,6 @@ public class ioConfirmActivity extends AppCompatActivity {
                 }
 
                 kProgressHUD.dismiss();
-
-
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -549,7 +550,5 @@ public class ioConfirmActivity extends AppCompatActivity {
 
         });
     }
-
-
 
 }

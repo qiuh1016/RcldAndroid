@@ -24,20 +24,20 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
     private TextView reasonTextView;
     private Button addButton;
 
-    private Button fillButton;
-    private Button idCheckButton;
-
     private Toast toast;
 
-    String name;
-    String id;
-    String reason;
+    private String name;
+    private String id;
+    private String reason;
 
-    SharedPreferences user;
+    private SharedPreferences user;
 
-    ArrayList<String> ids = new ArrayList<>();
-
+    private ArrayList<String> ids = new ArrayList<>();
     private Boolean allowBackPress = true;
+
+    //debug
+    private Button fillButton;
+    private Button idCheckButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,9 +146,7 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                 toast.show();
                 changeButtonState(false);
 
-                //TODO: 有漏洞
                 allowBackPress = false;
-
                 //返回上一页
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -156,7 +154,7 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
                         allowBackPress = true;
                         onBackPressed();
                     }
-                },1000);
+                },800);
                 break;
 
             case R.id.button111:
@@ -208,24 +206,5 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     };
-
-    protected void dialog(String name, String id, String reason) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ReasonActivity.this);
-        builder.setMessage(
-                "姓名：" + name + "\n" +
-                "身份证：" + id + "\n" +
-                "原因：" + reason + "\n"
-        );
-        builder.setTitle("添加完成");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                changeButtonState(false);
-//                onBackPressed();
-//                overridePendingTransition(R.anim.push_left_out_no_alpha, R.anim.push_left_in_no_alpha);
-            }
-        });
-        builder.create().show();
-    }
 
 }

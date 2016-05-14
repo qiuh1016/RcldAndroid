@@ -149,6 +149,11 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    public void onBackPressed() {
+        //super.onBackPressed();
+        finishDialog();
+    }
+
     private void logout() {
         Intent loginIntent = new Intent();
         loginIntent.setClass(getApplicationContext(), LoginActivity.class);
@@ -212,11 +217,6 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         });
         builder.setNegativeButton("取消", null);
         builder.create().show();
-    }
-
-    public void onBackPressed() {
-        //super.onBackPressed();
-        finishDialog();
     }
 
     @Override

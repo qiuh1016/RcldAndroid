@@ -1,7 +1,5 @@
 package com.cetcme.rcldandroid;
 
-import android.util.Log;
-
 import org.liquidplayer.webkit.javascriptcore.JSContext;
 import org.liquidplayer.webkit.javascriptcore.JSValue;
 
@@ -15,7 +13,7 @@ public class PrivateEncode {
         return d * Math.PI / 180.0;
     }
 
-    public double GetDistance(double lat1, double lng1, double lat2, double lng2) {
+    public Double GetDistance(double lat1, double lng1, double lat2, double lng2) {
         double radLat1 = rad(lat1);
         double radLat2 = rad(lat2);
         double a = radLat1 - radLat2;
@@ -27,8 +25,7 @@ public class PrivateEncode {
         return s;
     }
 
-    public Boolean isCard(String text)
-    {
+    public Boolean isCard(String text) {
 //        String reg15 = "^[1-9]\\d{7}((0\\[1-9])|(1[0-2]))(([0\\[1-9]|1\\d|2\\d])|3[0-1])\\d{2}([0-9]|x|X){1}$";
 
         if (text.length() != 18 ) {
@@ -53,9 +50,7 @@ public class PrivateEncode {
         int remainder = summary % 11;
         String checkString = "10X98765432";
         String checkBit = String.valueOf(checkString.charAt(remainder));
-        Boolean match = checkBit.equals(String.valueOf(text.charAt(17)).toUpperCase());
-        return match;
-
+        return checkBit.equals(String.valueOf(text.charAt(17)).toUpperCase());
     }
 
     public Boolean ipCheck(String text) {
@@ -77,7 +72,6 @@ public class PrivateEncode {
         // 返回判断信息
         return false;
     }
-
 
     public String b64_md5(String s) {
         JSContext context = new JSContext();

@@ -40,8 +40,7 @@ public class FenceActivity extends AppCompatActivity {
     private KProgressHUD kProgressHUD;
 
     private Toast toast;
-//    Boolean refreshEnable = true;
-    Boolean isFirstTimeToGet = true;
+    private Boolean isFirstTimeToGet = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,42 +88,10 @@ public class FenceActivity extends AppCompatActivity {
                 String fenceTypeName = (String) map.get("fenceTypeName");
                 int fenceType = (int) map.get("fenceType");
 
-                fenceInfodialog(fenceName, city, country, fenceAddr, fenceType, fenceTypeName);
+                fenceInfoDialog(fenceName, city, country, fenceAddr, fenceType, fenceTypeName);
             }
         });
 
-    }
-
-    //TODO: 点击扩展Cell 显示详细内容
-    //TODO: 点击显示港口地图
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        super.onCreateOptionsMenu(menu);
-//
-//        MenuItem setting = menu.add(0, 0, 0, "刷新");
-//        setting.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//        setting.setIcon(R.drawable.refresh1);
-//        setting.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                //toast结束之前 不许刷新
-//                if (refreshEnable) {
-//                    getFenceData();
-//                }
-//                return false;
-//            }
-//        });
-//
-//        return true;
-//    }
-
-    void ReadSharedPreferences(){
-        String strName,strPassword;
-        SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
-        strName = user.getString("shipNumber","");
-        strPassword = user.getString("password","");
-        System.out.println("********" + strName + ":" + strPassword);
     }
 
     public void onBackPressed() {
@@ -250,11 +217,7 @@ public class FenceActivity extends AppCompatActivity {
                 }
 
                 if (isFirstTimeToGet) {
-                    new Handler().postDelayed(new Runnable(){
-                        public void run() {
-                            kProgressHUD.dismiss();
-                        }
-                    }, 300);
+                    kProgressHUD.dismiss();
                     isFirstTimeToGet = false;
                 }
 
@@ -276,7 +239,7 @@ public class FenceActivity extends AppCompatActivity {
         return dataList;
     }
 
-    protected void fenceInfodialog(String fenceName, String city, String country, String fenceAddr, int fenceType, String fenceTypeName) {
+    private void fenceInfoDialog(String fenceName, String city, String country, String fenceAddr, int fenceType, String fenceTypeName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(FenceActivity.this);
         builder.setMessage(
                 "所在市：" + city + "\n" +

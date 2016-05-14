@@ -46,8 +46,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
     private Marker comMarker;
     private InfoWindow mInfoWindow;
-    boolean infoWindowIsShow = false;
-
+    private Boolean infoWindowIsShow = false;
 
 
     @Override
@@ -71,40 +70,6 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
         mapMark(companyPosition);
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        super.onCreateOptionsMenu(menu);
-//        MenuItem add = menu.add(0,0,0,"Add");
-//        MenuItem del = menu.add(0,0,0,"Del");
-//        MenuItem save = menu.add(0,0,0,"save");
-//        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-//        del.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-//        save.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-//        add.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                System.out.println("add");
-//                return false;
-//            }
-//        });
-//        del.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                System.out.println("del");
-//                return false;
-//            }
-//        });
-//        save.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                System.out.println("save");
-//                return false;
-//            }
-//        });
-//
-//        return true;
-//    }
 
     public void onBackPressed() {
         super.onBackPressed();
@@ -175,7 +140,19 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (marker.equals(comMarker)) {
+            if (infoWindowIsShow) {
+                baiduMap.hideInfoWindow();
+            } else {
+                baiduMap.showInfoWindow(mInfoWindow);
+            }
+            infoWindowIsShow = !infoWindowIsShow;
+        }
 
+        return false;
+    }
 
     private void showInfoWindow() {
 
@@ -229,19 +206,5 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        if (marker.equals(comMarker)) {
-            if (infoWindowIsShow) {
-                baiduMap.hideInfoWindow();
-            } else {
-                baiduMap.showInfoWindow(mInfoWindow);
-            }
-            infoWindowIsShow = !infoWindowIsShow;
-        }
-
-        return false;
     }
 }

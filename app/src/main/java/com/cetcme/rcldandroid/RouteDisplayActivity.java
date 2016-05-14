@@ -42,14 +42,14 @@ public class RouteDisplayActivity extends AppCompatActivity {
 
     private List<LatLng> latLngs = new LinkedList<>();
 
-    LatLng maxPoint;
-    LatLng minPoint;
-    LatLng mediaPoint;
-    Double distance;
+    private LatLng maxPoint;
+    private LatLng minPoint;
+    private LatLng mediaPoint;
+    private Double distance;
 
-    Boolean isConverted;
+    private Boolean isConverted;
 
-    int maxMediaPointMarkerNum = 1000;
+    private int maxMediaPointMarkerNum = 1000;
 
 
     @Override
@@ -117,14 +117,6 @@ public class RouteDisplayActivity extends AppCompatActivity {
         UIOperation();
 
     }
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        baiduMap.clear();
-//        Log.i("Main", "onDestroy");
-//
-//    }
 
     public void onBackPressed() {
         super.onBackPressed();
@@ -274,7 +266,6 @@ public class RouteDisplayActivity extends AppCompatActivity {
         //          14     13    12      11     10    9    8      7      6      5     4      3       2         1
         //          18                          14         12                         8                       5
     }
-
 
     private void UIOperation() {
         //如果只有一个点 画标注 多于一个点 则画轨迹

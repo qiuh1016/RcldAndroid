@@ -35,18 +35,18 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class ioLogActivity extends AppCompatActivity {
 
 
-    PullToRefreshListView listView;
+    private PullToRefreshListView listView;
 
-    List<Map<String, Object>> dataList = new ArrayList<>();
-    Toast toast;
-    SimpleAdapter simpleAdapter;
+    private List<Map<String, Object>> dataList = new ArrayList<>();
+    private Toast toast;
+    private SimpleAdapter simpleAdapter;
 
-    int sum; //总数
-    int totalPage;
-    int currentPage = 0;
-    Boolean isFirstTimeToGet = true;
+    private int sum; //总数
+    private int totalPage;
+    private int currentPage = 0;
+    private Boolean isFirstTimeToGet = true;
 
-    KProgressHUD kProgressHUD;
+    private KProgressHUD kProgressHUD;
     private int pageSize = 20;
 
     @Override
@@ -95,11 +95,6 @@ public class ioLogActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     public void onBackPressed() {
@@ -261,6 +256,5 @@ public class ioLogActivity extends AppCompatActivity {
 
         return dataList;
     }
-
 
 }

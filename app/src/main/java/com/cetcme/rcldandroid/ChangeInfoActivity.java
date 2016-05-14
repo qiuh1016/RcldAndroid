@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,15 +43,17 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
     private EditText antiThiefRadiusEditText;
     private Button changeInfoButton;
 
-    String originalPicName;
-    String originalPicTelNo;
-    String originalAntiThiefRadius;
-    String toChangePicName;
-    String toChangePicTelNo;
-    String toChangeAntiThiefRadius;
+    private String originalPicName;
+    private String originalPicTelNo;
+    private String originalAntiThiefRadius;
+    private String toChangePicName;
+    private String toChangePicTelNo;
+    private String toChangeAntiThiefRadius;
 
-    Toast toast;
-    KProgressHUD kProgressHUD;
+    private Toast toast;
+    private KProgressHUD kProgressHUD;
+
+    private Boolean showBackDialog = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,28 +98,24 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.push_right_in_no_alpha,
-                R.anim.push_right_out_no_alpha);
-        toast.cancel();
-        //TODO: 返回提示
-//        AlertDialog.Builder builder = new AlertDialog.Builder(ChangeInfoActivity.this);
-//        builder.setMessage("");
-//        builder.setTitle("放弃修改？");
-//        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                fileList();
-//                overridePendingTransition(R.anim.push_right_in_no_alpha,
-//                        R.anim.push_right_out_no_alpha);
-//
-//            }
-//        });
-//
-//        builder.setNegativeButton("否",null);
-//        builder.create().show();
-
+        if (showBackDialog) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(ChangeInfoActivity.this);
+            dialog.setIcon(android.R.drawable.ic_delete);
+            dialog.setTitle("放弃修改？");
+            dialog.setPositiveButton("放弃", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    showBackDialog = false;
+                    onBackPressed();
+                }
+            });
+            dialog.setNegativeButton("取消",null);
+            dialog.show();
+        } else {
+            super.onBackPressed();
+            overridePendingTransition(R.anim.push_right_in_no_alpha,
+                    R.anim.push_right_out_no_alpha);
+        }
     }
 
     @Override
@@ -136,6 +135,13 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
                     toast.setText("半径修改成功：" + toChangeAntiThiefRadius);
                     toast.show();
                     changeButtonState(false);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showBackDialog = false;
+                            onBackPressed();
+                        }
+                    },500);
                 }
 
                 break;
@@ -172,8 +178,6 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
             params.put("picTelNo",toChangePicTelNo);
         }
 
-//        Log.i("Main",params.toString());
-
         String urlBody = "http://"+serverIP+"/api/app/ship/update.json";
         String url = urlBody + "?userName="+shipNumber+"&password="+password+"&picName="+toChangePicName+"&picTelNo="+toChangePicTelNo;
         AsyncHttpClient client = new AsyncHttpClient();
@@ -196,6 +200,13 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
                         }
                         toast.setText("修改成功,退出后生效");
                         changeButtonState(true);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                showBackDialog = false;
+                                onBackPressed();
+                            }
+                        },500);
                     } else {
                         String msg = response.getString("msg");
                         toast.setText(msg);
@@ -255,8 +266,11 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
                     toChangeAntiThiefRadius.equals("0") ||
                     toChangeAntiThiefRadius.equals("") ) {
                 changeButtonState(false);
+                showBackDialog = false;
+
             } else {
                 changeButtonState(true);
+                showBackDialog = true;
             }
 
         }

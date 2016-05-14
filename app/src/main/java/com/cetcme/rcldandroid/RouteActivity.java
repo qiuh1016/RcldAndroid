@@ -54,10 +54,10 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
     private Button routeSearchButton;
     private Switch showMediumPointSwitch;
 
-    KProgressHUD kProgressHUD;
-    Toast toast;
-    SlideDateTimePicker slideDateTimeListener;
-    Boolean isStartTime = true;
+    private KProgressHUD kProgressHUD;
+    private Toast toast;
+    private SlideDateTimePicker slideDateTimeListener;
+    private Boolean isStartTime = true;
 
     private String startTime;
     private String endTime;
@@ -68,7 +68,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     private List<LatLng> route;
 
-    Boolean reducePointBySize = false;  //根据轨迹点数量 来减少距离较近的点
+    private Boolean reducePointBySize = false;  //根据轨迹点数量 来减少距离较近的点
 
     private SlideDateTimeListener listener = new SlideDateTimeListener() {
 

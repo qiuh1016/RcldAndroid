@@ -81,7 +81,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="IP1"
+            android:text="IP120"
             android:id="@+id/ip1Button"
             android:visibility="visible"
             android:layout_alignTop="@+id/ipButton"
@@ -91,7 +91,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ip2"
+            android:text="ip114"
             android:id="@+id/ip2Button"
             android:visibility="visible"
             android:layout_alignTop="@+id/ip1Button"
