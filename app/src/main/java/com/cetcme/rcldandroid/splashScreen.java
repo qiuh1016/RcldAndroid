@@ -34,7 +34,7 @@ public class splashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 /* Create an Intent that will start the Main WordPress Activity. */
-                Intent mainIntent = new Intent(splashScreen.this, MainActivity.class);
+                Intent mainIntent = new Intent(splashScreen.this, LoginActivity.class);
                 splashScreen.this.startActivity(mainIntent);
                 splashScreen.this.finish();
             }

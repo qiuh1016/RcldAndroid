@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.*;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.platform.comapi.map.L;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -51,9 +50,9 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
     private OverlayOptions antiThiefPolygonOption;
     private Boolean isGeoConved = false;
 
-    private  MenuItem antiThiefMenuItem;
+    private MenuItem antiThiefMenuItem;
 
-    private  Toast toast;
+    private Toast toast;
 
     private Marker comMarker;
     private InfoWindow mInfoWindow;
@@ -212,14 +211,14 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         MenuItem oConfirm = menu.add(0, 0, 0, "出海确认");
         MenuItem iConfirm = menu.add(0, 0, 0, "回港确认");
         MenuItem punch = menu.add(0, 0, 0, "打卡记录");
-//        MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
+        MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
         antiThiefMenuItem = menu.add(0, 0, 0, antiThiefIsOpen? "关闭防盗" : "开启防盗");
 
         changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         oConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         iConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         punch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-//        iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         antiThiefMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
 //        changeInfo.setIcon(R.drawable.menuicon);
@@ -279,7 +278,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
                 Bundle bundle = new Bundle();
                 bundle.putInt("iofFlag", 2);
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), PunchActivity.class);
+                intent.setClass(getApplicationContext(), ioConfirmActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
@@ -293,7 +292,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
                 Bundle bundle = new Bundle();
                 bundle.putInt("iofFlag", 1);
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), PunchActivity.class);
+                intent.setClass(getApplicationContext(), ioConfirmActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
@@ -304,11 +303,19 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         punch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("iofFlag", 1);
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), PunchHistoryActivity.class);
-//                intent.putExtras(bundle);
+                intent.setClass(getApplicationContext(), PunchActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+                return false;
+            }
+        });
+
+        iofLog.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), PunchActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                 return false;
@@ -453,7 +460,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 //        button.setBackgroundColor(0x88FFFFFF);
         button.setTextSize(13);
         button.setGravity(Gravity.CENTER);
-        button.setPadding(20,20,20,40);
+        button.setPadding(40,40,40,60);
         button.setText(shipInfoString);
         button.setTextColor(0xFF7D7D7D);
         button.setGravity(Gravity.LEFT);
@@ -476,7 +483,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         baiduMap.setMapStatus(mapStatusUpdate);
     }
 
-    void modifyAntiThiefRadius() {
+    private void modifyAntiThiefRadius() {
         //读取防盗半径，如果没有定义就设为1海里
         SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
         antiThiefRadius = antiThief.getString("antiThiefRadius","");
@@ -489,12 +496,12 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    void setAntiThiefCircle(LatLng latLng, String antiThiefRadius) {
+    private void setAntiThiefCircle(LatLng latLng, String antiThiefRadius) {
         antiThiefPolygonOption = new CircleOptions()
                 .center(latLng)
                 .radius(Integer.parseInt(antiThiefRadius) * 1852)
-                .stroke(new Stroke(2, 0x77167CF3))
-                .fillColor(0x222884EF);
+                .stroke(new Stroke(2, 0xAA167CF3))
+                .fillColor(0x332884EF);
         //在地图上添加多边形Option，用于显示
         if (antiThiefIsOpen) {
             baiduMap.addOverlay(antiThiefPolygonOption);

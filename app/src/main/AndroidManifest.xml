@@ -33,7 +33,7 @@
             android:value="scfFuUVYVYimLAGl65LmD8ELf9O7ctNK" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,17 +63,18 @@
             android:name=".ChangeInfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PunchActivity"
+            android:name=".ioConfirmActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ReasonActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PunchHistoryActivity"
+            android:name=".PunchActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".splashScreen"
             android:screenOrientation="portrait" />
+        <activity android:name=".ioLogActivity"></activity>
     </application>
 
 </manifest>

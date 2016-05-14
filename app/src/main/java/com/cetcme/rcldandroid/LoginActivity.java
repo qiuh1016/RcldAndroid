@@ -7,25 +7,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +39,7 @@ import cz.msebera.android.httpclient.Header;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,View.OnKeyListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener,View.OnKeyListener {
 
     private EditText shipNumberEditText;
     private EditText passwordEditText;
@@ -76,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         //百度地图初始化
         SDKInitializer.initialize(getApplicationContext());
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         getSupportActionBar().hide();
 
@@ -142,16 +137,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //hudView
-        kProgressHUD = KProgressHUD.create(MainActivity.this)
+        kProgressHUD = KProgressHUD.create(LoginActivity.this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setLabel("登录中")
                 .setAnimationSpeed(1)
                 .setDimAmount(0.3f)
                 .setSize(110, 110)
                 .setCancellable(false);
-        ImageView imageView = new ImageView(MainActivity.this);
+        ImageView imageView = new ImageView(LoginActivity.this);
         imageView.setBackgroundResource(R.drawable.checkmark);
-        okHUD  =  KProgressHUD.create(MainActivity.this)
+        okHUD  =  KProgressHUD.create(LoginActivity.this)
                 .setCustomView(imageView)
                 .setLabel("登录成功")
                 .setCancellable(false)
@@ -232,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //登录
                 loginButton.setEnabled(false);
-                kProgressHUD = KProgressHUD.create(MainActivity.this)
+                kProgressHUD = KProgressHUD.create(LoginActivity.this)
                         .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                         .setLabel("登录中")
                         .setAnimationSpeed(1)
@@ -251,10 +246,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.ipButton:
 
-                final EditText editText = new EditText(MainActivity.this);
+                final EditText editText = new EditText(LoginActivity.this);
                 editText.setSingleLine();
 
-                new AlertDialog.Builder(MainActivity.this).setTitle("服务器IP")
+                new AlertDialog.Builder(LoginActivity.this).setTitle("服务器IP")
                         .setIcon(android.R.drawable.ic_menu_info_details)
                         .setView(editText)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -425,27 +420,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         new Handler().postDelayed(new Runnable() {
                             public void run() {
 
-
                                 Bundle bundle = new Bundle();
                                 bundle.putString("myShipInfo", myShipInfo.toString());
                                 Intent indexIntent = new Intent();
                                 indexIntent.setClass(getApplicationContext(), IndexActivity.class);
                                 indexIntent.putExtras(bundle);
+                                okHUD.dismiss();
                                 startActivity(indexIntent);
                                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                                 finish();
-//                                okHUD.dismiss();
 
                             }
                         }, 800);
                     }
                 }, 1000);
 
-
 //                toast.setText("登录成功!");
 //                toast.show();
-
-
             }
 
             @Override

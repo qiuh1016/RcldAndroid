@@ -175,96 +175,79 @@ public class FenceActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-                Log.i("Main", response.toString());
+//                Log.i("Main", response.toString());
                 try {
-                    //TODO: 120.27.149.252 服务器更新后换成新的
-                    if (serverIP.equals("120.27.149.252") && false) {
-                        //原
-                        JSONArray dataArray = response.getJSONArray("data");
-                        for(int i = 0; i < dataArray.length(); i++) {
-                            JSONObject fence = (JSONObject) dataArray.get(i);
-                            Map<String, Object> map = new Hashtable<>();
-                            map.put("fenceName", "港口名：" + fence.get("fenceName"));
-                            Integer berthAmount = (Integer) fence.get("shipAmount");
-                            berthAmount = berthAmount * 10;
-                            map.put("berthAmount", "泊位：" + berthAmount + "%");
+
+                    //新
+                    JSONArray dataArray = response.getJSONArray("data");
+                    for(int i = 0; i < dataArray.length(); i++) {
+                        JSONObject fence = (JSONObject) dataArray.get(i);
+                        Map<String, Object> map = new Hashtable<>();
+
+                        try {
+                            map.put("fenceName", fence.get("fenceName"));
+                        } catch (JSONException e) {
+                            map.put("fenceName", "无");
+                        }
+
+                        try {
+                            map.put("berthAmount", "泊位：" + fence.getString("berthAmount"));
+                        } catch (JSONException e) {
+                            map.put("berthAmount", "泊位：无");
+                        }
+
+                        try {
                             map.put("fenceNo", fence.get("fenceNo"));
+                        } catch (JSONException e) {
+                            map.put("fenceNo","无");
+                        }
+
+                        try {
                             map.put("inShipAmount", fence.get("inShipAmount"));
-                            map.put("fenceType", fence.get("fenceLevel"));
-                            dataList.add(map);
+                        } catch (JSONException e) {
+                            map.put("inShipAmount",0);
                         }
-                        simpleAdapter.notifyDataSetChanged();
-                    } else {
-                        //新
-                        JSONArray dataArray = response.getJSONArray("data");
-                        for(int i = 0; i < dataArray.length(); i++) {
-                            JSONObject fence = (JSONObject) dataArray.get(i);
-                            Map<String, Object> map = new Hashtable<>();
 
-                            try {
-                                map.put("fenceName", fence.get("fenceName"));
-                            } catch (JSONException e) {
-                                map.put("fenceName", "无");
-                            }
-
-                            try {
-                                map.put("berthAmount", "泊位：" + fence.getString("berthAmount"));
-                            } catch (JSONException e) {
-                                map.put("berthAmount", "泊位：无");
-                            }
-
-                            try {
-                                map.put("fenceNo", fence.get("fenceNo"));
-                            } catch (JSONException e) {
-                                map.put("fenceNo","无");
-                            }
-
-                            try {
-                                map.put("inShipAmount", fence.get("inShipAmount"));
-                            } catch (JSONException e) {
-                                map.put("inShipAmount",0);
-                            }
-
-                            try {
-                                map.put("fenceLevel", fence.get("fenceLevel"));
-                            } catch (JSONException e) {
-                                map.put("fenceLevel","无");
-                            }
-
-                            try {
-                                map.put("city",fence.getString("city"));
-                            } catch (JSONException e) {
-                                map.put("city","无");
-                            }
-
-                            try {
-                                map.put("country",fence.getString("country"));
-                            } catch (JSONException e) {
-                                map.put("country","无");
-                            }
-
-                            try {
-                                map.put("fenceAddr",fence.getString("fenceAddr"));
-                            } catch (JSONException e) {
-                                map.put("fenceAddr","无");
-                            }
-
-                            try {
-                                map.put("fenceType",fence.getInt("fenceType"));
-                            } catch (JSONException e) {
-                                map.put("fenceType","无");
-                            }
-
-                            try {
-                                map.put("fenceTypeName",fence.getString("fenceTypeName"));
-                            } catch (JSONException e) {
-                                map.put("fenceTypeName","无");
-                            }
-
-                            dataList.add(map);
+                        try {
+                            map.put("fenceLevel", fence.get("fenceLevel"));
+                        } catch (JSONException e) {
+                            map.put("fenceLevel","无");
                         }
-                        simpleAdapter.notifyDataSetChanged();
+
+                        try {
+                            map.put("city",fence.getString("city"));
+                        } catch (JSONException e) {
+                            map.put("city","无");
+                        }
+
+                        try {
+                            map.put("country",fence.getString("country"));
+                        } catch (JSONException e) {
+                            map.put("country","无");
+                        }
+
+                        try {
+                            map.put("fenceAddr",fence.getString("fenceAddr"));
+                        } catch (JSONException e) {
+                            map.put("fenceAddr","无");
+                        }
+
+                        try {
+                            map.put("fenceType",fence.getInt("fenceType"));
+                        } catch (JSONException e) {
+                            map.put("fenceType","无");
+                        }
+
+                        try {
+                            map.put("fenceTypeName",fence.getString("fenceTypeName"));
+                        } catch (JSONException e) {
+                            map.put("fenceTypeName","无");
+                        }
+
+                        dataList.add(map);
                     }
+                    simpleAdapter.notifyDataSetChanged();
+
 
                     toast.setText("获取成功");
                     toast.show();

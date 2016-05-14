@@ -177,6 +177,7 @@ public class RouteDisplayActivity extends AppCompatActivity {
         baiduMap.addOverlay(startMaker);
         baiduMap.addOverlay(endMaker);
 
+        //TODO: 中间点用infowindow 偏移 显示在中间位置 更改图标
         //showMediaPoint
         if (showMediaPoint && latLngs.size() < maxMediaPointMarkerNum) {
 

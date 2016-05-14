@@ -2,8 +2,8 @@ package com.cetcme.rcldandroid;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -51,29 +51,38 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         helpButton.setOnClickListener(this);
 
         //set button size
-//        Display display = getWindowManager().getDefaultDisplay();
-//        int buttonSize = display.getWidth() * 14 / 48;
-//
-//        RelativeLayout.LayoutParams myShipButtonParams = (RelativeLayout.LayoutParams) myShipButton.getLayoutParams();
-//        myShipButtonParams.height = buttonSize;
-//        myShipButtonParams.width = buttonSize;
-//        myShipButton.setLayoutParams(myShipButtonParams);
-//
-//        RelativeLayout.LayoutParams fenceButtonParams = (RelativeLayout.LayoutParams) fenceButton.getLayoutParams();
-//        fenceButtonParams.height = buttonSize;
-//        fenceButtonParams.width = buttonSize;
-//        fenceButton.setLayoutParams(fenceButtonParams);
-//
-//        RelativeLayout.LayoutParams routeButtonParams = (RelativeLayout.LayoutParams) routeButton.getLayoutParams();
-//        routeButtonParams.height = buttonSize;
-//        routeButtonParams.width = buttonSize;
-////        routeButtonParams.setMargins(0,buttonSize / 2,0,0);
-//        routeButton.setLayoutParams(routeButtonParams);
-//
-//        RelativeLayout.LayoutParams helpButtonParams = (RelativeLayout.LayoutParams) helpButton.getLayoutParams();
-//        helpButtonParams.height = buttonSize;
-//        helpButtonParams.width = buttonSize;
-//        helpButton.setLayoutParams(helpButtonParams);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point pointSize = new Point();
+        display.getSize(pointSize);
+        int buttonSize = pointSize.x * 14 / 44;
+        int margin = buttonSize / 3;
+
+        RelativeLayout.LayoutParams welcomeTextParams = (RelativeLayout.LayoutParams) welcomeTextView.getLayoutParams();
+        welcomeTextParams.bottomMargin = margin;
+        welcomeTextView.setLayoutParams(welcomeTextParams);
+
+        RelativeLayout.LayoutParams myShipButtonParams = (RelativeLayout.LayoutParams) myShipButton.getLayoutParams();
+        myShipButtonParams.height = buttonSize;
+        myShipButtonParams.width = buttonSize;
+        myShipButtonParams.rightMargin = margin;
+        myShipButton.setLayoutParams(myShipButtonParams);
+
+        RelativeLayout.LayoutParams fenceButtonParams = (RelativeLayout.LayoutParams) fenceButton.getLayoutParams();
+        fenceButtonParams.height = buttonSize;
+        fenceButtonParams.width = buttonSize;
+        fenceButton.setLayoutParams(fenceButtonParams);
+
+        RelativeLayout.LayoutParams routeButtonParams = (RelativeLayout.LayoutParams) routeButton.getLayoutParams();
+        routeButtonParams.height = buttonSize;
+        routeButtonParams.width = buttonSize;
+        routeButtonParams.topMargin = margin;
+//        routeButtonParams.setMargins(0,buttonSize / 2,0,0);
+        routeButton.setLayoutParams(routeButtonParams);
+
+        RelativeLayout.LayoutParams helpButtonParams = (RelativeLayout.LayoutParams) helpButton.getLayoutParams();
+        helpButtonParams.height = buttonSize;
+        helpButtonParams.width = buttonSize;
+        helpButton.setLayoutParams(helpButtonParams);
 
         //获取上一个Activity的数据
         Bundle bundle = this.getIntent().getExtras();
@@ -141,7 +150,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
     private void logout() {
         Intent loginIntent = new Intent();
-        loginIntent.setClass(getApplicationContext(), MainActivity.class);
+        loginIntent.setClass(getApplicationContext(), LoginActivity.class);
         startActivity(loginIntent);
         overridePendingTransition(R.anim.push_right_in_no_alpha, R.anim.push_right_out_no_alpha);
         finish();
@@ -248,6 +257,5 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
         }
     }
-
 
 }

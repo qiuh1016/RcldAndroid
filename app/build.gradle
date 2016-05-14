@@ -25,9 +25,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/BaiduLBS_Android.jar')
     compile(name: 'AndroidJSCore-2.2-pre1-release', ext: 'aar')
-    //    compile 'com.android.support:recyclerview-v7:21.0.0'
-    //    compile 'com.nineoldandroids:library:2.4.0'
-    //    compile 'cn.bingoogolapple:bga-refreshlayout:1.1.4@aar'
     compile project(':pullToRefresh')
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.loopj.android:android-async-http:1.4.9'
