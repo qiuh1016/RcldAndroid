@@ -1,16 +1,25 @@
 package com.cetcme.rcldandroid;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,8 +40,37 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
     private Button fenceButton;
     private Button routeButton;
     private Button helpButton;
+    private AntiThiefService antiThiefService = new AntiThiefService();
+    private AntiThiefReceiver antiThiefReceiver;
 
     private JSONObject myShipInfoJSON;
+
+    ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i("Main","onServiceConnected");
+            antiThiefService = ((AntiThiefService.MsgBinder)service).getService();
+            antiThiefService.setOnAntiThiefListener(new AntiThiefListener() {
+                @Override
+                public void antiThiefState(Boolean antiThief) {
+                    Log.i("Main", "get:" + antiThief.toString());
+                    if (antiThief) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAntiThiefDialog();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +115,6 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         routeButtonParams.height = buttonSize;
         routeButtonParams.width = buttonSize;
         routeButtonParams.topMargin = verticalMargin;
-//        routeButtonParams.setMargins(0,buttonSize / 2,0,0);
         routeButton.setLayoutParams(routeButtonParams);
 
         RelativeLayout.LayoutParams helpButtonParams = (RelativeLayout.LayoutParams) helpButton.getLayoutParams();
@@ -88,7 +125,6 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         //获取上一个Activity的数据
         Bundle bundle = this.getIntent().getExtras();
         String str = bundle.getString("myShipInfo");
-        //str = "{\"code\":0,\"data\":[{\"deviceNo\":\"10000001\",\"latitude\":30.782284,\"latitudeDisp\":\"N30°46′56.22\\\"\",\"longitude\":120.669029,\"longitudeDisp\":\"E120°40′8.50\\\"\",\"offlineFlag\":true,\"ownerName\":\"船东\",\"ownerTelNo\":\"18877779999\",\"picName\":\"qhhhhhTest\",\"picTelNo\":\"123456789900009\",\"shipName\":\"浙嘉渔0415\",\"shipNo\":\"3304001987070210\"}],\"msg\":\"成功\",\"success\":true,\"total\":0}";
         try {
             myShipInfoJSON = new JSONObject(str);
             JSONArray data = myShipInfoJSON.getJSONArray("data");
@@ -104,6 +140,28 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
             welcomeTextView.setText("欢迎使用本软件!");
         }
+
+        //绑定service
+        Intent intent = new Intent();
+        intent.setAction("com.cetcme.rcldandroid.AntiThiefService");
+        intent.setPackage(getPackageName());
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        SharedPreferences antiThief = getSharedPreferences("antiThief",Context.MODE_PRIVATE);
+        Boolean antiThiefIsOpen = antiThief.getBoolean("antiThiefIsOpen", false);
+        if (antiThiefIsOpen) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    antiThiefService.startDetection();
+                }
+            },1000);
+        }
+
+        //接受广播
+        antiThiefReceiver = new AntiThiefReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.antiThief");
+        registerReceiver(antiThiefReceiver,intentFilter);
 
     }
 
@@ -150,8 +208,11 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void onBackPressed() {
-        //super.onBackPressed();
-        finishDialog();
+        //返回手机桌面
+        Intent home = new Intent(Intent.ACTION_MAIN);
+        home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        home.addCategory(Intent.CATEGORY_HOME);
+        startActivity(home);
     }
 
     private void logout() {
@@ -259,4 +320,61 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private void showAntiThiefDialog() {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(IndexActivity.this);
+        builder.setMessage("当前位置已超出您设置的防盗范围");
+        builder.setTitle("注意");
+        builder.setIcon(android.R.drawable.ic_delete);
+        builder.setCancelable(false);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences antiThief = getSharedPreferences("antiThief", 0);
+                SharedPreferences.Editor edit = antiThief.edit();
+                edit.putBoolean("notification", false);
+                edit.putBoolean("antiThiefIsOpen", false);
+                edit.apply();
+            }
+        });
+        builder.create().show();
+    }
+
+    public class AntiThiefReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context arg0, Intent arg1) {
+            // TODO Auto-generated method stub
+            Bundle bundle = arg1.getExtras();
+            Boolean antiThiefIsOpen = bundle.getBoolean("antiThiefIsOpen");
+            if (antiThiefIsOpen) {
+                antiThiefService.startDetection();
+                Log.i("Main","startDetection");
+            } else {
+                antiThiefService.stopDetection();
+                Log.i("Main","stopDetection");
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+//        antiThiefService.stopDetection();
+//        unbindService(serviceConnection);
+//        unregisterReceiver(antiThiefReceiver);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences antiThiefSharedPreferences = getSharedPreferences("antiThief",Context.MODE_PRIVATE);
+        Boolean gotNotification = antiThiefSharedPreferences.getBoolean("notification", false);
+        if (gotNotification) {
+            Intent dialog = new Intent(getApplicationContext(), AlertDialogActivity.class);
+//            dialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(dialog);
+
+        }
+
+    }
 }

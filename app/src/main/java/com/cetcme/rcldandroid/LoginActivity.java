@@ -19,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -288,20 +289,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 return;
             case R.id.nullButton:
 
-                kProgressHUD.show();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        kProgressHUD.dismiss();
-                        okHUD.show();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                okHUD.dismiss();
-                            }
-                        },2000);
-                    }
-                },3000);
+//                kProgressHUD.show();
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        kProgressHUD.dismiss();
+//                        okHUD.show();
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                okHUD.dismiss();
+//                            }
+//                        },2000);
+//                    }
+//                },3000);
 
                 break;
             case R.id.quitButton:
@@ -404,6 +405,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     editor.apply();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+
+                //与保存的账号不一致 清除其他设置
+                SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                String savedShipNumber = user.getString("shipNumber", "");
+                if (!shipNumber.equals(savedShipNumber)) {
+                    SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = antiThief.edit();
+                    editor.clear();
+                    editor.apply();
                 }
 
                 WriteSharedPreferences(shipNumber, password);

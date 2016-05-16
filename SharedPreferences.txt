@@ -1,0 +1,15 @@
+SharedPreferences :
+
+user: 
+	shipNumber 			String
+	password 			String
+	serverIP			String
+antiThief:
+	antiThiefIsOpen 	Boolen
+	antiThiefLat		String
+	antiThiefLng		String
+	antiThiefRadius		int
+	notification		Boolen
+	alertTime			String
+	
+

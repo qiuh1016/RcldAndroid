@@ -38,12 +38,13 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
     private BaiduMap baiduMap;
 
     private LatLng shipLocation;
+    private LatLng shipLocationUnConved;
     private String shipInfoString;
     private String picName;
     private String picTelNo;
     private JSONObject myShipInfoJSON;
     private Boolean antiThiefIsOpen = false;
-    private String antiThiefRadius;
+    private int antiThiefRadius;
     private OverlayOptions antiThiefPolygonOption;
     private Boolean isGeoConved = false;
 
@@ -170,6 +171,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             shipLocation = new LatLng(Lat, Lng);
+            shipLocationUnConved = new LatLng(Lat, Lng);
 
             shipInfoString = shipName + "\n" +
                     "船东：" + ownerName + "\n" +
@@ -241,6 +243,9 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
                 SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = antiThief.edit();
                 editor.putBoolean("antiThiefIsOpen", !antiThiefIsOpen);
+                editor.putString("antiThiefLat", String.valueOf(shipLocationUnConved.latitude));
+                editor.putString("antiThiefLng", String.valueOf(shipLocationUnConved.longitude));
+                Log.i("Main", "saved  :" + String.valueOf(shipLocationUnConved.latitude) + "," + String.valueOf(shipLocationUnConved.longitude));
                 editor.apply();
                 antiThiefIsOpen = !antiThiefIsOpen;
 
@@ -253,6 +258,11 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
                     toast.setText("防盗已关闭");
                 }
 
+                //通知index
+                Intent intent = new Intent();
+                intent.putExtra("antiThiefIsOpen" , antiThiefIsOpen);
+                intent.setAction("com.antiThief");
+                sendBroadcast(intent);
                 toast.show();
 
                 //延时改变菜单内容
@@ -479,20 +489,20 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
     private void modifyAntiThiefRadius() {
         //读取防盗半径，如果没有定义就设为1海里
         SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
-        antiThiefRadius = antiThief.getString("antiThiefRadius","");
-        if (antiThiefRadius.isEmpty()) {
-            SharedPreferences.Editor editor = antiThief.edit();
-            editor.putString("antiThiefRadius", "1");
-            editor.apply();
-            antiThiefRadius = antiThief.getString("antiThiefRadius","");
-            Log.i("Main","Default antiThiefRadius set");
-        }
+        antiThiefRadius =antiThief.getInt("antiThiefRadius" , 1);
+//        if (antiThiefRadius.isEmpty()) {
+//            SharedPreferences.Editor editor = antiThief.edit();
+//            editor.putInt("antiThiefRadius", 1);
+//            editor.apply();
+//            antiThiefRadius = antiThief.getString("antiThiefRadius","");
+//            Log.i("Main","Default antiThiefRadius set");
+//        }
     }
 
-    private void setAntiThiefCircle(LatLng latLng, String antiThiefRadius) {
+    private void setAntiThiefCircle(LatLng latLng, int antiThiefRadius) {
         antiThiefPolygonOption = new CircleOptions()
                 .center(latLng)
-                .radius(Integer.parseInt(antiThiefRadius) * 1852)
+                .radius(antiThiefRadius * 1852)
                 .stroke(new Stroke(2, 0xAA167CF3))
                 .fillColor(0x332884EF);
         //在地图上添加多边形Option，用于显示

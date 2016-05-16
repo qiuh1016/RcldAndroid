@@ -45,10 +45,10 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
 
     private String originalPicName;
     private String originalPicTelNo;
-    private String originalAntiThiefRadius;
+    private int originalAntiThiefRadius;
     private String toChangePicName;
     private String toChangePicTelNo;
-    private String toChangeAntiThiefRadius;
+    private int toChangeAntiThiefRadius;
 
     private Toast toast;
     private KProgressHUD kProgressHUD;
@@ -74,11 +74,11 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         originalPicTelNo = bundle.getString("picTelNo");
 
         SharedPreferences antiThief = getSharedPreferences("antiThief", Activity.MODE_PRIVATE);
-        originalAntiThiefRadius = antiThief.getString("antiThiefRadius","");
+        originalAntiThiefRadius = antiThief.getInt("antiThiefRadius",1);
 
         picNameEditText.setText(originalPicName);
         picTelNoEditText.setText(originalPicTelNo);
-        antiThiefRadiusEditText.setText(originalAntiThiefRadius);
+        antiThiefRadiusEditText.setText(String.valueOf(originalAntiThiefRadius));
 
         //文本改变监听
         picNameEditText.addTextChangedListener(textChangeWatcher);
@@ -151,7 +151,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
     private void changeRadius() {
         SharedPreferences antiThief = getSharedPreferences("antiThief", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = antiThief.edit();
-        editor.putString("antiThiefRadius", toChangeAntiThiefRadius);
+        editor.putInt("antiThiefRadius", toChangeAntiThiefRadius);
         editor.apply();
         originalAntiThiefRadius = toChangeAntiThiefRadius;
     }
@@ -194,7 +194,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
                         originalPicName = toChangePicName;
                         originalPicTelNo = toChangePicTelNo;
                         //修改半径
-                        if (!toChangeAntiThiefRadius.equals(originalAntiThiefRadius)) {
+                        if (toChangeAntiThiefRadius != originalAntiThiefRadius) {
                             changeRadius();
                         }
                         toast.setText("修改成功,退出后生效");
@@ -255,15 +255,19 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
             //TODO: 半径01的时候
             toChangePicName = picNameEditText.getText().toString();
             toChangePicTelNo = picTelNoEditText.getText().toString();
-            toChangeAntiThiefRadius = antiThiefRadiusEditText.getText().toString();
+            if (antiThiefRadiusEditText.getText().toString().isEmpty()) {
+                toChangeAntiThiefRadius = 0;
+            } else {
+                toChangeAntiThiefRadius = Integer.parseInt(antiThiefRadiusEditText.getText().toString()) ;
+            }
+
             //如果内容有变，则enable changeButton
             if (toChangePicName.equals(originalPicName) &&
                     toChangePicTelNo.equals(originalPicTelNo) &&
-                    toChangeAntiThiefRadius.equals(originalAntiThiefRadius) ||
+                    toChangeAntiThiefRadius == originalAntiThiefRadius ||
                     toChangePicTelNo.equals("") ||
                     toChangePicName.equals("") ||
-                    toChangeAntiThiefRadius.equals("0") ||
-                    toChangeAntiThiefRadius.equals("") ) {
+                    toChangeAntiThiefRadius == 0 ) {
                 changeButtonState(false);
                 showBackDialog = false;
 
