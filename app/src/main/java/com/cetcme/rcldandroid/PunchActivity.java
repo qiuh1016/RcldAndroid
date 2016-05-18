@@ -66,8 +66,8 @@ public class PunchActivity extends AppCompatActivity {
         simpleAdapter = new SimpleAdapter(PunchActivity.this, getPunchData(true), R.layout.punch_list_cell,
                 new String[]{"name", "id", "punchTime", "null"},
                 new int[]{
-                        R.id.timeTextInioLogCell,
-                        R.id.ioFlagTextInioLogCell,
+                        R.id.nameTextViewInPunchListCell,
+                        R.id.idTextViewInPunchListCell,
                         R.id.punchTimeTextViewInPunchListView,
                         R.id.dataTypeTextViewInPunchListView
                 });

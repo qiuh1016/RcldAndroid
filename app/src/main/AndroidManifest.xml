@@ -79,6 +79,10 @@
         <activity
             android:name=".ioLogActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".iofSailorActivity"
+            android:screenOrientation="portrait" />
+
 
         <service android:name=".AntiThiefService">
             <intent-filter>
@@ -88,9 +92,10 @@
 
         <activity
             android:name=".AlertDialogActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog" />
+
     </application>
 
 </manifest>

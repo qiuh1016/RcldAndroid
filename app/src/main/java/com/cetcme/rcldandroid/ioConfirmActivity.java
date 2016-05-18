@@ -70,8 +70,8 @@ public class ioConfirmActivity extends AppCompatActivity {
         simpleAdapter = new SimpleAdapter(this, getPunchData(), R.layout.punch_list_cell,
                 new String[]{"name", "id", "punchTime", "dataTypeString"},
                 new int[]{
-                        R.id.timeTextInioLogCell,
-                        R.id.ioFlagTextInioLogCell,
+                        R.id.nameTextViewInPunchListCell,
+                        R.id.idTextViewInPunchListCell,
                         R.id.punchTimeTextViewInPunchListView,
                         R.id.dataTypeTextViewInPunchListView
                         });

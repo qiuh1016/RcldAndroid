@@ -1,10 +1,13 @@
 package com.cetcme.rcldandroid;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -54,6 +57,8 @@ public class ioLogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_io_log);
 
+        setTitle("出海记录");
+
         toast = Toast.makeText(ioLogActivity.this, "", LENGTH_SHORT);
         listView = (PullToRefreshListView) findViewById(R.id.ioLogListView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -66,12 +71,10 @@ public class ioLogActivity extends AppCompatActivity {
         listView.getLoadingLayoutProxy(false,true).setPullLabel("上拉可以加载");
 
         simpleAdapter = new SimpleAdapter(ioLogActivity.this, getioLogData(true), R.layout.io_log_list_cell,
-                new String[]{"iofTime", "id", "punchTime", "null"},
+                new String[]{"iofTime", "iofFlag"},
                 new int[]{
-                        R.id.timeTextInioLogCell,
-                        R.id.ioFlagTextInioLogCell,
-                        R.id.punchTimeTextViewInPunchListView,
-                        R.id.dataTypeTextViewInPunchListView
+                        R.id.timeTextViewInioLogListCell,
+                        R.id.flagTextViewInioLogListCell
                 });
         listView.setAdapter(simpleAdapter);
 
@@ -93,6 +96,21 @@ public class ioLogActivity extends AppCompatActivity {
 
                 }
 
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Bundle bundle = new Bundle();
+                bundle.putString("iofTime", dataList.get(i - 1).get("iofTime").toString());
+                bundle.putString("iofFlag", dataList.get(i - 1).get("iofFlag").toString());
+                bundle.putString("iofSailorList", dataList.get(i - 1).get("iofSailorList").toString());
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), iofSailorActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
             }
         });
     }
@@ -147,8 +165,8 @@ public class ioLogActivity extends AppCompatActivity {
         RequestParams params = new RequestParams();
         params.put("userName", shipNumber);
         params.put("password", password);
-        params.put("startTime", startTime);
-        params.put("endTime", endTime);
+        params.put("pageNum" , currentPage + 1);
+        params.put("pageSize", pageSize);
 
 //        params.put("pageNum", currentPage + 1);
 //        params.put("pageSize", pageSize);
@@ -161,78 +179,81 @@ public class ioLogActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
                 Log.i("Main",response.toString());
-
                 try {
-                    JSONArray dataArray = response.getJSONArray("data");
+                    String msg = response.getString("msg");
+                    if (msg.equals("没有符合条件的数据")) {
+                        toast.setText("没有符合条件的数据");
+                        toast.show();
+                    } else if (msg.equals("成功")) {
+                        JSONArray dataArray = response.getJSONArray("data");
 
-                    for(int i = 0; i < dataArray.length(); i++) {
-                        JSONObject punch = (JSONObject) dataArray.get(i);
+                        //刷新的时候 重置总数和总页数
+                        if (isRefresh) {
+                            sum = response.getInt("total");  //获取总数
+                            totalPage = sum / pageSize + 1;
 
-                        Map<String, Object> map = new Hashtable<>();
-                        map.put("id", punch.getString("sailorIdNo"));
-                        map.put("name", punch.getString("sailorName"));
-                        map.put("punchTime", punch.getString("punchTime"));
-                        map.put("null", "");
-//                            map.put("null", "第"+currentPage+"页");
+                            //如果只有1页
+                            if (totalPage == 1) {
+                                listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                            } else {
+                                listView.setMode(PullToRefreshBase.Mode.BOTH);
+                            }
+                        } else {
+                            //加载的时候检测总数是否变化 如变化 重新刷新
+                            int sumGot = response.getInt("total");
+                            if (sumGot != sum) {
+                                getioLogData(true);
+                                Toast.makeText(getApplicationContext(),"总数有变，已刷新数据",LENGTH_SHORT).show();
+                                return;
+                            }
 
-                        dataList.add(map);
+                        }
+
+                        currentPage += 1;
+
+                        for(int i = 0; i < dataArray.length(); i++) {
+                            JSONObject log = (JSONObject) dataArray.get(i);
+
+                            Map<String, Object> map = new Hashtable<>();
+                            try {
+                            map.put("iofTime", log.getString("iofTime"));
+                        } catch (JSONException e) {
+                            map.put("iofTime", "无");
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            int flag = log.getInt("iofFlag");
+                            String ioFlagString;
+                            if (flag == 1) {
+                                ioFlagString = "出港";
+                            } else if (flag == 2) {
+                                ioFlagString = "进港";
+                            } else {
+                                ioFlagString = "无";
+                            }
+                            map.put("iofFlag", ioFlagString);
+                        } catch (JSONException e) {
+                            map.put("iofFlag", "无");
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            map.put("iofSailorList", log.getString("iofSailorList"));
+                        } catch (JSONException e) {
+                            map.put("iofSailorList", log.getString("iofSailorList"));
+                            e.printStackTrace();
+                        }
+
+                            dataList.add(map);
+                        }
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     toast.setText("数据解析失败");
                     toast.show();
                 }
-//                /*try {
-//                    String msg = response.getString("msg");
-//                    if (msg.equals("没有符合条件的数据")) {
-//                        toast.setText("没有符合条件的数据");
-//                        toast.show();
-//                    } else if (msg.equals("成功")) {
-//                        JSONArray dataArray = response.getJSONArray("data");
-//
-//                        //刷新的时候 重置总数和总页数
-//                        if (isRefresh) {
-//                            sum = response.getInt("total");  //获取总数
-//                            totalPage = sum / pageSize + 1;
-//
-//                            //如果只有1页
-//                            if (totalPage == 1) {
-//                                listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-//                            } else {
-//                                listView.setMode(PullToRefreshBase.Mode.BOTH);
-//                            }
-//                        } else {
-//                            //加载的时候检测总数是否变化 如变化 重新刷新
-//                            int sumToget = response.getInt("total");
-//                            if (sumToget != sum) {
-//                                getPunchData(true);
-//                                Toast.makeText(getApplicationContext(),"总数有变，已刷新数据",LENGTH_SHORT).show();
-//                                return;
-//                            }
-//
-//                        }
-//
-//                        currentPage += 1;
-//
-//                        for(int i = 0; i < dataArray.length(); i++) {
-//                            JSONObject punch = (JSONObject) dataArray.get(i);
-//
-//                            Map<String, Object> map = new Hashtable<>();
-//                            map.put("id", punch.getString("sailorIdNo"));
-//                            map.put("name", punch.getString("sailorName"));
-//                            map.put("punchTime", punch.getString("punchTime"));
-//                            map.put("null", "");
-////                            map.put("null", "第"+currentPage+"页");
-//
-//                            dataList.add(map);
-//                        }
-//
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                    toast.setText("数据解析失败");
-//                    toast.show();
-//                }*/
                 if (isFirstTimeToGet) {
                     kProgressHUD.dismiss();
                     isFirstTimeToGet = false;
