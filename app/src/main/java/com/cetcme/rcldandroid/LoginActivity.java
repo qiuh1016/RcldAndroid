@@ -112,6 +112,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             PackageInfo pi = pm.getPackageInfo(getApplicationContext().getPackageName(), 0);
             TextView versionNumber = (TextView) findViewById(R.id.versionTextViewInMainActivity);
             versionNumber.setText("©2016 CETCME V" + pi.versionName);
+
+            //保存
+            SharedPreferences system = getSharedPreferences("system", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = system.edit();
+            editor.putString("version", pi.versionName);
+            editor.apply();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -153,6 +159,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .setCancellable(false)
                 .setSize(110,110)
                 .setDimAmount(0.3f);
+
+        //autoUpdate
+        UpdateAppManager updateManager;
+        updateManager = new UpdateAppManager(this);
+        updateManager.checkUpdateInfo();
 
     }
 

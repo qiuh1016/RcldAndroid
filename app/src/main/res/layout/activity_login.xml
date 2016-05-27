@@ -13,10 +13,10 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/closeButton"
-        android:layout_alignTop="@+id/autofillButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/closewindow" />
+        android:background="@drawable/closewindow"
+        android:layout_alignParentTop="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -205,7 +205,6 @@
                 android:text="@string/shipNumber"
                 android:id="@+id/textView30"
                 android:layout_marginTop="55dp"
-                android:layout_below="@+id/textView"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentRight="true"
