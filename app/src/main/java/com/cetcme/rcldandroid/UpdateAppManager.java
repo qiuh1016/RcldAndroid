@@ -54,10 +54,13 @@ public class UpdateAppManager {
 
     private Context context;
     private String message = "检测到本程序有新版本发布，建议您更新！";
+
+    // 服务器路径
+    private String UPDATE_SERVER_ADDRESS = "http://192.168.0.116:8081";
     // 下载路径
-    private String spec = "http://192.168.0.116:8081/download";
+    private String spec = UPDATE_SERVER_ADDRESS + "/download";
     // 版本路径
-    private String versionUrl = "http://192.168.0.116:8081/version";
+    private String versionUrl = UPDATE_SERVER_ADDRESS + "/version";
     // 下载应用的对话框
     private Dialog dialog;
     // 下载应用的进度条
