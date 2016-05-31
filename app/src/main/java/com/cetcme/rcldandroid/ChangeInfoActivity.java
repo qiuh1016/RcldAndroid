@@ -162,12 +162,12 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         kProgressHUD.show();
 
         SharedPreferences user = getSharedPreferences("user",0);
-        String shipNumber = user.getString("shipNumber","");
+        String username = user.getString("username","");
         String password = user.getString("password","");
         String serverIP = user.getString("serverIP", "120.27.149.252");
 
         RequestParams params = new RequestParams();
-        params.put("userName", shipNumber);
+        params.put("userName", username);
         params.put("password", password);
 
         if (!toChangePicName.equals(originalPicName)) {
@@ -177,8 +177,8 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
             params.put("picTelNo",toChangePicTelNo);
         }
 
-        String urlBody = "http://"+serverIP+"/api/app/ship/update.json";
-        String url = urlBody + "?userName="+shipNumber+"&password="+password+"&picName="+toChangePicName+"&picTelNo="+toChangePicTelNo;
+        String urlBody = "http://"+serverIP+ getString(R.string.shipUpdateUrl);
+        String url = urlBody + "?userName="+username+"&password="+password+"&picName="+toChangePicName+"&picTelNo="+toChangePicTelNo;
         AsyncHttpClient client = new AsyncHttpClient();
         //TODO: 拼接url问题
         client.setURLEncodingEnabled(true);

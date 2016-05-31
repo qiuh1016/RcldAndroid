@@ -45,7 +45,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,View.OnKeyListener {
 
-    private EditText shipNumberEditText;
+    private EditText usernameEditText;
     private EditText passwordEditText;
     private Button loginButton;
     private Button closeButton;
@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         client = new AsyncHttpClient();
         toast = Toast.makeText(getApplicationContext(),"",LENGTH_SHORT);
 
-        shipNumberEditText = (EditText) findViewById(R.id.shipNumberEditText);
+        usernameEditText = (EditText) findViewById(R.id.usernameEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
         passwordEditText.setOnKeyListener(this);
         loginButton = (Button) findViewById(R.id.loginButton);
@@ -209,14 +209,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         nullButton  .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
         quitButton  .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
 
-        shipNumberEditText.clearFocus();
+        usernameEditText.clearFocus();
         passwordEditText.clearFocus();
     }
 
     @Override
     public void onClick(View v) {
 
-        String shipName = shipNumberEditText.getText().toString();
+        String shipName = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -232,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     toast.show();
                     debugModeEnable(true);
                     passwordEditText.setText("");
-                    shipNumberEditText.setText("");
+                    usernameEditText.setText("");
                     return;
                 }
 
@@ -254,7 +254,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.autofillButton:
-                shipNumberEditText.setText("3304001987070210"); //3304001987070210   16040205  99999999
+                usernameEditText.setText("3304001987070210"); //3304001987070210   16040205  99999999
                 passwordEditText.setText("123"); //ICy5YqxZB1uWSwcVLSNLcA==
                 break;
             case R.id.ipButton:
@@ -339,17 +339,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return false;
     }
 
-    private void login(final String shipNumber, final String password) {
+    private void login(final String username, final String password) {
         RequestParams params = new RequestParams();
-        params.put("userName", shipNumber);
+        params.put("userName", username);
         params.put("password", password);
         params.put("userType", 2);
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", "120.27.149.252");
-        String urlBody = "http://"+serverIP+"/api/app/login.json";
+        String urlBody = "http://"+serverIP+getString(R.string.loginUrl);
 
-        //TODO: json 解析 try 全部分开
         client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -358,7 +357,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 try {
                     code = response.getInt("code");
                     if (code == 0) {
-                        getShipInfo(shipNumber, password);
+                        getShipInfo(username, password);
                         return;
                     } else {
                         String msg = response.getString("msg");
@@ -387,15 +386,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void getShipInfo(final String shipNumber, final String password) {
+    private void getShipInfo(final String username, final String password) {
         RequestParams params = new RequestParams();
-        params.put("userName", shipNumber);
+        params.put("userName", username);
         new PrivateEncode();
         params.put("password", password);
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", "120.27.149.252");
-        String urlBody = "http://"+serverIP+"/api/app/ship/get.json";
+        String urlBody = "http://"+serverIP+getString(R.string.shipGetUrl);
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -418,17 +417,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     e.printStackTrace();
                 }
 
+                //保存shipNo
+                try {
+                    JSONArray data = response.getJSONArray("data");
+                    JSONObject data0 = data.getJSONObject(0);
+                    String shipNo = data0.getString("shipNo");
+
+                    //保存deviceNo
+                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = user.edit();
+                    editor.putString("shipNo", shipNo);
+                    editor.apply();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 //与保存的账号不一致 清除其他设置
                 SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
-                String savedShipNumber = user.getString("shipNumber", "");
-                if (!shipNumber.equals(savedShipNumber)) {
+                String savedShipNumber = user.getString("username", "");
+                if (!username.equals(savedShipNumber)) {
                     SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = antiThief.edit();
                     editor.clear();
                     editor.apply();
                 }
 
-                WriteSharedPreferences(shipNumber, password);
+                WriteSharedPreferences(username, password);
 
                 //指示器
                 new Handler().postDelayed(new Runnable() {
@@ -475,17 +489,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void ReadSharedPreferences() {
         String strName, strPassword;
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
-        strName = user.getString("shipNumber", "");
+        strName = user.getString("username", "");
         strPassword = user.getString("password", "");
         //填充EditText
-        shipNumberEditText.setText(strName);
+        usernameEditText.setText(strName);
         passwordEditText.setText(strPassword);
     }
 
     private void WriteSharedPreferences(String strName, String strPassword) {
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = user.edit();
-        editor.putString("shipNumber", strName);
+        editor.putString("username", strName);
         editor.putString("password", strPassword);
         editor.apply();
     }

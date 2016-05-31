@@ -116,18 +116,18 @@ public class FenceActivity extends AppCompatActivity {
         }
 
 
-        final String shipNumber,password,serverIP;
+        final String username,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
-        shipNumber = user.getString("shipNumber","");
+        username = user.getString("username","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
 
         dataList.clear();
 
         RequestParams params = new RequestParams();
-        params.put("userName", shipNumber);
+        params.put("userName", username);
         params.put("password", password);
-        String urlBody = "http://"+serverIP+"/api/app/fence/all.json";
+        String urlBody = "http://"+serverIP+ getString(R.string.fenceUrl);
         AsyncHttpClient client = new AsyncHttpClient();
 
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){

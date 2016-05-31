@@ -121,7 +121,6 @@ public class ioLogActivity extends AppCompatActivity {
                 R.anim.push_right_out_no_alpha);
     }
 
-    //TODO: 等该接口
     private List<Map<String, Object>> getioLogData(final Boolean isRefresh) {
 
         if (isFirstTimeToGet) {
@@ -136,9 +135,9 @@ public class ioLogActivity extends AppCompatActivity {
         }
 
         //获取保存的用户名和密码
-        String shipNumber,password,serverIP;
+        String username,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
-        shipNumber = user.getString("shipNumber","");
+        username = user.getString("username","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
 
@@ -163,16 +162,13 @@ public class ioLogActivity extends AppCompatActivity {
 
         //设置输入参数
         RequestParams params = new RequestParams();
-        params.put("userName", shipNumber);
+        params.put("userName", username);
         params.put("password", password);
         params.put("pageNum" , currentPage + 1);
         params.put("pageSize", pageSize);
 
-//        params.put("pageNum", currentPage + 1);
-//        params.put("pageSize", pageSize);
-
-        String urlBody = "http://"+serverIP+"/api/app/iof/get.json";
-        String url = urlBody+"?userName="+shipNumber+"&password="+password+"&pageNum=0"+"&pageSize=20";
+        String urlBody = "http://"+serverIP+ getString(R.string.iofGetUrl);
+        String url = urlBody+"?userName="+username+"&password="+password+"&pageNum=0"+"&pageSize=20";
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
             @Override

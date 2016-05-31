@@ -220,9 +220,9 @@ public class ioConfirmActivity extends AppCompatActivity {
                 .show();
 
         //获取保存的用户名和密码
-        String shipNumber,password,serverIP;
+        String username,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
-        shipNumber = user.getString("shipNumber","");
+        username = user.getString("username","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
 
@@ -240,15 +240,15 @@ public class ioConfirmActivity extends AppCompatActivity {
 
         //设置输入参数
         RequestParams params = new RequestParams();
-        params.put("userName", shipNumber);
+        params.put("userName", username);
         params.put("password", password);
         params.put("startTime", startTime);
         params.put("endTime", endTime);
 
         Log.i("Main",startTime +" "+ endTime);
 
-        String urlBody = "http://"+serverIP+"/api/app/punch/get.json";
-        String url = urlBody+"?userName="+shipNumber+"&password="+password+"&startTime="+startTime+"&endTime="+endTime;
+        String urlBody = "http://"+serverIP+ getString(R.string.punchGetUrl);
+        String url = urlBody+"?userName="+username+"&password="+password+"&startTime="+startTime+"&endTime="+endTime;
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, null, new JsonHttpResponseHandler("UTF-8"){
             @Override
@@ -408,21 +408,21 @@ public class ioConfirmActivity extends AppCompatActivity {
         }
 
         //获取保存的用户名和密码
-        String shipNumber,password,serverIP;
+        String username,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
-        shipNumber = user.getString("shipNumber","");
+        username = user.getString("username","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
 
         //设置输入参数
         RequestParams params = new RequestParams();
-        params.put("userName", shipNumber);
+        params.put("userName", username);
         params.put("password", password);
         params.put("iofFlag", iofFlag);
         params.put("sailors", sailors);
 
 
-        String urlBody = "http://"+serverIP+"/api/app/iof/sailor/new.json";
+        String urlBody = "http://"+serverIP+ getString(R.string.sailorNewUrl);
 //        String url = urlBody+"?userName="+shipNumber+"&password="+password+"&startTime="+startTime+"&endTime="+endTime;
         AsyncHttpClient client = new AsyncHttpClient();
         client.setURLEncodingEnabled(true);
@@ -478,15 +478,15 @@ public class ioConfirmActivity extends AppCompatActivity {
     private void uploadPunch(final int position) {
 
         //获取保存的用户名和密码
-        String shipNumber,password,serverIP;
+        String username,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
-        shipNumber = user.getString("shipNumber","");
+        username = user.getString("username","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
 
         //设置输入参数
         RequestParams params = new RequestParams();
-        params.put("userName", shipNumber);
+        params.put("userName", username);
         params.put("password", password);
         params.put("iofFlag", iofFlag);
         params.put("sailorIdNo", dataList.get(position).get("id"));

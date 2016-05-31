@@ -347,8 +347,8 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 
     public void geoconv(final LatLng latLng) {
 
-        String urlBody = "http://api.map.baidu.com/geoconv/v1/";
-        String ak = "stfZ8nXV0rvMfTLuAAY9SX2AqgLGLuOQ";
+        String urlBody = getString(R.string.baiduGeoConvUrl);
+        String ak = getString(R.string.baiduGeoConvAppKey);
         RequestParams params = new RequestParams();
         params.put("coords", latLng.longitude + "," + latLng.latitude);
         params.put("ak", ak);

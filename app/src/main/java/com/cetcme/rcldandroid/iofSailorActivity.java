@@ -2,6 +2,7 @@ package com.cetcme.rcldandroid;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -36,7 +37,7 @@ public class iofSailorActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.iofSailorListView);
         simpleAdapter = new SimpleAdapter(iofSailorActivity.this, getioSailorData(), R.layout.punch_list_cell,
-                new String[]{"sailorName", "sailorNo", "reason","dataType"},
+                new String[]{"sailorName", "sailorIdNo", "reason","dataType"},
                 new int[]{
                         R.id.nameTextViewInPunchListCell,
                         R.id.idTextViewInPunchListCell,
@@ -54,6 +55,7 @@ public class iofSailorActivity extends AppCompatActivity {
     }
 
     private List<Map<String, Object>> getioSailorData() {
+        Log.i("Main", sailorListString);
 
         try {
             JSONArray sailorList = new JSONArray(sailorListString);
@@ -67,9 +69,9 @@ public class iofSailorActivity extends AppCompatActivity {
                     map.put("sailorName", "无");
                 }
                 try{
-                    map.put("sailorNo", sailor.getString("sailorNo"));
+                    map.put("sailorIdNo", sailor.getString("sailorIdNo"));
                 }catch(JSONException e){
-                    map.put("sailorNo", "无");
+                    map.put("sailorIdNo", "无");
                 }
                 try{
                     map.put("punchTime", sailor.getString("punchTime"));
@@ -87,7 +89,6 @@ public class iofSailorActivity extends AppCompatActivity {
                     } else {
                         map.put("dataType", "无");
                     }
-
                 }catch(JSONException e){
                     map.put("dataType", "无");
                 }

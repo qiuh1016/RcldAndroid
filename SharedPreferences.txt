@@ -4,9 +4,10 @@ system:
 	version			String
 
 user: 
-	shipNumber 		String
+	username 		String
 	password 		String
 	serverIP		String
+	shipNo			String
 antiThief:
 	antiThiefIsOpen 	Boolen
 	antiThiefLat		String

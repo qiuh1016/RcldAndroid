@@ -63,18 +63,16 @@ public class AntiThiefService extends Service{
             @Override
             public void run() {
                 while (detectionEnable) {
-//                    progress += 1;
-//                    Log.i("Main", progress +"");
 
-                    String shipNumber = userSharedPreferences.getString("shipNumber","");
+                    String username = userSharedPreferences.getString("username","");
                     String password = userSharedPreferences.getString("password","");
                     RequestParams params = new RequestParams();
-                    params.put("userName", shipNumber);
+                    params.put("userName", username);
                     new PrivateEncode();
                     params.put("password", password);
 
                     String serverIP = userSharedPreferences.getString("serverIP", "120.27.149.252");
-                    String urlBody = "http://"+serverIP+"/api/app/ship/get.json";
+                    String urlBody = "http://"+serverIP+getString(R.string.shipGetUrl);
                     SyncHttpClient client = new SyncHttpClient();
                     client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8") {
                         @Override

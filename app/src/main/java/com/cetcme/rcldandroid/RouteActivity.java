@@ -194,23 +194,23 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     private void getRouteData() {
 
-        String shipNumber,password,serverIP,deviceNo;
+        String username,password,serverIP,deviceNo;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
-        shipNumber = user.getString("shipNumber","");
+        username = user.getString("username","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
         deviceNo = user.getString("deviceNo","");
 
         //设置参数
         final RequestParams params = new RequestParams();
-        params.put("userName", shipNumber);
+        params.put("userName", username);
         params.put("password", password);
         params.put("deviceNo", deviceNo);
         params.put("startTime", startTime);
         params.put("endTime", endTime);
 
-        String urlBody = "http://"+serverIP+"/api/app/trail/get.json";
-        String url = urlBody+"?userName=" + shipNumber +"&password="+password+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;
+        String urlBody = "http://"+serverIP+ getString(R.string.trailGetUrl);
+        String url = urlBody+"?userName=" + username +"&password="+password+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;
         AsyncHttpClient client = new AsyncHttpClient();
         client.setURLEncodingEnabled(true);
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
@@ -270,8 +270,8 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     private void geoconv(List<LatLng> list) {
 
-        String urlBody = "http://api.map.baidu.com/geoconv/v1/";
-        String ak = "stfZ8nXV0rvMfTLuAAY9SX2AqgLGLuOQ";
+        String urlBody = getString(R.string.baiduGeoConvUrl);
+        String ak = getString(R.string.baiduGeoConvAppKey);
         RequestParams params = new RequestParams();
         String coords = "";
 

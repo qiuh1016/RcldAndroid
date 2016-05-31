@@ -75,6 +75,11 @@ public class UpdateAppManager {
     public UpdateAppManager(Context context) {
         this.context = context;
 
+        // 下载路径
+        spec = UPDATE_SERVER_ADDRESS + context.getString(R.string.appDownloadUrl);
+        // 版本路径
+        versionUrl = UPDATE_SERVER_ADDRESS + context.getString(R.string.appVersionUrl);
+
         SharedPreferences system = context.getSharedPreferences("system", Context.MODE_PRIVATE);
         String versionString = system.getString("version","");
         Log.i("Main","currentVersion: " + versionString );
