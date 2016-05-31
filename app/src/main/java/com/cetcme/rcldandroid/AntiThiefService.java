@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.baidu.platform.comapi.map.L;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -39,7 +40,7 @@ import cz.msebera.android.httpclient.Header;
  */
 public class AntiThiefService extends Service{
 
-    private int sleepTime = 60;  //单位秒
+    private int sleepTime = 120;  //单位秒
     private Boolean antiThief = false;
     private Boolean detectionEnable = true;
     private AntiThiefListener antiThiefListener;
@@ -86,37 +87,51 @@ public class AntiThiefService extends Service{
                                 Double Lat = data0.getDouble("latitude");
                                 Double Lng = data0.getDouble("longitude");
 
-                                Double antiThiefLat = Double.valueOf(antiThiefSharedPreferences.getString("antiThiefLat", "0"));
-                                Double antiThiefLng = Double.valueOf(antiThiefSharedPreferences.getString("antiThiefLng", "0"));
-                                Double distance = new PrivateEncode().GetDistance(Lat, Lng, antiThiefLat,antiThiefLng); // + progress;
-                                int antiThiefRadius = antiThiefSharedPreferences.getInt("antiThiefRadius", 1);
-                                Log.i("Main", "current: " + Lat + "," + Lng);
-                                Log.i("Main", "saved  : " + antiThiefLat + "," + antiThiefLng);
+                                //更新船的位置
+                                Intent intent = new Intent();
+                                intent.putExtra("lat" , Lat);
+                                intent.putExtra("lng" , Lng);
+                                intent.setAction("com.updateShipLocation");
+                                sendBroadcast(intent);
+                                Log.i("Main", "ship location updated: lat:" + Lat + " lng: " + Lng);
 
-                                Log.i("Main", "distance: " + distance + "-->" + antiThiefRadius * 1852);
+                                //如果开启了报警 就做判断
+                                Boolean antiThiefIsOpen = antiThiefSharedPreferences.getBoolean("antiThiefIsOpen", false);
+                                if (antiThiefIsOpen) {
+                                    Double antiThiefLat = Double.valueOf(antiThiefSharedPreferences.getString("antiThiefLat", "0"));
+                                    Double antiThiefLng = Double.valueOf(antiThiefSharedPreferences.getString("antiThiefLng", "0"));
+                                    Double distance = new PrivateEncode().GetDistance(Lat, Lng, antiThiefLat,antiThiefLng); // + progress;
+                                    int antiThiefRadius = antiThiefSharedPreferences.getInt("antiThiefRadius", 1);
+                                    Log.i("Main", "current: " + Lat + "," + Lng);
+                                    Log.i("Main", "saved  : " + antiThiefLat + "," + antiThiefLng);
 
-                                if (distance > antiThiefRadius * 1852) {
-                                    stopDetection();
+                                    Log.i("Main", "distance: " + distance + "-->" + antiThiefRadius * 1852);
 
-                                    SharedPreferences.Editor edit = antiThiefSharedPreferences.edit();
+                                    if (distance > antiThiefRadius * 1852) {
+                                        stopDetection();
 
-                                    SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                                    Date alertDate = new Date();
-                                    String alertTime = df.format(alertDate);
+                                        SharedPreferences.Editor edit = antiThiefSharedPreferences.edit();
 
-                                    if (isAppOnForeground()){
-                                        showAlertDialog();
-                                    }
-                                    CreateInform();
-                                    edit.putBoolean("notification", true);
-                                    edit.putString("alertTime",alertTime);
-                                    edit.apply();
+                                        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                                        Date alertDate = new Date();
+                                        String alertTime = df.format(alertDate);
+
+                                        if (isAppOnForeground()){
+                                            showAlertDialog();
+                                        }
+                                        CreateInform();
+                                        edit.putBoolean("notification", true);
+                                        edit.putString("alertTime",alertTime);
+                                        edit.apply();
 //                                    antiThief = true;
 //                                    if (antiThiefListener != null) {
 //                                        antiThiefListener.antiThiefState(true);
 //                                    }
 
+                                    }
                                 }
+
+
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -135,6 +150,7 @@ public class AntiThiefService extends Service{
                     //设置每次时间间隔；
                     try {
                         Thread.sleep(sleepTime * 1000);
+                        Log.i("Main", "sleep for " + sleepTime + "s");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

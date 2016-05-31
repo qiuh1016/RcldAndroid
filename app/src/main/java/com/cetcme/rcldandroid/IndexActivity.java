@@ -41,7 +41,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
     private Button routeButton;
     private Button helpButton;
     private AntiThiefService antiThiefService = new AntiThiefService();
-    private AntiThiefReceiver antiThiefReceiver;
+//    private AntiThiefReceiver antiThiefReceiver;
 
     private JSONObject myShipInfoJSON;
 
@@ -146,22 +146,20 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         intent.setAction("com.cetcme.rcldandroid.AntiThiefService");
         intent.setPackage(getPackageName());
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        SharedPreferences antiThief = getSharedPreferences("antiThief",Context.MODE_PRIVATE);
-        Boolean antiThiefIsOpen = antiThief.getBoolean("antiThiefIsOpen", false);
-        if (antiThiefIsOpen) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    antiThiefService.startDetection();
-                }
-            },1000);
-        }
 
-        //接受广播
-        antiThiefReceiver = new AntiThiefReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.antiThief");
-        registerReceiver(antiThiefReceiver,intentFilter);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                antiThiefService.startDetection();
+            }
+        },1000);
+
+
+//        //接受广播
+//        antiThiefReceiver = new AntiThiefReceiver();
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction("com.antiThief");
+//        registerReceiver(antiThiefReceiver,intentFilter);
 
     }
 
@@ -339,22 +337,22 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         builder.create().show();
     }
 
-    public class AntiThiefReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context arg0, Intent arg1) {
-            // TODO Auto-generated method stub
-            Bundle bundle = arg1.getExtras();
-            Boolean antiThiefIsOpen = bundle.getBoolean("antiThiefIsOpen");
-            if (antiThiefIsOpen) {
-                antiThiefService.startDetection();
-                Log.i("Main","startDetection");
-            } else {
-                antiThiefService.stopDetection();
-                Log.i("Main","stopDetection");
-            }
-        }
-    }
+//    public class AntiThiefReceiver extends BroadcastReceiver {
+//
+//        @Override
+//        public void onReceive(Context arg0, Intent arg1) {
+//            // TODO Auto-generated method stub
+//            Bundle bundle = arg1.getExtras();
+//            Boolean antiThiefIsOpen = bundle.getBoolean("antiThiefIsOpen");
+//            if (antiThiefIsOpen) {
+//                antiThiefService.startDetection();
+//                Log.i("Main","startDetection");
+//            } else {
+//                antiThiefService.stopDetection();
+//                Log.i("Main","stopDetection");
+//            }
+//        }
+//    }
 
     @Override
     protected void onDestroy() {

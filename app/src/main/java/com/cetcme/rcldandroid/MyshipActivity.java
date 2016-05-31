@@ -1,7 +1,9 @@
 package com.cetcme.rcldandroid;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -53,8 +55,11 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 
     private Marker comMarker;
     private InfoWindow mInfoWindow;
-    private Boolean infoWindowIsShow = false;
+    private Boolean infoWindowIsShow = true ;
+    private Boolean isFirstToShow = true;
 
+    //TODO: 位置实时更新
+    //TODO: 报警求助
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -198,6 +203,12 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         antiThiefIsOpen = antiThief.getBoolean("antiThiefIsOpen",false);
         modifyAntiThiefRadius();
 
+        //接受广播
+        ShipLocationReceiver shipLocationReceiver = new ShipLocationReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.updateShipLocation");
+        registerReceiver(shipLocationReceiver,intentFilter);
+
     }
 
     @Override
@@ -257,12 +268,12 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
                     toast.setText("防盗已关闭");
                 }
 
-                //通知index
-                Intent intent = new Intent();
-                intent.putExtra("antiThiefIsOpen" , antiThiefIsOpen);
-                intent.setAction("com.antiThief");
-                sendBroadcast(intent);
-                toast.show();
+//                //通知index
+//                Intent intent = new Intent();
+//                intent.putExtra("antiThiefIsOpen" , antiThiefIsOpen);
+//                intent.setAction("com.antiThief");
+//                sendBroadcast(intent);
+//                toast.show();
 
                 //延时改变菜单内容
                 new Handler().postDelayed(new Runnable() {
@@ -359,6 +370,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
                 Log.i("Main",response.toString());
+                baiduMap.clear();
                 Integer status;
                 try {
                     status = response.getInt("status");
@@ -434,8 +446,12 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
     private void mapMark(LatLng latLng){
 
         Log.i("Main","mapMark");
-        //设置地图范围
-        mapStatus(latLng);
+
+        if (isFirstToShow) {
+            //设置地图范围
+            mapStatus(latLng);
+            isFirstToShow = false; //位置更新后地图范围不变
+        }
 
         //定义Maker坐标点
         LatLng point = latLng;
@@ -467,12 +483,15 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
-        mInfoWindow = new InfoWindow(button, point, -bitmap.getBitmap().getHeight());
+        if (infoWindowIsShow) {
+            //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
+            mInfoWindow = new InfoWindow(button, point, -bitmap.getBitmap().getHeight());
 
-        //显示InfoWindow
-        baiduMap.showInfoWindow(mInfoWindow);
-        infoWindowIsShow = true;
+            //显示InfoWindow
+            baiduMap.showInfoWindow(mInfoWindow);
+            infoWindowIsShow = true;
+        }
+
 
     }
 
@@ -523,6 +542,20 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         return false;
+    }
+
+    public class ShipLocationReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context arg0, Intent arg1) {
+            // TODO Auto-generated method stub
+            Bundle bundle = arg1.getExtras();
+            Double lat = bundle.getDouble("lat");
+            Double lng = bundle.getDouble("lng");
+            shipLocationUnConved = new LatLng(lat, lng);
+            geoconv(shipLocationUnConved);
+
+        }
     }
 
 

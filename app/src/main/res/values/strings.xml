@@ -28,6 +28,8 @@
     <!--<string name="trailGetUrl">/api/trail/get.json</string>-->
     <!--<string name="sailorNewUrl">/api/iof/sailor/new.json</string>-->
 
+    <string name="helpAlarm">/api/device/helpAlarm.json</string>
+
     <string name="appDownloadUrl">/download</string>
     <string name="appVersionUrl">/version</string>
 
