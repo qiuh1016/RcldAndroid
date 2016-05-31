@@ -69,6 +69,8 @@ public class UpdateAppManager {
     private int curProgress;
     // 用户是否取消下载
     private boolean isCancel;
+    // 强制更新
+    private boolean forceToUpdate;
 
     public UpdateAppManager(Context context) {
         this.context = context;
@@ -101,15 +103,13 @@ public class UpdateAppManager {
     /**
      * 检测应用更新信息
      */
-
-
-
     public void checkUpdateInfo() {
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(versionUrl, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Double version = response.getDouble("version");
+                    forceToUpdate = response.getBoolean("forceToUpdate");
                     if (version > currentVersion) {
                         FILE_NAME = FILE_PATH + "RCLD_V" + version +".apk";
                         showNoticeDialog();
@@ -129,21 +129,21 @@ public class UpdateAppManager {
      * 显示提示更新对话框
      */
     private void showNoticeDialog() {
-        new AlertDialog.Builder(context)
-                .setTitle("软件版本更新")
+        AlertDialog.Builder builder =  new AlertDialog.Builder(context);
+        builder.setTitle("软件版本更新")
                 .setMessage(message)
+                .setCancelable(false)
                 .setPositiveButton("下载", new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         showDownloadDialog();
                     }
-                }).setNegativeButton("以后再说", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).create().show();
+                });
+        if (!forceToUpdate) {
+            builder.setNegativeButton("以后再说", null);
+        }
+        builder.create().show();
     }
 
     /**
@@ -155,12 +155,15 @@ public class UpdateAppManager {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("软件版本更新");
         builder.setView(view);
-        builder.setNegativeButton("取消", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                isCancel = true;
-            }
-        });
+        builder.setCancelable(false);
+        if (!forceToUpdate) {
+            builder.setNegativeButton("取消", new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    isCancel = true;
+                }
+            });
+        }
         dialog = builder.create();
         dialog.show();
         downloadApp();

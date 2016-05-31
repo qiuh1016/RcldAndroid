@@ -152,9 +152,9 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             if (offlineFlag) {
-                onLine = "是";
-            } else {
                 onLine = "否";
+            } else {
+                onLine = "是";
             }
 
             Double Lat;
@@ -218,7 +218,6 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         antiThiefMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-//        changeInfo.setIcon(R.drawable.menuicon);
         changeInfo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
