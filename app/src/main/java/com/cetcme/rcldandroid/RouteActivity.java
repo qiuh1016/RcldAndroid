@@ -194,18 +194,20 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     private void getRouteData() {
 
-        String username,password,serverIP,deviceNo;
+        String username,password,serverIP,deviceNo,shipNo;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         username = user.getString("username","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
         deviceNo = user.getString("deviceNo","");
+        shipNo   = user.getString("shipNo","");
 
         //设置参数
         final RequestParams params = new RequestParams();
         params.put("userName", username);
         params.put("password", password);
         params.put("deviceNo", deviceNo);
+        params.put("shipNo", shipNo);
         params.put("startTime", startTime);
         params.put("endTime", endTime);
 

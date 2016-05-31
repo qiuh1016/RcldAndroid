@@ -408,16 +408,18 @@ public class ioConfirmActivity extends AppCompatActivity {
         }
 
         //获取保存的用户名和密码
-        String username,password,serverIP;
+        String username,password,serverIP,shipNo;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         username = user.getString("username","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
+        shipNo   = user.getString("shipNo","");
 
         //设置输入参数
         RequestParams params = new RequestParams();
         params.put("userName", username);
         params.put("password", password);
+        params.put("shipNo", shipNo);
         params.put("iofFlag", iofFlag);
         params.put("sailors", sailors);
 

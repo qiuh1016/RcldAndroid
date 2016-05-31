@@ -120,11 +120,12 @@ public class PunchActivity extends AppCompatActivity {
         }
 
         //获取保存的用户名和密码
-        String username,password,serverIP;
+        String username,password,serverIP,shipNo;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         username = user.getString("username","");
         password = user.getString("password","");
         serverIP = user.getString("serverIP", "120.27.149.252");
+        shipNo   = user.getString("shipNo","");
 
         //刷新则清空
         if (isRefresh) {
@@ -140,6 +141,7 @@ public class PunchActivity extends AppCompatActivity {
         RequestParams params = new RequestParams();
         params.put("userName", username);
         params.put("password", password);
+        params.put("shipNo", shipNo);
         params.put("pageNum", currentPage + 1);
         params.put("pageSize", pageSize);
 

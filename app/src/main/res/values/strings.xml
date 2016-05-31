@@ -8,15 +8,25 @@
     <string name="iConfirm">进港确认</string>
     <string name="oConfirm">出港确认</string>
 
-    <string name="loginUrl">/api/app/login.json</string>
-    <string name="shipGetUrl">/api/app/ship/get.json</string>
-    <string name="shipUpdateUrl">/api/app/ship/update.json</string>
-    <string name="fenceUrl">/api/app/fence/all.json</string>
-    <string name="punchGetUrl">/api/app/punch/get.json</string>
-    <string name="iofGetUrl">/api/app/iof/get.json</string>
-    <string name="punchAllByPageUrl">/api/app/punch/allByPage.json</string>
-    <string name="trailGetUrl">/api/app/trail/get.json</string>
-    <string name="sailorNewUrl">/api/app/iof/sailor/new.json</string>
+    <!--<string name="loginUrl">/api/app/login.json</string>-->
+    <!--<string name="shipGetUrl">/api/app/ship/get.json</string>-->
+    <!--<string name="shipUpdateUrl">/api/app/ship/update.json</string>-->
+    <!--<string name="fenceUrl">/api/app/fence/all.json</string>-->
+    <!--<string name="punchGetUrl">/api/app/punch/get.json</string>-->
+    <!--<string name="iofGetUrl">/api/app/iof/get.json</string>-->
+    <!--<string name="punchAllByPageUrl">/api/app/punch/allByPage.json</string>-->
+    <!--<string name="trailGetUrl">/api/app/trail/get.json</string>-->
+    <!--<string name="sailorNewUrl">/api/app/iof/sailor/new.json</string>-->
+
+    <string name="loginUrl">/api/login.json</string>
+    <string name="shipGetUrl">/api/ship/get.json</string>
+    <string name="shipUpdateUrl">/api/ship/update.json</string>
+    <string name="fenceUrl">/api/fence/all.json</string>
+    <string name="punchGetUrl">/api/punch/get.json</string>
+    <string name="iofGetUrl">/api/iof/get.json</string>
+    <string name="punchAllByPageUrl">/api/punch/allByPage.json</string>
+    <string name="trailGetUrl">/api/trail/get.json</string>
+    <string name="sailorNewUrl">/api/iof/sailor/new.json</string>
 
     <string name="appDownloadUrl">/download</string>
     <string name="appVersionUrl">/version</string>
