@@ -341,7 +341,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 //
 //        @Override
 //        public void onReceive(Context arg0, Intent arg1) {
-//            // TODO Auto-generated method stub
+//
 //            Bundle bundle = arg1.getExtras();
 //            Boolean antiThiefIsOpen = bundle.getBoolean("antiThiefIsOpen");
 //            if (antiThiefIsOpen) {

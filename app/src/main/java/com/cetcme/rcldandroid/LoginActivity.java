@@ -456,7 +456,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             public void run() {
 
                                 Bundle bundle = new Bundle();
+//                                String shipInfoTemp = "{\"code\":0,\"data\":[{\"cfsEndDate\":\"2016\\/06\\/02\",\"cfsStartDate\":\"2016\\/06\\/01\",\"deviceNo\":\"10000003\",\"fenceName\":\"园区测试港\",\"fenceNo\":\"10001\",\"idcardreaderNo\":\"10000003\",\"latitudeDisp\":\"\",\"longitudeDisp\":\"\",\"offlineFlag\":false,\"ownerName\":\"10000003\",\"ownerTelNo\":\"10000003\",\"pairFlag\":true,\"picName\":\"船主3\",\"picTelNo\":\"15058463252\",\"qrPicPath\":\"\\/static\\/images\\/10000003_c1950a9f9d984dbf86efbed635a67d2a.jpeg\",\"shipName\":\"10000003\",\"shipNo\":\"10000003\"}]}";
                                 bundle.putString("myShipInfo", myShipInfo.toString());
+//                                bundle.putString("myShipInfo", shipInfoTemp);
                                 Intent indexIntent = new Intent();
                                 indexIntent.setClass(getApplicationContext(), IndexActivity.class);
                                 indexIntent.putExtras(bundle);

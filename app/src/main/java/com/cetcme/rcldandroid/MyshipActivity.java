@@ -1,5 +1,6 @@
 package com.cetcme.rcldandroid;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,9 +25,19 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.BDNotifyListener;//假如用到位置提醒功能，需要import该类
+import com.baidu.location.Poi;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -58,7 +69,10 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
     private Boolean infoWindowIsShow = true ;
     private Boolean isFirstToShow = true;
 
-    //TODO: 位置实时更新
+    public LocationClient mLocationClient = null;
+    public BDLocationListener myListener = new MyLocationListener();
+    private BDLocation bdLocation;
+
     //TODO: 报警求助
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +91,30 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         toast =  Toast.makeText(MyShipActivity.this, "", LENGTH_SHORT);
 
         //mapSet();
+        getShipData();
 
+        //读取防盗状态 和 防盗半径
+        SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
+        antiThiefIsOpen = antiThief.getBoolean("antiThiefIsOpen",false);
+        modifyAntiThiefRadius();
+
+        //接受广播
+        ShipLocationReceiver shipLocationReceiver = new ShipLocationReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.updateShipLocation");
+        registerReceiver(shipLocationReceiver,intentFilter);
+
+        //定位
+        mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+        mLocationClient.registerLocationListener( myListener );    //注册监听函数
+        initLocation();
+        mLocationClient.start();
+
+    }
+
+    private void getShipData() {
         Bundle bundle = this.getIntent().getExtras();
         String str = bundle.getString("myShipInfo");
-
         try {
             myShipInfoJSON = new JSONObject(str);
             JSONArray data = myShipInfoJSON.getJSONArray("data");
@@ -197,18 +231,6 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        //读取防盗状态 和 防盗半径
-        SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
-        antiThiefIsOpen = antiThief.getBoolean("antiThiefIsOpen",false);
-        modifyAntiThiefRadius();
-
-        //接受广播
-        ShipLocationReceiver shipLocationReceiver = new ShipLocationReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.updateShipLocation");
-        registerReceiver(shipLocationReceiver,intentFilter);
-
     }
 
     @Override
@@ -221,6 +243,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         MenuItem punch = menu.add(0, 0, 0, "打卡记录");
         MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
         antiThiefMenuItem = menu.add(0, 0, 0, antiThiefIsOpen? "关闭防盗" : "开启防盗");
+        final MenuItem helpAlarm = menu.add(0,0,0,"报警求助");
 
         changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         oConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -228,6 +251,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         punch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         antiThiefMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        helpAlarm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         changeInfo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -242,46 +266,6 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
                 changeInfoIntent.putExtras(bundle);
                 startActivity(changeInfoIntent);
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
-
-                return false;
-            }
-        });
-
-        antiThiefMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = antiThief.edit();
-                editor.putBoolean("antiThiefIsOpen", !antiThiefIsOpen);
-                editor.putString("antiThiefLat", String.valueOf(shipLocationUnConved.latitude));
-                editor.putString("antiThiefLng", String.valueOf(shipLocationUnConved.longitude));
-                Log.i("Main", "saved  :" + String.valueOf(shipLocationUnConved.latitude) + "," + String.valueOf(shipLocationUnConved.longitude));
-                editor.apply();
-                antiThiefIsOpen = !antiThiefIsOpen;
-
-                if (antiThiefIsOpen) {
-                    baiduMap.addOverlay(antiThiefPolygonOption);
-                    toast.setText("防盗已开启，防盗半径：" + antiThiefRadius + "海里");
-                } else {
-                    baiduMap.clear();
-                    mapMark(shipLocation);
-                    toast.setText("防盗已关闭");
-                }
-
-//                //通知index
-//                Intent intent = new Intent();
-//                intent.putExtra("antiThiefIsOpen" , antiThiefIsOpen);
-//                intent.setAction("com.antiThief");
-//                sendBroadcast(intent);
-//                toast.show();
-
-                //延时改变菜单内容
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        antiThiefMenuItem.setTitle(antiThiefIsOpen? "关闭防盗" : "开启防盗");
-                    }
-                }, 200);
 
                 return false;
             }
@@ -333,6 +317,59 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
                 intent.setClass(getApplicationContext(), ioLogActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+                return false;
+            }
+        });
+
+        antiThiefMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = antiThief.edit();
+                editor.putBoolean("antiThiefIsOpen", !antiThiefIsOpen);
+                editor.putString("antiThiefLat", String.valueOf(shipLocationUnConved.latitude));
+                editor.putString("antiThiefLng", String.valueOf(shipLocationUnConved.longitude));
+                Log.i("Main", "saved  :" + String.valueOf(shipLocationUnConved.latitude) + "," + String.valueOf(shipLocationUnConved.longitude));
+                editor.apply();
+                antiThiefIsOpen = !antiThiefIsOpen;
+
+                if (antiThiefIsOpen) {
+                    baiduMap.addOverlay(antiThiefPolygonOption);
+                    toast.setText("防盗已开启，防盗半径：" + antiThiefRadius + "海里");
+                } else {
+                    baiduMap.clear();
+                    mapMark(shipLocation);
+                    toast.setText("防盗已关闭");
+                }
+
+//                //通知index
+//                Intent intent = new Intent();
+//                intent.putExtra("antiThiefIsOpen" , antiThiefIsOpen);
+//                intent.setAction("com.antiThief");
+//                sendBroadcast(intent);
+//                toast.show();
+
+                //延时改变菜单内容
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        antiThiefMenuItem.setTitle(antiThiefIsOpen? "关闭防盗" : "开启防盗");
+                    }
+                }, 200);
+
+                return false;
+            }
+        });
+
+        helpAlarm.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (bdLocation != null) {
+                    uploadHelpAlarm();
+                } else {
+                    toast.setText("请等待定位数据");
+                    toast.show();
+                }
                 return false;
             }
         });
@@ -431,12 +468,12 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
         //mapView.onResume();
     }
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
-//        mapView.onPause();
-//    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLocationClient.stop();
+    }
 
     private void mapSet() {
         mapView.showZoomControls(true);
@@ -558,6 +595,142 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    private void initLocation(){
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
+        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        int span=5000;
+        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
+        mLocationClient.setLocOption(option);
+    }
+
+    public class MyLocationListener implements BDLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            bdLocation = location;
+            //Receive Location
+            StringBuffer sb = new StringBuffer(256);
+            sb.append("time : ");
+            sb.append(location.getTime());
+            sb.append("\nerror code : ");
+            sb.append(location.getLocType());
+            sb.append("\nlatitude : ");
+            sb.append(location.getLatitude());
+            sb.append("\nlontitude : ");
+            sb.append(location.getLongitude());
+            sb.append("\nradius : ");
+            sb.append(location.getRadius());
+            if (location.getLocType() == BDLocation.TypeGpsLocation) {// GPS定位结果
+                sb.append("\nspeed : ");
+                sb.append(location.getSpeed());// 单位：公里每小时
+                sb.append("\nsatellite : ");
+                sb.append(location.getSatelliteNumber());
+                sb.append("\nheight : ");
+                sb.append(location.getAltitude());// 单位：米
+                sb.append("\ndirection : ");
+                sb.append(location.getDirection());// 单位度
+                sb.append("\naddr : ");
+                sb.append(location.getAddrStr());
+                sb.append("\ndescribe : ");
+                sb.append("gps定位成功");
+
+            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// 网络定位结果
+                sb.append("\naddr : ");
+                sb.append(location.getAddrStr());
+                //运营商信息
+                sb.append("\noperationers : ");
+                sb.append(location.getOperators());
+                sb.append("\ndescribe : ");
+                sb.append("网络定位成功");
+            } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {// 离线定位结果
+                sb.append("\ndescribe : ");
+                sb.append("离线定位成功，离线定位结果也是有效的");
+            } else if (location.getLocType() == BDLocation.TypeServerError) {
+                sb.append("\ndescribe : ");
+                sb.append("服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因");
+            } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
+                sb.append("\ndescribe : ");
+                sb.append("网络不同导致定位失败，请检查网络是否通畅");
+            } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
+                sb.append("\ndescribe : ");
+                sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
+            }
+            sb.append("\nlocationdescribe : ");
+            sb.append(location.getLocationDescribe());// 位置语义化信息
+            List<Poi> list = location.getPoiList();// POI数据
+            if (list != null) {
+                sb.append("\npoilist size = : ");
+                sb.append(list.size());
+                for (Poi p : list) {
+                    sb.append("\npoi= : ");
+                    sb.append(p.getId() + " " + p.getName() + " " + p.getRank());
+                }
+            }
+            Log.i("BaiduLocationApiDem", sb.toString());
+//            toast.setText(sb.toString());
+//            toast.show();
+        }
+
+    }
+
+    private void uploadHelpAlarm() {
+        String username,password,serverIP,deviceNo,shipNo;
+        SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
+        username = user.getString("username","");
+        password = user.getString("password","");
+        serverIP = user.getString("serverIP", "120.27.149.252");
+        deviceNo = user.getString("deviceNo","");
+        shipNo   = user.getString("shipNo","");
+
+        //设置参数
+        final RequestParams params = new RequestParams();
+        params.put("userName", username);
+        params.put("password", password);
+        params.put("deviceNo", deviceNo);
+        params.put("shipNo", shipNo);
+        params.put("alertType", 1);
+        params.put("longitude", bdLocation.getLongitude());
+        params.put("latitude", bdLocation.getLatitude());
+        params.put("time", bdLocation.getTime());
+        params.put("description", "报警求助");
+
+        String urlBody = "http://"+serverIP+ getString(R.string.helpAlarmUrl);
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.setURLEncodingEnabled(true);
+        client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final JSONObject response) {
+                // If the response is JSONObject instead of expected JSONArray
+                Log.i("Main", response.toString());
+                toast.setText("报警成功");
+                toast.show();
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                toast.setText("报警失败");
+                toast.show();
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                Log.i("Main", response);
+                toast.setText("网络连接失败");
+                toast.show();
+            }
+        });
+
+    }
 
 }
 
