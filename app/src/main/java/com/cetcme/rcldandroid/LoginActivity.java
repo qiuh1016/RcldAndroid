@@ -389,8 +389,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void getShipInfo(final String username, final String password) {
         RequestParams params = new RequestParams();
         params.put("userName", username);
-        new PrivateEncode();
         params.put("password", password);
+        params.put("shipNo", username);
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", "120.27.149.252");
