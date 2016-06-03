@@ -198,18 +198,18 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         username = user.getString("username","");
         password = user.getString("password","");
-        serverIP = user.getString("serverIP", "120.27.149.252");
+        serverIP = user.getString("serverIP","120.27.149.252");
         deviceNo = user.getString("deviceNo","");
-        shipNo   = user.getString("shipNo","");
+        shipNo   = user.getString("shipNo"  ,"");
 
         //设置参数
         final RequestParams params = new RequestParams();
-        params.put("userName", username);
-        params.put("password", password);
-        params.put("deviceNo", deviceNo);
-        params.put("shipNo", shipNo);
+        params.put("userName" , username);
+        params.put("password" , password);
+        params.put("deviceNo" , deviceNo);
+        params.put("shipNo"   , shipNo);
         params.put("startTime", startTime);
-        params.put("endTime", endTime);
+        params.put("endTime"  , endTime);
 
         String urlBody = "http://"+serverIP+ getString(R.string.trailGetUrl);
         String url = urlBody+"?userName=" + username +"&password="+password+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;

@@ -67,10 +67,11 @@ public class AntiThiefService extends Service{
 
                     String username = userSharedPreferences.getString("username","");
                     String password = userSharedPreferences.getString("password","");
+                    String shipNo   = userSharedPreferences.getString("shipNo","");
                     RequestParams params = new RequestParams();
                     params.put("userName", username);
-                    new PrivateEncode();
                     params.put("password", password);
+                    params.put("shipNo",   shipNo);
 
                     String serverIP = userSharedPreferences.getString("serverIP", "120.27.149.252");
                     String urlBody = "http://"+serverIP+getString(R.string.shipGetUrl);

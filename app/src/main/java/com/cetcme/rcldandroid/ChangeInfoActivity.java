@@ -165,10 +165,12 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         String username = user.getString("username","");
         String password = user.getString("password","");
         String serverIP = user.getString("serverIP", "120.27.149.252");
+        String shipNo   = user.getString("shipNo","");
 
         RequestParams params = new RequestParams();
         params.put("userName", username);
         params.put("password", password);
+        params.put("shipNo", shipNo);
 
         if (!toChangePicName.equals(originalPicName)) {
             params.put("picName", toChangePicName);
@@ -178,11 +180,11 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         }
 
         String urlBody = "http://"+serverIP+ getString(R.string.shipUpdateUrl);
-        String url = urlBody + "?userName="+username+"&password="+password+"&picName="+toChangePicName+"&picTelNo="+toChangePicTelNo;
+        String url = urlBody + "?userName="+username+"&password="+password+"&shipNo="+shipNo+"&picName="+toChangePicName+"&picTelNo="+toChangePicTelNo;
         AsyncHttpClient client = new AsyncHttpClient();
         //TODO: 拼接url问题
         client.setURLEncodingEnabled(true);
-        client.put(url, null, new JsonHttpResponseHandler("UTF-8"){
+        client.post(url, null, new JsonHttpResponseHandler("UTF-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray

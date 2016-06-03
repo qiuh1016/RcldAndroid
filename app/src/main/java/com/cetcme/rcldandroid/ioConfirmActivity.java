@@ -220,10 +220,11 @@ public class ioConfirmActivity extends AppCompatActivity {
                 .show();
 
         //获取保存的用户名和密码
-        String username,password,serverIP;
+        String username,password,serverIP,shipNo;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         username = user.getString("username","");
         password = user.getString("password","");
+        shipNo   = user.getString("shipNo"  ,"");
         serverIP = user.getString("serverIP", "120.27.149.252");
 
         dataList = new ArrayList<>();
@@ -244,11 +245,12 @@ public class ioConfirmActivity extends AppCompatActivity {
         params.put("password", password);
         params.put("startTime", startTime);
         params.put("endTime", endTime);
+        params.put("shipNo", shipNo);
 
         Log.i("Main",startTime +" "+ endTime);
 
         String urlBody = "http://"+serverIP+ getString(R.string.punchGetUrl);
-        String url = urlBody+"?userName="+username+"&password="+password+"&startTime="+startTime+"&endTime="+endTime;
+        String url = urlBody+"?userName="+username+"&password="+password+"&shipNo="+shipNo+"&startTime="+startTime+"&endTime="+endTime;
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, null, new JsonHttpResponseHandler("UTF-8"){
             @Override
