@@ -16,7 +16,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:background="@drawable/closewindow"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,7 +29,8 @@
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        android:layout_marginBottom="10dp" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -45,7 +48,9 @@
             android:visibility="visible"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="16dp" />
 
         <Button
             android:layout_width="wrap_content"
@@ -65,7 +70,8 @@
             android:visibility="visible"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/nullButton"
-            android:layout_toEndOf="@+id/nullButton" />
+            android:layout_toEndOf="@+id/nullButton"
+            android:layout_marginTop="10dp" />
 
         <Button
             android:layout_width="wrap_content"
@@ -76,7 +82,8 @@
             android:layout_below="@+id/autofillButton"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="16dp" />
 
         <Button
             android:layout_width="wrap_content"
@@ -129,7 +136,9 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
 
             <Button
                 android:layout_width="wrap_content"

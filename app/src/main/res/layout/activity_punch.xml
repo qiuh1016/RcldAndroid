@@ -12,7 +12,11 @@
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/punchHistoryListView"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" />
+        android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
 
 
 </RelativeLayout>
