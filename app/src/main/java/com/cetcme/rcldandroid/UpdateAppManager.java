@@ -56,7 +56,7 @@ public class UpdateAppManager {
     private String message = "检测到本程序有新版本发布，建议您更新！";
 
     // 服务器路径
-    private String UPDATE_SERVER_ADDRESS = "http://192.168.0.116:8081";
+    private String UPDATE_SERVER_ADDRESS = "http://192.168.0.228:8081";
     // 下载路径
     private String spec = UPDATE_SERVER_ADDRESS + "/download";
     // 版本路径
@@ -74,6 +74,10 @@ public class UpdateAppManager {
 
     public UpdateAppManager(Context context) {
         this.context = context;
+
+        SharedPreferences user = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+        UPDATE_SERVER_ADDRESS = "http://" + user.getString("serverIP", "120.27.149.252");
+        Log.i("Main", UPDATE_SERVER_ADDRESS);
 
         // 下载路径
         spec = UPDATE_SERVER_ADDRESS + context.getString(R.string.appDownloadUrl);
