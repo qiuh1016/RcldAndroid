@@ -167,6 +167,10 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
+        /**
+         *  二维码
+         */
+        /*
         MenuItem qrcode = menu.add(0,0,0,"二维码");
         qrcode.setIcon(R.drawable.qrcodeicon);
         qrcode.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -178,6 +182,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
                 return false;
             }
         });
+        */
 
         MenuItem setting = menu.add(0, 0, 0, "退出");
         setting.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);

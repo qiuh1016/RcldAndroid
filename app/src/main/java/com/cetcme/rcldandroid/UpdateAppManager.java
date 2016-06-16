@@ -76,11 +76,12 @@ public class UpdateAppManager {
         this.context = context;
 
         SharedPreferences user = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-        UPDATE_SERVER_ADDRESS = "http://" + user.getString("serverIP", "120.27.149.252");
-        Log.i("Main", UPDATE_SERVER_ADDRESS);
+        UPDATE_SERVER_ADDRESS = "http://" + user.getString("serverIP", context.getString(R.string.defaultServerIP_1));
+//        Log.i("Main", UPDATE_SERVER_ADDRESS);
 
         // 下载路径
         spec = UPDATE_SERVER_ADDRESS + context.getString(R.string.appDownloadUrl);
+        spec = "ftp://hdy:1234@121.40.212.195/";
         // 版本路径
         versionUrl = UPDATE_SERVER_ADDRESS + context.getString(R.string.appVersionUrl);
 
@@ -116,9 +117,15 @@ public class UpdateAppManager {
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(versionUrl, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.i("Main", "versionJSON: " + response.toString());
                 try {
                     Double version = response.getDouble("version");
-                    forceToUpdate = response.getBoolean("forceToUpdate");
+                    try {
+                        forceToUpdate = response.getBoolean("forceToUpdate");
+                    } catch (JSONException e) {
+                        forceToUpdate = false;
+                    }
+
                     if (version > currentVersion) {
                         FILE_NAME = FILE_PATH + "RCLD_V" + version +".apk";
                         showNoticeDialog();

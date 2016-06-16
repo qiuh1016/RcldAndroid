@@ -164,7 +164,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         SharedPreferences user = getSharedPreferences("user",0);
         String username = user.getString("username","");
         String password = user.getString("password","");
-        String serverIP = user.getString("serverIP", "120.27.149.252");
+        String serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
         String shipNo   = user.getString("shipNo","");
 
         RequestParams params = new RequestParams();

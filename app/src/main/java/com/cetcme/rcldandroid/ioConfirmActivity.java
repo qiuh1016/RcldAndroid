@@ -130,8 +130,8 @@ public class ioConfirmActivity extends AppCompatActivity {
                 punchInfo += ".";
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ioConfirmActivity.this);
-                builder.setMessage(punchInfo);
-                builder.setTitle("共" + dataList.size() + "人,确认上传?");
+                //builder.setMessage(punchInfo);
+                builder.setTitle("确认上传？"); //("共" + dataList.size() + "人,确认上传?");
                 builder.setNegativeButton("取消", null);
                 builder.setPositiveButton("上传", new DialogInterface.OnClickListener() {
                     @Override
@@ -225,7 +225,7 @@ public class ioConfirmActivity extends AppCompatActivity {
         username = user.getString("username","");
         password = user.getString("password","");
         shipNo   = user.getString("shipNo"  ,"");
-        serverIP = user.getString("serverIP", "120.27.149.252");
+        serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
 
         dataList = new ArrayList<>();
 
@@ -414,7 +414,7 @@ public class ioConfirmActivity extends AppCompatActivity {
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         username = user.getString("username","");
         password = user.getString("password","");
-        serverIP = user.getString("serverIP", "120.27.149.252");
+        serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
         shipNo   = user.getString("shipNo","");
 
         //设置输入参数
@@ -486,7 +486,7 @@ public class ioConfirmActivity extends AppCompatActivity {
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         username = user.getString("username","");
         password = user.getString("password","");
-        serverIP = user.getString("serverIP", "120.27.149.252");
+        serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
 
         //设置输入参数
         RequestParams params = new RequestParams();

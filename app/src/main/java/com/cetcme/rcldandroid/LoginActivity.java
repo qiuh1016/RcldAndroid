@@ -287,18 +287,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         .show();
                 break;
             case R.id.ip1Button:
-                editor.putString("serverIP", "120.27.149.252");
+                editor.putString("serverIP", getString(R.string.defaultServerIP_1));
                 editor.apply();
-                toast.setText("服务器IP修改成功：" + "120.27.149.252");
+                toast.setText("服务器IP修改成功：" + getString(R.string.defaultServerIP_1));
                 toast.show();
                 return;
             case R.id.ip2Button:
-                editor.putString("serverIP", "114.55.101.20");
+                editor.putString("serverIP", getString(R.string.defaultServerIP_2));
                 editor.apply();
-                toast.setText("服务器IP修改成功：" + "114.55.101.20");
+                toast.setText("服务器IP修改成功：" + getString(R.string.defaultServerIP_2));
                 toast.show();
                 return;
             case R.id.nullButton:
+                String serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
+                toast.setText("当前服务器IP：" + serverIP);
+                toast.show();
 
 //                kProgressHUD.show();
 //                new Handler().postDelayed(new Runnable() {
@@ -346,18 +349,47 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         params.put("userType", 2);
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
-        String serverIP = user.getString("serverIP", "120.27.149.252");
+        String serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
         String urlBody = "http://"+serverIP+getString(R.string.loginUrl);
 
         client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
+                Log.i("Main", response.toString());
                 Integer code;
                 try {
                     code = response.getInt("code");
                     if (code == 0) {
                         getShipInfo(username, password);
+
+                        //保存deviceNo 供轨迹查询
+                        try {
+                            String deviceNo = response.getString("deviceNo");
+
+                            //保存deviceNo
+                            SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = user.edit();
+                            editor.putString("deviceNo", deviceNo);
+                            editor.apply();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //保存shipNo
+                        try {
+                            String shipNo = response.getString("shipNo");
+
+                            //保存deviceNo
+                            SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = user.edit();
+                            editor.putString("shipNo", shipNo);
+                            editor.apply();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
                         return;
                     } else {
                         String msg = response.getString("msg");
@@ -387,13 +419,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void getShipInfo(final String username, final String password) {
+        SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+        String shipNo = user.getString("shipNo", "");
+
         RequestParams params = new RequestParams();
         params.put("userName", username);
         params.put("password", password);
-        params.put("shipNo", username);
+        params.put("shipNo", shipNo);
 
-        SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
-        String serverIP = user.getString("serverIP", "120.27.149.252");
+
+        String serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
         String urlBody = "http://"+serverIP+getString(R.string.shipGetUrl);
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8") {
             @Override
@@ -402,35 +437,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.i("Main", response.toString());
                 myShipInfo = response;
 
-                //保存deviceNo 供轨迹查询
-                try {
-                    JSONArray data = response.getJSONArray("data");
-                    JSONObject data0 = data.getJSONObject(0);
-                    String deviceNo = data0.getString("deviceNo");
-
-                    //保存deviceNo
-                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = user.edit();
-                    editor.putString("deviceNo", deviceNo);
-                    editor.apply();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                //保存shipNo
-                try {
-                    JSONArray data = response.getJSONArray("data");
-                    JSONObject data0 = data.getJSONObject(0);
-                    String shipNo = data0.getString("shipNo");
-
-                    //保存deviceNo
-                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = user.edit();
-                    editor.putString("shipNo", shipNo);
-                    editor.apply();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                //保存deviceNo 供轨迹查询
+//                try {
+//                    JSONArray data = response.getJSONArray("data");
+//                    JSONObject data0 = data.getJSONObject(0);
+//                    String deviceNo = data0.getString("deviceNo");
+//
+//                    //保存deviceNo
+//                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = user.edit();
+//                    editor.putString("deviceNo", deviceNo);
+//                    editor.apply();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                //保存shipNo
+//                try {
+//                    JSONArray data = response.getJSONArray("data");
+//                    JSONObject data0 = data.getJSONObject(0);
+//                    String shipNo = data0.getString("shipNo");
+//
+//                    //保存deviceNo
+//                    SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = user.edit();
+//                    editor.putString("shipNo", shipNo);
+//                    editor.apply();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
 
                 //与保存的账号不一致 清除其他设置
                 SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);

@@ -73,7 +73,7 @@ public class AntiThiefService extends Service{
                     params.put("password", password);
                     params.put("shipNo",   shipNo);
 
-                    String serverIP = userSharedPreferences.getString("serverIP", "120.27.149.252");
+                    String serverIP = userSharedPreferences.getString("serverIP", getString(R.string.defaultServerIP_1));
                     String urlBody = "http://"+serverIP+getString(R.string.shipGetUrl);
                     SyncHttpClient client = new SyncHttpClient();
                     client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8") {

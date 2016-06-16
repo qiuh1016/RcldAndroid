@@ -198,7 +198,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         username = user.getString("username","");
         password = user.getString("password","");
-        serverIP = user.getString("serverIP","120.27.149.252");
+        serverIP = user.getString("serverIP",getString(R.string.defaultServerIP_1));
         deviceNo = user.getString("deviceNo","");
         shipNo   = user.getString("shipNo"  ,"");
 

@@ -8,6 +8,9 @@
     <string name="iConfirm">进港确认</string>
     <string name="oConfirm">出港确认</string>
 
+    <string name="defaultServerIP_1">120.27.149.252</string>
+    <string name="defaultServerIP_2">114.55.101.20</string>
+
     <!--<string name="loginUrl">/api/app/login.json</string>-->
     <!--<string name="shipGetUrl">/api/app/ship/get.json</string>-->
     <!--<string name="shipUpdateUrl">/api/app/ship/update.json</string>-->
@@ -29,9 +32,10 @@
     <string name="trailGetUrl">/api/trail/get.json</string>
     <string name="sailorNewUrl">/api/iof/sailor/new.json</string>
     <string name="helpAlarmUrl">/api/device/helpAlarm.json</string>
+    <string name="getDownLoadUrl">/api/app/fishermanApp.json</string>
 
     <string name="appDownloadUrl">/download</string>
-    <string name="appVersionUrl">/version</string>
+    <string name="appVersionUrl">/api/app/latestVersion.json</string>
 
     <string name="baiduGeoConvUrl">http://api.map.baidu.com/geoconv/v1/</string>
     <string name="baiduGeoConvAppKey">stfZ8nXV0rvMfTLuAAY9SX2AqgLGLuOQ</string>

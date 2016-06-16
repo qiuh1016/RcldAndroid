@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -120,7 +121,7 @@ public class FenceActivity extends AppCompatActivity {
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         username = user.getString("username","");
         password = user.getString("password","");
-        serverIP = user.getString("serverIP", "120.27.149.252");
+        serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
 
         dataList.clear();
 
@@ -134,7 +135,7 @@ public class FenceActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-//                Log.i("Main", response.toString());
+                Log.i("Main", response.toString());
                 try {
 
                     //新
