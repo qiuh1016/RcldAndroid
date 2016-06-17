@@ -35,7 +35,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
     private MapView mapView;
     private BaiduMap baiduMap;
 
-    private LatLng companyPosition = new LatLng(29.891853,121.64414);
+    private LatLng companyPosition = new LatLng(30.772614,120.669103);   // 嘉兴120.669103,30.772614   宁波 29.891853,121.64414
 
     private Marker comMarker;
     private InfoWindow mInfoWindow;
@@ -75,7 +75,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.telTextViewInHelpActivity:
                 //用intent启动拨打电话
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:0574-55712322"));
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getString(R.string.telphone)));  //"tel:0573-82793269"
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     // Consider calling
                     //    ActivityCompat#requestPermissions
@@ -98,7 +98,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
     private void mapMark(LatLng point){
 
         //设置中心点 和显示范围
-        MapStatus mapStatus = new MapStatus.Builder().target(point).zoom(15) //15
+        MapStatus mapStatus = new MapStatus.Builder().target(point).zoom(18) //15
                 .build();
         MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                 .newMapStatus(mapStatus);

@@ -143,7 +143,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 //                    Log.i("Main", "dpf: " + dpf + "; day: " + day);
 
                     if (day > 31) {
-                        dialog("时间差不能超过31天！");
+                        dialog("查询时间不能超过1个月！");
                     } else {
                         kProgressHUD = KProgressHUD.create(RouteActivity.this)
                                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -223,11 +223,10 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         final RequestParams params = new RequestParams();
         params.put("userName" , username);
         params.put("password" , password);
-//        params.put("deviceNo" , deviceNo);
         params.put("shipNo"   , shipNo);
         params.put("startTime", startTime);
         params.put("endTime"  , endTime);
-        params.put("dpf", dpf);
+        params.put("dpf"      , dpf);
 
         String urlBody = "http://"+serverIP+ getString(R.string.trailGetUrl);
         String url = urlBody+"?userName=" + username +"&password="+password+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;
@@ -237,7 +236,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onSuccess(int statusCode, Header[] headers, final JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-                Log.i("Main", "getLocation: " + response.toString());
+//                Log.i("Main", "getLocation: " + response.toString());
                 dataString = response.toString();
                 route = new ArrayList<>();
                 try {
@@ -290,12 +289,8 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void geoconvAll(List<LatLng> list) {
-//        Log.i("Main", "list: " + list.toString());
-
         locationSum = list.size();
         groupCount = locationSum / 100 + 1;
-
-//        Log.i("Main", "sum: " + locationSum + ", groupCount: " + groupCount);
 
         geocovedResult.clear();
         geocovedList.clear();
@@ -319,7 +314,6 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
 
-//            Log.i("Main", "toConvList: " + toConvList.toString());
             geoconv(toConvList, i);
 
         }
@@ -342,14 +336,12 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         for (LatLng latLng :list) {
             coords += latLng.longitude + "," + latLng.latitude + ";";
         }
-//        Log.i("Main", coords);
+
         coords = coords.substring(0, coords.length() - 1); //去掉最后一个分号
 
         //设置参数
         params.put("coords", coords);
         params.put("ak", ak);
-
-        //TODO: 一次最多100个点
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
@@ -361,14 +353,14 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                 try {
                     status = response.getInt("status");
                     if (status == 0) {
-                        geocovedList.add(i, response.toString());
-                        geocovedResult.add(i,"OK");
+                        geocovedList.set(i, response.toString());
+                        geocovedResult.set(i,"OK");
                     } else {
-                        geocovedResult.add(i,"FAIL");
+                        geocovedResult.set(i,"FAIL");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    geocovedResult.add(i,"FAIL");
+                    geocovedResult.set(i,"FAIL");
                 }
 
                 //判断是否全部纠偏完成

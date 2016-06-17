@@ -7,6 +7,10 @@
     <string name="close">关闭</string>
     <string name="iConfirm">进港确认</string>
     <string name="oConfirm">出港确认</string>
+    
+    <string name="contractor">陈先生</string>
+    <string name="telphone">0573-82793269</string>
+    <string name="address">嘉兴秀洲区桃园路587号中电科智慧产业园4号楼3楼</string>
 
     <string name="defaultServerIP_1">121.40.212.195</string>
     <string name="defaultServerIP_2">114.55.101.20</string>

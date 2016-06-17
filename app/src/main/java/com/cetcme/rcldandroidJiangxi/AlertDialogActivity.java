@@ -24,6 +24,8 @@ public class AlertDialogActivity extends Activity {
 
         SharedPreferences s = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
         String alertTime = s.getString("alertTime","/");
+
+//        alertTime = "2016/06/17 20:21:47"; //测试用
         timeTextView.setText("报警时间:" + alertTime);
 
         closeButton.setOnClickListener(new View.OnClickListener() {

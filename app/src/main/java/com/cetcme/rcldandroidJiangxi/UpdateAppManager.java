@@ -140,7 +140,15 @@ public class UpdateAppManager {
                     }
 
                     //TODO: 用version Code 比较
-                    if (Double.valueOf(version) > currentVersion) {
+                    Double serverVersion;
+                    try {
+                        serverVersion = Double.valueOf(version);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        serverVersion = 0.0;
+                        Log.i("Main", "******** 服务器新版本号转换错误: " + version);
+                    }
+                    if (serverVersion > currentVersion) {
                         FILE_NAME = FILE_PATH + "RCLD_V" + version +".apk";
                         showNoticeDialog();
                     } else {

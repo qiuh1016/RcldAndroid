@@ -495,7 +495,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                 startActivity(indexIntent);
                                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
-                                okHUD.dismiss();
+//                                okHUD.dismiss();
                                 finish();
 
                             }
