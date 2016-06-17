@@ -147,11 +147,11 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                     Long ms = endDate.getTime() - startDate.getTime();
                     long day = ms / 1000 / 3600 / 24;
 
-                    if (day < 1) {
+                    if (day <= 1) {
                         dpf = 0.0;
-                    } else if (day >= 1 && day < 7 ){
+                    } else if (day > 1 && day <= 7 ){
                         dpf = 0.001;
-                    } else if (day >= 7 && day <= 31) {
+                    } else if (day > 7 && day <= 31) {
                         dpf = 0.01;
                     } else {
                         dpf = 1.0;
@@ -243,7 +243,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         params.put("shipNo"   , shipNo);
         params.put("startTime", startTime);
         params.put("endTime"  , endTime);
-        params.put("dpf", dpf);
+        params.put("dpf", 0);
 
         String urlBody = "http://"+serverIP+ getString(R.string.trailGetUrl);
         String url = urlBody+"?userName=" + username +"&password="+password+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;
