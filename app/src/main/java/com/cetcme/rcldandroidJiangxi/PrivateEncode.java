@@ -1,4 +1,4 @@
-package com.cetcme.rcldandroid;
+package com.cetcme.rcldandroidJiangxi;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

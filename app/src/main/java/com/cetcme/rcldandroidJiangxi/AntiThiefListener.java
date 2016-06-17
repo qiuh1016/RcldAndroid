@@ -1,4 +1,4 @@
-package com.cetcme.rcldandroid;
+package com.cetcme.rcldandroidJiangxi;
 
 /**
  * Created by qiuhong on 5/15/16.

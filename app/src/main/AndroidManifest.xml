@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cetcme.rcldandroid">
+    package="com.cetcme.rcldandroidJiangxi">
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -45,10 +45,10 @@
         <!-- Baidu Map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="scfFuUVYVYimLAGl65LmD8ELf9O7ctNK" />
+            android:value="tjw1LE4nKpP4VQmzNbhvcj8ZkBA8lEaX" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,52 +57,52 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".IndexActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.IndexActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MyShipActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.MyShipActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".FenceActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.FenceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RouteActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.RouteActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RouteDisplayActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.RouteDisplayActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HelpActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.HelpActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ChangeInfoActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.ChangeInfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ioConfirmActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.ioConfirmActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ReasonActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.ReasonActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PunchActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.PunchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".splashScreen"
+            android:name="com.cetcme.rcldandroidJiangxi.splashScreen"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ioLogActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.ioLogActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".iofSailorActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.iofSailorActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AlertDialogActivity"
+            android:name="com.cetcme.rcldandroidJiangxi.AlertDialogActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.DeviceDefault.Dialog" />
 
-        <service android:name=".AntiThiefService">
+        <service android:name="com.cetcme.rcldandroidJiangxi.AntiThiefService">
             <intent-filter>
                 <action android:name="com.cetcme.rcldandroid.AntiThiefService" />
             </intent-filter>
@@ -112,7 +112,7 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <activity android:name=".settingActivity"></activity>
+        <activity android:name="com.cetcme.rcldandroidJiangxi.settingActivity"></activity>
     </application>
 
 </manifest>

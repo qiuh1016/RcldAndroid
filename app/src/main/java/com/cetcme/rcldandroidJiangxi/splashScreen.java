@@ -1,4 +1,4 @@
-package com.cetcme.rcldandroid;
+package com.cetcme.rcldandroidJiangxi;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;

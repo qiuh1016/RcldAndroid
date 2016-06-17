@@ -1,4 +1,4 @@
-package com.cetcme.rcldandroid;
+package com.cetcme.rcldandroidJiangxi;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

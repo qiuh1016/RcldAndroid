@@ -1,30 +1,19 @@
-package com.cetcme.rcldandroid;
+package com.cetcme.rcldandroidJiangxi;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.LongSparseArray;
-import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.JsResult;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.Switch;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.platform.comapi.map.L;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -38,15 +27,10 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.impl.client.SystemDefaultCredentialsProvider;
 
 public class RouteActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -243,7 +227,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         params.put("shipNo"   , shipNo);
         params.put("startTime", startTime);
         params.put("endTime"  , endTime);
-        params.put("dpf", 0);
+        params.put("dpf", dpf);
 
         String urlBody = "http://"+serverIP+ getString(R.string.trailGetUrl);
         String url = urlBody+"?userName=" + username +"&password="+password+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;
