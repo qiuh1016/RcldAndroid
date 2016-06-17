@@ -24,6 +24,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.platform.comapi.map.L;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -70,6 +71,8 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     private Boolean reducePointBySize = false;  //根据轨迹点数量 来减少距离较近的点
 
+    private Double dpf = 0.0;
+
     private SlideDateTimeListener listener = new SlideDateTimeListener() {
 
         @Override
@@ -78,7 +81,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
             // Do something with the date. This Date object contains
             // the date and time that the user has selected.
 
-            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             if (isStartTime) {
                 startDate = date;
                 startTime = df.format(date);
@@ -142,8 +145,21 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     //1天时间
                     Long ms = endDate.getTime() - startDate.getTime();
-                    if (ms > 1000 * 3600 * 24) {
-                        dialog("时间差不能超过1天！");
+                    long day = ms / 1000 / 3600 / 24;
+
+                    if (day < 1) {
+                        dpf = 0.0;
+                    } else if (day >= 1 && day < 7 ){
+                        dpf = 0.001;
+                    } else if (day >= 7 && day <= 31) {
+                        dpf = 0.01;
+                    } else {
+                        dpf = 1.0;
+                    }
+//                    Log.i("Main", "dpf: " + dpf + "; day: " + day);
+
+                    if (day > 31) {
+                        dialog("时间差不能超过31天！");
                     } else {
                         kProgressHUD = KProgressHUD.create(RouteActivity.this)
                                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -155,6 +171,21 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                                 .show();
                         getRouteData();
                     }
+
+
+//                    if (ms > 1000 * 3600 * 24) {
+//                        dialog("时间差不能超过1天！");
+//                    } else {
+//                        kProgressHUD = KProgressHUD.create(RouteActivity.this)
+//                                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+//                                .setLabel("查询中")
+//                                .setAnimationSpeed(1)
+//                                .setDimAmount(0.3f)
+//                                .setSize(110, 110)
+//                                .setCancellable(false)
+//                                .show();
+//                        getRouteData();
+//                    }
                 }
                 break;
             default:
@@ -168,6 +199,8 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         bundle.putString("endTime", endTime);
         bundle.putBoolean("showMediaPoint", showMediumPointSwitch.isChecked());
         bundle.putString("dataString", dataString);
+        bundle.putStringArrayList("convedList", geocovedList);
+        bundle.putBoolean("geoOK", geoOK);
 
         Intent intent = new Intent();
         intent.setClass(getApplicationContext(), RouteDisplayActivity.class);
@@ -206,10 +239,11 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         final RequestParams params = new RequestParams();
         params.put("userName" , username);
         params.put("password" , password);
-        params.put("deviceNo" , deviceNo);
+//        params.put("deviceNo" , deviceNo);
         params.put("shipNo"   , shipNo);
         params.put("startTime", startTime);
         params.put("endTime"  , endTime);
+        params.put("dpf", dpf);
 
         String urlBody = "http://"+serverIP+ getString(R.string.trailGetUrl);
         String url = urlBody+"?userName=" + username +"&password="+password+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;
@@ -219,7 +253,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onSuccess(int statusCode, Header[] headers, final JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
-//                Log.i("Main", response.toString());
+                Log.i("Main", "getLocation: " + response.toString());
                 dataString = response.toString();
                 route = new ArrayList<>();
                 try {
@@ -234,6 +268,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                                 Double lat = point.getDouble("latitude");
                                 Double lng = point.getDouble("longitude");
                                 LatLng latLng = new LatLng(lat,lng);
+
                                 route.add(latLng);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -242,7 +277,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                geoconv(route);
+                                geoconvAll(route);
                             }
                         },1000);
 
@@ -270,14 +305,128 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void geoconv(List<LatLng> list) {
+    private void geoconvAll(List<LatLng> list) {
+//        Log.i("Main", "list: " + list.toString());
+
+        locationSum = list.size();
+        groupCount = locationSum / 100 + 1;
+
+//        Log.i("Main", "sum: " + locationSum + ", groupCount: " + groupCount);
+
+        geocovedResult.clear();
+        geocovedList.clear();
+        for (int i = 0; i < groupCount; i++) {
+            geocovedResult.add("NOT");
+            geocovedList.add("");
+        }
+
+        for (int i = 0; i < groupCount; i++) {
+
+            //获取每组的点
+            List<LatLng> toConvList = new ArrayList<>();
+
+            if (i != groupCount - 1) {
+                for (int j = i * 100; j < i * 100 + 99; j++) {
+                    toConvList.add(list.get(j));
+                }
+            } else {
+                for (int j = i * 100; j < i * 100 + locationSum - (groupCount - 1) * 100; j++) {
+                    toConvList.add(list.get(j));
+                }
+            }
+
+//            Log.i("Main", "toConvList: " + toConvList.toString());
+            geoconv(toConvList, i);
+
+        }
+    }
+
+    private int locationSum, groupCount;
+    private boolean geoOK = true;
+
+    private ArrayList<String> geocovedList = new ArrayList<>();
+    private ArrayList<String> geocovedResult = new ArrayList<>();
+
+    private void geoconv(List<LatLng> list, final int i) {
 
         String urlBody = getString(R.string.baiduGeoConvUrl);
         String ak = getString(R.string.baiduGeoConvAppKey);
         RequestParams params = new RequestParams();
         String coords = "";
 
-        int sum = list.size();
+        //把坐标array转成字符串
+        for (LatLng latLng :list) {
+            coords += latLng.longitude + "," + latLng.latitude + ";";
+        }
+//        Log.i("Main", coords);
+        coords = coords.substring(0, coords.length() - 1); //去掉最后一个分号
+
+        //设置参数
+        params.put("coords", coords);
+        params.put("ak", ak);
+
+        //TODO: 一次最多100个点
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // If the response is JSONObject instead of expected JSONArray
+//                Log.i("Main", response.toString());
+                Integer status;
+                try {
+                    status = response.getInt("status");
+                    if (status == 0) {
+                        geocovedList.add(i, response.toString());
+                        geocovedResult.add(i,"OK");
+                    } else {
+                        geocovedResult.add(i,"FAIL");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    geocovedResult.add(i,"FAIL");
+                }
+
+                //判断是否全部纠偏完成
+                boolean geoFinished = true;
+                for (int j = 0; j < groupCount; j++) {
+                    if (geocovedResult.get(j).equals("NOT")) {
+                        geoFinished = false;
+                    } else if (geocovedResult.get(j).equals("FAIL")) {
+                        geoOK = false;
+                    }
+
+                }
+
+                if (geoFinished) {
+                    if (geoOK) {
+                        kProgressHUD.dismiss();
+                        showDisplayIntent();
+                    } else {
+                        kProgressHUD.dismiss();
+                        toast.setText("纠偏失败");
+                        toast.show();
+                        showDisplayIntent();
+                    }
+                }
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                kProgressHUD.dismiss();
+                toast.setText("纠偏服务器连接失败");
+                toast.show();
+            }
+        });
+    }
+
+    private void geoconv_original(List<LatLng> list) {
+
+        String urlBody = getString(R.string.baiduGeoConvUrl);
+        String ak = getString(R.string.baiduGeoConvAppKey);
+        RequestParams params = new RequestParams();
+        String coords = "";
 
         //减少重复点
 //        if (list.size() > 100) {

@@ -76,7 +76,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="IP"
+            android:text="SET IP"
             android:id="@+id/ipButton"
             android:visibility="visible"
             android:layout_below="@+id/autofillButton"
@@ -88,7 +88,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="IP120"
+            android:text="IP_1"
             android:id="@+id/ip1Button"
             android:visibility="visible"
             android:layout_alignTop="@+id/ipButton"
@@ -98,7 +98,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ip114"
+            android:text="ip_2"
             android:id="@+id/ip2Button"
             android:visibility="visible"
             android:layout_alignTop="@+id/ip1Button"

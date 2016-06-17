@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,16 +73,21 @@ public class UpdateAppManager {
     // 强制更新
     private boolean forceToUpdate;
 
+    //用户数据
+    private String username,password,serverIP,updateContent;
+
     public UpdateAppManager(Context context) {
         this.context = context;
 
         SharedPreferences user = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-        UPDATE_SERVER_ADDRESS = "http://" + user.getString("serverIP", context.getString(R.string.defaultServerIP_1));
-//        Log.i("Main", UPDATE_SERVER_ADDRESS);
+        username = user.getString("username","");
+        password = user.getString("password","");
+        serverIP = user.getString("serverIP", context.getString(R.string.defaultServerIP_1));
+        UPDATE_SERVER_ADDRESS = "http://" + serverIP;
 
         // 下载路径
-        spec = UPDATE_SERVER_ADDRESS + context.getString(R.string.appDownloadUrl);
-        spec = "ftp://hdy:1234@121.40.212.195/";
+        spec = UPDATE_SERVER_ADDRESS + context.getString(R.string.getDownLoadUrl);
+
         // 版本路径
         versionUrl = UPDATE_SERVER_ADDRESS + context.getString(R.string.appVersionUrl);
 
@@ -114,19 +120,30 @@ public class UpdateAppManager {
      * 检测应用更新信息
      */
     public void checkUpdateInfo() {
+
+        RequestParams params = new RequestParams();
+        params.put("code", 1); // 1: 渔民app  2: 安装app
+
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(versionUrl, new JsonHttpResponseHandler() {
+        client.get(versionUrl, params, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.i("Main", "versionJSON: " + response.toString());
                 try {
-                    Double version = response.getDouble("version");
+                    String version = response.getString("version");
                     try {
-                        forceToUpdate = response.getBoolean("forceToUpdate");
+                        forceToUpdate = response.getBoolean("force_Update");
                     } catch (JSONException e) {
                         forceToUpdate = false;
                     }
 
-                    if (version > currentVersion) {
+                    try {
+                        updateContent = response.getString("content");
+                    } catch (JSONException e) {
+                        updateContent = "";
+                    }
+
+                    //TODO: 用version Code 比较
+                    if (Double.valueOf(version) > currentVersion) {
                         FILE_NAME = FILE_PATH + "RCLD_V" + version +".apk";
                         showNoticeDialog();
                     } else {
@@ -136,7 +153,16 @@ public class UpdateAppManager {
                     e.printStackTrace();
                 }
             }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.i("Main", "getVersion: " + errorResponse);
+            }
+
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("Main", responseString);
+            }
         });
+
 
 
     }
@@ -183,6 +209,37 @@ public class UpdateAppManager {
         dialog = builder.create();
         dialog.show();
         downloadApp();
+//
+//        //获取下载链接，成功后开始下载，失败后下载进度对话框消失，提示失败
+//
+////        RequestParams params = new RequestParams();
+////        params.put("userName", username);
+////        params.put("password", password);
+////        params.put("code", 1);
+//        String url = "http://" + serverIP + context.getString(R.string.getDownLoadUrl);
+//
+//        AsyncHttpClient client = new AsyncHttpClient();
+//        client.get(url, new JsonHttpResponseHandler() {
+//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                Log.i("Main", "getDownloadUrl: " + response.toString());
+//                try {
+//                    spec = response.getString("url");
+//                    downloadApp();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                Log.i("Main", "getDownloadUrlERROR: " + errorResponse);
+//            }
+//
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                Log.i("Main", responseString);
+//            }
+//
+//        });
+
     }
 
     /**

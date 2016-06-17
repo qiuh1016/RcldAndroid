@@ -73,46 +73,54 @@ public class RouteDisplayActivity extends AppCompatActivity {
         showMediaPoint = bundle.getBoolean("showMediaPoint");
         String dataString = bundle.getString("dataString");
 
+        ArrayList<String> convedList = bundle.getStringArrayList("convedList");
+        boolean geoOK = bundle.getBoolean("geoOK");
+
         startTimeTextView.setText(startTime);
         endTimeTextView.setText(endTime);
 
+        if (geoOK) {
 
-        try {
-            JSONObject dataJSON = new JSONObject(dataString);
-            JSONArray resultArray = dataJSON.getJSONArray("result");
+            for (String convedListString : convedList) {
+                try {
+//                    Log.i("Main", convedListString);
+                    JSONObject dataJSON = new JSONObject(convedListString);
+                    JSONArray resultArray = dataJSON.getJSONArray("result");
 
-            for (int i = 0; i < resultArray.length(); i++) {
-                JSONObject data = (JSONObject) resultArray.get(i);
-                Double lat = data.getDouble("y");
-                Double lng = data.getDouble("x");
-                LatLng latLng = new LatLng(lat, lng);
-                latLngs.add(latLng);
+                    for (int i = 0; i < resultArray.length(); i++) {
+                        JSONObject data = (JSONObject) resultArray.get(i);
+                        Double lat = data.getDouble("y");
+                        Double lng = data.getDouble("x");
+                        LatLng latLng = new LatLng(lat, lng);
+                        latLngs.add(latLng);
+                    }
+                    isConverted = true;
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-            isConverted = true;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
 
-        try {
-            JSONObject dataJSON = new JSONObject(dataString);
-            JSONArray resultArray = dataJSON.getJSONArray("data");
+        } else {
+            try {
+                JSONObject dataJSON = new JSONObject(dataString);
+                JSONArray resultArray = dataJSON.getJSONArray("data");
 
-            for (int i = 0; i < resultArray.length(); i++) {
-                JSONObject data = (JSONObject) resultArray.get(i);
-                Double lat = data.getDouble("latitude");
-                Double lng = data.getDouble("longitude");
-                LatLng latLng = new LatLng(lat, lng);
-                latLngs.add(latLng);
-                latLngs.add(latLng);
-                latLngs.add(latLng);
+                for (int i = 0; i < resultArray.length(); i++) {
+                    JSONObject data = (JSONObject) resultArray.get(i);
+                    Double lat = data.getDouble("latitude");
+                    Double lng = data.getDouble("longitude");
+                    LatLng latLng = new LatLng(lat, lng);
+                    latLngs.add(latLng);
+                    latLngs.add(latLng);
+                    latLngs.add(latLng);
+                }
+                isConverted = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            isConverted = false;
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-
 
         UIOperation();
 
