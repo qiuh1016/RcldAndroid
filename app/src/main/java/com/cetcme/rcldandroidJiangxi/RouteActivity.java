@@ -140,6 +140,9 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                     } else {
                         dpf = 1.0;
                     }
+
+                    dpf = 0.001;
+
 //                    Log.i("Main", "dpf: " + dpf + "; day: " + day);
 
                     if (day > 31) {
