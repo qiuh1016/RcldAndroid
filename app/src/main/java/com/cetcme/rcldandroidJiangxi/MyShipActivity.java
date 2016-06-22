@@ -104,11 +104,12 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         registerReceiver(shipLocationReceiver,intentFilter);
 
         //定位
+        /*
         mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
         mLocationClient.registerLocationListener( myListener );    //注册监听函数
         initLocation();
         mLocationClient.start();
-
+        */
     }
 
     private void getShipData() {
@@ -242,7 +243,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 //        MenuItem punch = menu.add(0, 0, 0, "打卡记录");
 //        MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
         antiThiefMenuItem = menu.add(0, 0, 0, antiThiefIsOpen? "关闭防盗" : "开启防盗");
-        final MenuItem helpAlarm = menu.add(0,0,0,"报警求助");
+//        final MenuItem helpAlarm = menu.add(0,0,0,"报警求助");
 
         changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         oConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -250,7 +251,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 //        punch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 //        iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         antiThiefMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        helpAlarm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+//        helpAlarm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         changeInfo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -360,18 +361,18 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        helpAlarm.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (bdLocation != null) {
-                    uploadHelpAlarm();
-                } else {
-                    toast.setText("请等待定位数据");
-                    toast.show();
-                }
-                return false;
-            }
-        });
+//        helpAlarm.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                if (bdLocation != null) {
+//                    uploadHelpAlarm();
+//                } else {
+//                    toast.setText("请等待定位数据");
+//                    toast.show();
+//                }
+//                return false;
+//            }
+//        });
 
         return true;
     }
@@ -700,7 +701,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         params.put("alertType", 1);
         params.put("longitude", bdLocation.getLongitude());
         params.put("latitude", bdLocation.getLatitude());
-        params.put("time", bdLocation.getTime());
+        params.put("time", "2016/06/22%2013:22:22"); //bdLocation.getTime()
         params.put("description", "报警求助");
 
         Log.i("Main", "报警内容：" + params.toString());

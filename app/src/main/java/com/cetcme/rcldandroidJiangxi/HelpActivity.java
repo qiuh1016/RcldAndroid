@@ -98,7 +98,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
     private void mapMark(LatLng point){
 
         //设置中心点 和显示范围
-        MapStatus mapStatus = new MapStatus.Builder().target(point).zoom(18) //15
+        MapStatus mapStatus = new MapStatus.Builder().target(point).zoom(17) //15
                 .build();
         MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                 .newMapStatus(mapStatus);
