@@ -67,6 +67,8 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
     private Boolean infoWindowIsShow = true ;
     private Boolean isFirstToShow = true;
 
+    private ShipLocationReceiver shipLocationReceiver;
+
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
     private BDLocation bdLocation;
@@ -98,7 +100,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         modifyAntiThiefRadius();
 
         //接受广播
-        ShipLocationReceiver shipLocationReceiver = new ShipLocationReceiver();
+        shipLocationReceiver = new ShipLocationReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.updateShipLocation");
         registerReceiver(shipLocationReceiver,intentFilter);
@@ -471,8 +473,9 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(shipLocationReceiver);
         super.onDestroy();
-        mLocationClient.stop();
+//        mLocationClient.stop();
     }
 
     private void mapSet() {

@@ -426,6 +426,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
         }
 
+
     }
 
     private void setButtonSize() {
