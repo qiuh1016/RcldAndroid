@@ -155,7 +155,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
         mLocationClient.registerLocationListener( myListener );    //注册监听函数
         initLocation();
-        mLocationClient.start();
+//        mLocationClient.start();
 
     }
 
@@ -189,6 +189,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         sos.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                mLocationClient.start();
                 sosDialog();
                 return false;
             }
@@ -577,6 +578,8 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         params.put("description", "报警求助");
 
         Log.i("Main", "报警内容：" + params.toString());
+
+        mLocationClient.stop();
 
         String urlBody = "http://"+serverIP+ getString(R.string.helpAlarmUrl);
         AsyncHttpClient client = new AsyncHttpClient();
