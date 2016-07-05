@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">船载安全系统</string>
-    <string name="loginTitle">船载安全系统</string>
+    <string name="app_name">人船联动系统</string>
+    <string name="loginTitle">人船联动系统</string>
     <string name="login">登陆</string>
     <string name="shipNumber">船号</string>
     <string name="password">密码</string>
@@ -12,11 +12,11 @@
     <string name="telphone">0573-82793269</string>
     <string name="address">嘉兴秀洲区桃园路587号中电科智慧产业园4号楼3楼</string>
 
-    <string name="defaultServerIP_1">121.40.212.195</string>
+    <string name="defaultServerIP_1">120.27.149.252</string>
     <string name="defaultServerIP_2">114.55.101.20</string>
 
 
-    <!--//120.27.149.252-->
+    <!--浙江//120.27.149.252  江西//121.40.212.195-->
 
 
     <!--<string name="loginUrl">/api/app/login.json</string>-->

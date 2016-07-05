@@ -1,4 +1,4 @@
-package com.cetcme.rcldandroidJiangxi;
+package com.cetcme.rcldandroidZhejiang;
 
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -9,8 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;

@@ -1,10 +1,13 @@
-package com.cetcme.rcldandroidJiangxi;
+package com.cetcme.rcldandroidZhejiang;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -20,7 +23,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +35,7 @@ import cz.msebera.android.httpclient.Header;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class PunchActivity extends AppCompatActivity {
+public class ioLogActivity extends AppCompatActivity {
 
 
     private PullToRefreshListView listView;
@@ -49,11 +55,12 @@ public class PunchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_punch);
-        setTitle("打卡记录");
+        setContentView(R.layout.activity_io_log);
 
-        toast = Toast.makeText(PunchActivity.this, "", LENGTH_SHORT);
-        listView = (PullToRefreshListView) findViewById(R.id.punchHistoryListView);
+        setTitle("出海记录");
+
+        toast = Toast.makeText(ioLogActivity.this, "", LENGTH_SHORT);
+        listView = (PullToRefreshListView) findViewById(R.id.ioLogListView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
 
         listView.getLoadingLayoutProxy(true,false).setRefreshingLabel("刷新中");
@@ -63,13 +70,11 @@ public class PunchActivity extends AppCompatActivity {
         listView.getLoadingLayoutProxy(false,true).setReleaseLabel("松开立即加载");
         listView.getLoadingLayoutProxy(false,true).setPullLabel("上拉可以加载");
 
-        simpleAdapter = new SimpleAdapter(PunchActivity.this, getPunchData(true), R.layout.punch_list_cell,
-                new String[]{"name", "id", "punchTime", "null"},
+        simpleAdapter = new SimpleAdapter(ioLogActivity.this, getioLogData(true), R.layout.io_log_list_cell,
+                new String[]{"iofTime", "iofFlag"},
                 new int[]{
-                        R.id.nameTextViewInPunchListCell,
-                        R.id.idTextViewInPunchListCell,
-                        R.id.punchTimeTextViewInPunchListView,
-                        R.id.dataTypeTextViewInPunchListView
+                        R.id.timeTextViewInioLogListCell,
+                        R.id.flagTextViewInioLogListCell
                 });
         listView.setAdapter(simpleAdapter);
 
@@ -78,10 +83,10 @@ public class PunchActivity extends AppCompatActivity {
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 
                 if (listView.isHeaderShown()) {
-                    getPunchData(true);
+                    getioLogData(true);
                 } else if (listView.isFooterShown()) {
                     if (currentPage != totalPage) {
-                        getPunchData(false);
+                        getioLogData(false);
                     } else {
                         listView.getLoadingLayoutProxy(false,true).setRefreshingLabel("已全部加载完成");
                         listView.getLoadingLayoutProxy(false,true).setReleaseLabel("已全部加载完成");
@@ -93,11 +98,21 @@ public class PunchActivity extends AppCompatActivity {
 
             }
         });
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Bundle bundle = new Bundle();
+                bundle.putString("iofTime", dataList.get(i - 1).get("iofTime").toString());
+                bundle.putString("iofFlag", dataList.get(i - 1).get("iofFlag").toString());
+                bundle.putString("iofSailorList", dataList.get(i - 1).get("iofSailorList").toString());
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), iofSailorActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+            }
+        });
     }
 
     public void onBackPressed() {
@@ -106,10 +121,10 @@ public class PunchActivity extends AppCompatActivity {
                 R.anim.push_right_out_no_alpha);
     }
 
-    private List<Map<String, Object>> getPunchData(final Boolean isRefresh) {
+    private List<Map<String, Object>> getioLogData(final Boolean isRefresh) {
 
         if (isFirstTimeToGet) {
-            kProgressHUD = KProgressHUD.create(PunchActivity.this)
+            kProgressHUD = KProgressHUD.create(ioLogActivity.this)
                     .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                     .setLabel("获取中")
                     .setAnimationSpeed(1)
@@ -137,15 +152,24 @@ public class PunchActivity extends AppCompatActivity {
             listView.getLoadingLayoutProxy(false,true).setPullLabel("上拉可以加载");
         }
 
+        //设置时间
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd%20HH:mm:ss");
+        Date endDate = new Date();
+        String endTime = df.format(endDate);
+        Calendar calendar = Calendar.getInstance();//日历对象
+        calendar.setTime(endDate);//设置当前日期
+        calendar.add(Calendar.MONTH, -1);//
+        String startTime = df.format(calendar.getTime());//设置起始日期
+
         //设置输入参数
         RequestParams params = new RequestParams();
         params.put("userName", username);
         params.put("password", password);
         params.put("shipNo", shipNo);
-        params.put("pageNum", currentPage + 1);
+        params.put("pageNum" , currentPage + 1);
         params.put("pageSize", pageSize);
 
-        String urlBody = "http://"+serverIP+ getString(R.string.punchAllByPageUrl);
+        String urlBody = "http://"+serverIP+ getString(R.string.iofGetUrl);
         String url = urlBody+"?userName="+username+"&password="+password+"&pageNum=0"+"&pageSize=20";
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
@@ -153,7 +177,6 @@ public class PunchActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
                 Log.i("Main",response.toString());
-
                 try {
                     String msg = response.getString("msg");
                     if (msg.equals("没有符合条件的数据")) {
@@ -175,9 +198,9 @@ public class PunchActivity extends AppCompatActivity {
                             }
                         } else {
                             //加载的时候检测总数是否变化 如变化 重新刷新
-                            int sumToget = response.getInt("total");
-                            if (sumToget != sum) {
-                                getPunchData(true);
+                            int sumGot = response.getInt("total");
+                            if (sumGot != sum) {
+                                getioLogData(true);
                                 Toast.makeText(getApplicationContext(),"总数有变，已刷新数据",LENGTH_SHORT).show();
                                 return;
                             }
@@ -187,14 +210,38 @@ public class PunchActivity extends AppCompatActivity {
                         currentPage += 1;
 
                         for(int i = 0; i < dataArray.length(); i++) {
-                            JSONObject punch = (JSONObject) dataArray.get(i);
+                            JSONObject log = (JSONObject) dataArray.get(i);
 
                             Map<String, Object> map = new Hashtable<>();
-                            map.put("id", punch.getString("sailorIdNo"));
-                            map.put("name", punch.getString("sailorName"));
-                            map.put("punchTime", punch.getString("punchTime"));
-                            map.put("null", "");
-//                            map.put("null", "第"+currentPage+"页");
+                            try {
+                            map.put("iofTime", log.getString("iofTime"));
+                        } catch (JSONException e) {
+                            map.put("iofTime", "无");
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            int flag = log.getInt("iofFlag");
+                            String ioFlagString;
+                            if (flag == 1) {
+                                ioFlagString = "出港";
+                            } else if (flag == 2) {
+                                ioFlagString = "进港";
+                            } else {
+                                ioFlagString = "无";
+                            }
+                            map.put("iofFlag", ioFlagString);
+                        } catch (JSONException e) {
+                            map.put("iofFlag", "无");
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            map.put("iofSailorList", log.getString("iofSailorList"));
+                        } catch (JSONException e) {
+                            map.put("iofSailorList", log.getString("iofSailorList"));
+                            e.printStackTrace();
+                        }
 
                             dataList.add(map);
                         }
@@ -229,4 +276,3 @@ public class PunchActivity extends AppCompatActivity {
     }
 
 }
-

@@ -1,7 +1,6 @@
-package com.cetcme.rcldandroidJiangxi;
+package com.cetcme.rcldandroidZhejiang;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,7 +29,6 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
-import com.baidu.mapapi.model.LatLng;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -183,17 +181,16 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         /**
          *  sos
          */
-        MenuItem sos = menu.add(0, 0, 0, "SOS");
-        sos.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//        setting.setIcon(R.drawable.user);
-        sos.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                mLocationClient.start();
-                sosDialog();
-                return false;
-            }
-        });
+//        MenuItem sos = menu.add(0, 0, 0, "SOS");
+//        sos.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        sos.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//                mLocationClient.start();
+//                sosDialog();
+//                return false;
+//            }
+//        });
 
         /**
          *  退出登录

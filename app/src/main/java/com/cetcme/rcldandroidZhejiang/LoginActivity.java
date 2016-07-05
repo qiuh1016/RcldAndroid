@@ -1,4 +1,4 @@
-package com.cetcme.rcldandroidJiangxi;
+package com.cetcme.rcldandroidZhejiang;
 
 import android.app.Activity;
 import android.content.Context;
@@ -99,6 +99,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (savePassword) {
             ReadSharedPreferences();
             savePasswordCheckBox.setChecked(true);
+        } else {
+            String strName;
+            strName = user.getString("username", "");
+            //填充EditText
+            usernameEditText.setText(strName);
+            savePasswordCheckBox.setChecked(false);
         }
 
         //Display the current version number
@@ -182,21 +188,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void debugModeEnable(Boolean enable) {
-//        if (enable) {
-//            ipButton.setVisibility(View.VISIBLE);
-//            ip1Button.setVisibility(View.VISIBLE);
-//            ip2Button.setVisibility(View.VISIBLE);
-//            fillButton.setVisibility(View.VISIBLE);
-//            nullButton.setVisibility(View.VISIBLE);
-//            quitButton.setVisibility(View.VISIBLE);
-//        } else {
-//            ipButton.setVisibility(View.INVISIBLE);
-//            ip1Button.setVisibility(View.INVISIBLE);
-//            ip2Button.setVisibility(View.INVISIBLE);
-//            fillButton.setVisibility(View.INVISIBLE);
-//            nullButton.setVisibility(View.INVISIBLE);
-//            quitButton.setVisibility(View.INVISIBLE);
-//        }
         ipButton    .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
         ip1Button   .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
         ip2Button   .setVisibility( enable? View.VISIBLE : View.INVISIBLE);
@@ -342,6 +333,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         params.put("userName", username);
         params.put("password", password);
         params.put("userType", 2);
+
+        Log.i("Main", params.toString());
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));

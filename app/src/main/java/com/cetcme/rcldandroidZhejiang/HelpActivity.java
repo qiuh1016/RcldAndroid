@@ -1,4 +1,4 @@
-package com.cetcme.rcldandroidJiangxi;
+package com.cetcme.rcldandroidZhejiang;
 
 import android.Manifest;
 import android.content.Intent;

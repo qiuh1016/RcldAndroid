@@ -1,4 +1,4 @@
-package com.cetcme.rcldandroidJiangxi;
+package com.cetcme.rcldandroidZhejiang;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -242,16 +242,16 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         MenuItem changeInfo = menu.add(0, 0, 0, "修改信息");
         MenuItem oConfirm = menu.add(0, 0, 0, R.string.oConfirm);
         MenuItem iConfirm = menu.add(0, 0, 0, R.string.iConfirm);
-//        MenuItem punch = menu.add(0, 0, 0, "打卡记录");
-//        MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
+        MenuItem punch = menu.add(0, 0, 0, "打卡记录");
+        MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
         antiThiefMenuItem = menu.add(0, 0, 0, antiThiefIsOpen? "关闭防盗" : "开启防盗");
 //        final MenuItem helpAlarm = menu.add(0,0,0,"报警求助");
 
         changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         oConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         iConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-//        punch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-//        iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        punch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         antiThiefMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 //        helpAlarm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
@@ -301,27 +301,27 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-//        punch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                Intent intent = new Intent();
-//                intent.setClass(getApplicationContext(), PunchActivity.class);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
-//                return false;
-//            }
-//        });
-//
-//        iofLog.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                Intent intent = new Intent();
-//                intent.setClass(getApplicationContext(), ioLogActivity.class);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
-//                return false;
-//            }
-//        });
+        punch.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), PunchActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+                return false;
+            }
+        });
+
+        iofLog.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), ioLogActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+                return false;
+            }
+        });
 
         antiThiefMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
