@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.cetcme.rcldandroid.HelpActivity">
+    tools:context="com.cetcme.rcldandroidZhejiang.HelpActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="0574-55712322"
+            android:text="@string/telphone"
             android:id="@+id/telTextViewInHelpActivity"
             android:layout_below="@+id/textView21"
             android:layout_alignParentLeft="true"
@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="王先生"
+            android:text="@string/contractor"
             android:id="@+id/textView23"
             android:layout_below="@+id/textView22"
             android:layout_alignLeft="@+id/telTextViewInHelpActivity"
@@ -134,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="宁波高新区扬帆路999弄研发园A区17楼"
+            android:text="@string/address"
             android:id="@+id/addressTextViewInHelpActivity"
             android:layout_below="@+id/textView24"
             android:layout_alignLeft="@+id/textView23"
@@ -145,7 +145,8 @@
             android:gravity="center_vertical"
             android:clickable="true"
             android:textSize="16sp"
-            android:layout_marginTop="2dp" />
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="16dp" />
     </RelativeLayout>
 
     <com.baidu.mapapi.map.MapView

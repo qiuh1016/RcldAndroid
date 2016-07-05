@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cetcme.rcldandroid">
+    package="com.cetcme.rcldandroidZhejiang">
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -37,7 +37,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_zhejiang"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -48,7 +48,7 @@
             android:value="scfFuUVYVYimLAGl65LmD8ELf9O7ctNK" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,52 +57,52 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".IndexActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.IndexActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MyShipActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.MyShipActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".FenceActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.FenceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RouteActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.RouteActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RouteDisplayActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.RouteDisplayActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HelpActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.HelpActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ChangeInfoActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.ChangeInfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ioConfirmActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.ioConfirmActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ReasonActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.ReasonActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PunchActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.PunchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".splashScreen"
+            android:name="com.cetcme.rcldandroidZhejiang.splashScreen"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ioLogActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.ioLogActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".iofSailorActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.iofSailorActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AlertDialogActivity"
+            android:name="com.cetcme.rcldandroidZhejiang.AlertDialogActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.DeviceDefault.Dialog" />
 
-        <service android:name=".AntiThiefService">
+        <service android:name="com.cetcme.rcldandroidZhejiang.AntiThiefService">
             <intent-filter>
                 <action android:name="com.cetcme.rcldandroid.AntiThiefService" />
             </intent-filter>
@@ -112,7 +112,7 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <activity android:name=".settingActivity"></activity>
+        <activity android:name="com.cetcme.rcldandroidZhejiang.settingActivity"></activity>
     </application>
 
 </manifest>
