@@ -334,7 +334,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         params.put("password", password);
         params.put("userType", 2);
 
-        Log.i("Main", params.toString());
+//        Log.i("Main", params.toString());
 
         SharedPreferences user = getSharedPreferences("user", Context.MODE_PRIVATE);
         String serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
@@ -349,7 +349,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 try {
                     code = response.getInt("code");
                     if (code == 0) {
-                        getShipInfo(username, password);
 
                         //保存deviceNo 供轨迹查询
                         try {
@@ -377,6 +376,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             e.printStackTrace();
                         }
 
+                        getShipInfo(username, password);
 
                         return;
                     } else {
@@ -414,6 +414,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         params.put("userName", username);
         params.put("password", password);
         params.put("shipNo", shipNo);
+
+        Log.i("Main", "getShipInfo: " + params.toString());
 
 
         String serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
