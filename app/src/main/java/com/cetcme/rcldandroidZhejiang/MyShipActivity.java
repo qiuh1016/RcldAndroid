@@ -162,6 +162,9 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             String cfsStartDate;
             try {
                 cfsStartDate = data0.getString("cfsStartDate");
+                if (cfsStartDate.equals("1900/01/01")) {
+                    cfsStartDate = "无";
+                }
             } catch (JSONException e) {
                 cfsStartDate = "无";
             }
@@ -169,6 +172,9 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             String cfsEndDate;
             try {
                 cfsEndDate = data0.getString("cfsEndDate");
+                if (cfsEndDate.equals("1900/01/01")) {
+                    cfsEndDate = "无";
+                }
             } catch (JSONException e) {
                 cfsEndDate = "无";
             }
@@ -239,39 +245,39 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        MenuItem changeInfo = menu.add(0, 0, 0, "修改信息");
+//        MenuItem changeInfo = menu.add(0, 0, 0, "修改信息");
         MenuItem oConfirm = menu.add(0, 0, 0, R.string.oConfirm);
         MenuItem iConfirm = menu.add(0, 0, 0, R.string.iConfirm);
         MenuItem punch = menu.add(0, 0, 0, "打卡记录");
         MenuItem iofLog = menu.add(0, 0, 0, "出海记录");
-        antiThiefMenuItem = menu.add(0, 0, 0, antiThiefIsOpen? "关闭防盗" : "开启防盗");
+//        antiThiefMenuItem = menu.add(0, 0, 0, antiThiefIsOpen? "关闭防盗" : "开启防盗");
 //        final MenuItem helpAlarm = menu.add(0,0,0,"报警求助");
 
-        changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+//        changeInfo.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         oConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         iConfirm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         punch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         iofLog.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        antiThiefMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+//        antiThiefMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 //        helpAlarm.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-        changeInfo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-
-                Bundle bundle = new Bundle();
-                bundle.putString("picName", picName);
-                bundle.putString("picTelNo", picTelNo);
-
-                Intent changeInfoIntent = new Intent();
-                changeInfoIntent.setClass(getApplicationContext(),ChangeInfoActivity.class);
-                changeInfoIntent.putExtras(bundle);
-                startActivity(changeInfoIntent);
-                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
-
-                return false;
-            }
-        });
+//        changeInfo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//
+//                Bundle bundle = new Bundle();
+//                bundle.putString("picName", picName);
+//                bundle.putString("picTelNo", picTelNo);
+//
+//                Intent changeInfoIntent = new Intent();
+//                changeInfoIntent.setClass(getApplicationContext(),ChangeInfoActivity.class);
+//                changeInfoIntent.putExtras(bundle);
+//                startActivity(changeInfoIntent);
+//                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+//
+//                return false;
+//            }
+//        });
 
         iConfirm.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -323,45 +329,45 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        antiThiefMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = antiThief.edit();
-                editor.putBoolean("antiThiefIsOpen", !antiThiefIsOpen);
-                editor.putString("antiThiefLat", String.valueOf(shipLocationUnConved.latitude));
-                editor.putString("antiThiefLng", String.valueOf(shipLocationUnConved.longitude));
-                Log.i("Main", "saved  :" + String.valueOf(shipLocationUnConved.latitude) + "," + String.valueOf(shipLocationUnConved.longitude));
-                editor.apply();
-                antiThiefIsOpen = !antiThiefIsOpen;
-
-                if (antiThiefIsOpen) {
-                    baiduMap.addOverlay(antiThiefPolygonOption);
-                    toast.setText("防盗已开启，防盗半径：" + antiThiefRadius + "海里");
-                } else {
-                    baiduMap.clear();
-                    mapMark(shipLocation);
-                    toast.setText("防盗已关闭");
-                }
-
-//                //通知index
-//                Intent intent = new Intent();
-//                intent.putExtra("antiThiefIsOpen" , antiThiefIsOpen);
-//                intent.setAction("com.antiThief");
-//                sendBroadcast(intent);
-//                toast.show();
-
-                //延时改变菜单内容
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        antiThiefMenuItem.setTitle(antiThiefIsOpen? "关闭防盗" : "开启防盗");
-                    }
-                }, 200);
-
-                return false;
-            }
-        });
+//        antiThiefMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                SharedPreferences antiThief = getSharedPreferences("antiThief", Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = antiThief.edit();
+//                editor.putBoolean("antiThiefIsOpen", !antiThiefIsOpen);
+//                editor.putString("antiThiefLat", String.valueOf(shipLocationUnConved.latitude));
+//                editor.putString("antiThiefLng", String.valueOf(shipLocationUnConved.longitude));
+//                Log.i("Main", "saved  :" + String.valueOf(shipLocationUnConved.latitude) + "," + String.valueOf(shipLocationUnConved.longitude));
+//                editor.apply();
+//                antiThiefIsOpen = !antiThiefIsOpen;
+//
+//                if (antiThiefIsOpen) {
+//                    baiduMap.addOverlay(antiThiefPolygonOption);
+//                    toast.setText("防盗已开启，防盗半径：" + antiThiefRadius + "海里");
+//                } else {
+//                    baiduMap.clear();
+//                    mapMark(shipLocation);
+//                    toast.setText("防盗已关闭");
+//                }
+//
+////                //通知index
+////                Intent intent = new Intent();
+////                intent.putExtra("antiThiefIsOpen" , antiThiefIsOpen);
+////                intent.setAction("com.antiThief");
+////                sendBroadcast(intent);
+////                toast.show();
+//
+//                //延时改变菜单内容
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        antiThiefMenuItem.setTitle(antiThiefIsOpen? "关闭防盗" : "开启防盗");
+//                    }
+//                }, 200);
+//
+//                return false;
+//            }
+//        });
 
 //        helpAlarm.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 //            @Override
@@ -537,7 +543,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 
     private void mapStatus(LatLng latLng) {
         //设置中心点 和显示范围
-        MapStatus mapStatus = new MapStatus.Builder().target(latLng).zoom(14) //15
+        MapStatus mapStatus = new MapStatus.Builder().target(latLng).zoom(9) //15
                 .build();
         MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory
                 .newMapStatus(mapStatus);

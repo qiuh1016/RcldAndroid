@@ -303,7 +303,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 //        builder.setIcon(R.mipmap.ic_launcher);
         builder.setIcon(android.R.drawable.ic_menu_view);
 //        builder.setMessage("是否继续?");
-        builder.setTitle("请选择(功能带开发)");
+        builder.setTitle("请选择");
         builder.setPositiveButton("报警", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -324,7 +324,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
                 },1000);
             }
         });
-        builder.setNegativeButton("查看", null);
+//        builder.setNegativeButton("查看", null);
         builder.create().show();
     }
 
