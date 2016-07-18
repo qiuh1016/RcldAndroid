@@ -7,9 +7,9 @@
     <string name="close">关闭</string>
     <string name="iConfirm">进港确认</string>
     <string name="oConfirm">出港确认</string>
-    
+
     <string name="contractor">陈先生</string>
-    <string name="telphone">0573-82793269</string>
+    <string name="telephone">0573-82793269</string>
     <string name="address">嘉兴秀洲区桃园路587号中电科智慧产业园4号楼3楼</string>
 
     <string name="defaultServerIP_1">120.27.149.252</string>
@@ -47,5 +47,11 @@
 
     <string name="baiduGeoConvUrl">http://api.map.baidu.com/geoconv/v1/</string>
     <string name="baiduGeoConvAppKey">stfZ8nXV0rvMfTLuAAY9SX2AqgLGLuOQ</string>
+    <string name="title_activity_visa">VisaActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>

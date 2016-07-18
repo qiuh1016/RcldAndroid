@@ -75,7 +75,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.telTextViewInHelpActivity:
                 //用intent启动拨打电话
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getString(R.string.telphone)));  //"tel:0573-82793269"
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getString(R.string.telephone)));  //"tel:0573-82793269"
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     // Consider calling
                     //    ActivityCompat#requestPermissions

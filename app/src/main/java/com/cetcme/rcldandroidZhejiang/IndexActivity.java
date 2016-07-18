@@ -96,6 +96,8 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
+        setTitle(getString(R.string.loginTitle));
+
         welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
         myShipButton = (Button) findViewById(R.id.myShipButton);
         fenceButton = (Button) findViewById(R.id.fenceButton);
@@ -336,7 +338,8 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
                 Bundle bundle = new Bundle();
                 bundle.putString("myShipInfo", myShipInfoJSON.toString());
                 Intent myShipIntent = new Intent();
-                myShipIntent.setClass(getApplicationContext(), MyShipActivity.class);
+//                myShipIntent.setClass(getApplicationContext(), MyShipActivity.class);
+                myShipIntent.setClass(getApplicationContext(), VisaActivity.class);
                 myShipIntent.putExtras(bundle);
                 startActivity(myShipIntent);
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);

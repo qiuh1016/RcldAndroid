@@ -22,7 +22,7 @@
         <Button
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:text="本船信息"
+            android:text="电子签证"
             android:id="@+id/myShipButton"
             android:background="@drawable/myshipbutton"
             android:contextClickable="false"

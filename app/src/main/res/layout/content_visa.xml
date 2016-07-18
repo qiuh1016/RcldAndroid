@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.cetcme.rcldandroidZhejiang.VisaActivity"
+    tools:showIn="@layout/app_bar_visa">
+
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/baiduMapInVisaActivity"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true" />
+
+    <ImageButton android:layout_width="40dp" android:layout_height="40dp" android:id="@+id/showShipLocationImageButtonInVisaActivity"
+        android:src="@drawable/ship" android:adjustViewBounds="false" android:scaleType="fitXY"
+        android:background="@drawable/mapbuttonbackground" android:contentDescription="" android:clickable="true"
+        android:layout_marginBottom="100dp"
+        android:layout_alignBottom="@+id/baiduMapInVisaActivity"
+        android:layout_alignRight="@+id/baiduMapInVisaActivity"
+        android:layout_alignEnd="@+id/baiduMapInVisaActivity"
+        android:layout_marginRight="7dp" />
+
+
+</RelativeLayout>
