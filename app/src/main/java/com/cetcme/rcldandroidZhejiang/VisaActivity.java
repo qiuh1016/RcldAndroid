@@ -102,7 +102,7 @@ public class VisaActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setTitle("电子签证");
+        setTitle("本船信息");
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -155,14 +155,23 @@ public class VisaActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-            overridePendingTransition(R.anim.push_right_in_no_alpha,
-                    R.anim.push_right_out_no_alpha);
-        }
+
+        /**
+         *
+         */
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//            overridePendingTransition(R.anim.push_right_in_no_alpha,
+//                    R.anim.push_right_out_no_alpha);
+//        }
+
+
+        super.onBackPressed();
+        overridePendingTransition(R.anim.push_right_in_no_alpha,
+                R.anim.push_right_out_no_alpha);
     }
 
     @Override
