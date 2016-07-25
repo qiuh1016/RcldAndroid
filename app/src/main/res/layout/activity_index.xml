@@ -19,60 +19,6 @@
         android:layout_centerInParent="true"
         android:id="@+id/relativeLayout3">
 
-        <Button
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:text="电子签证"
-            android:id="@+id/myShipButton"
-            android:background="@drawable/myshipbutton"
-            android:contextClickable="false"
-            android:textColor="#ffffff"
-            android:textSize="16sp"
-            android:layout_below="@+id/welcomeTextView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginRight="50dp" />
-
-        <Button
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:text="港口信息"
-            android:id="@+id/fenceButton"
-            android:background="@drawable/fencebutton"
-            android:contextClickable="false"
-            android:textColor="#ffffff"
-            android:textSize="16sp"
-            android:layout_below="@+id/welcomeTextView"
-            android:layout_toRightOf="@+id/myShipButton"
-            android:layout_toEndOf="@+id/myShipButton" />
-
-        <Button
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:text="轨迹记录"
-            android:id="@+id/routeButton"
-            android:layout_marginTop="60dp"
-            android:background="@drawable/routebutton"
-            android:contextClickable="false"
-            android:textColor="#ffffff"
-            android:textSize="16sp"
-            android:layout_below="@+id/myShipButton"
-            android:layout_alignLeft="@+id/myShipButton"
-            android:layout_alignStart="@+id/myShipButton" />
-
-        <Button
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:text="帮        助"
-            android:id="@+id/helpButton"
-            android:background="@drawable/helpbutton"
-            android:contextClickable="false"
-            android:textColor="#ffffff"
-            android:textSize="16sp"
-            android:layout_alignTop="@+id/routeButton"
-            android:layout_alignLeft="@+id/fenceButton"
-            android:layout_alignStart="@+id/fenceButton" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,6 +28,67 @@
             android:layout_alignParentTop="false"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="40dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textAlignment="center" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/welcomeTextView"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/buttonLayout">
+
+            <Button
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:text="帮        助"
+                android:id="@+id/helpButton"
+                android:background="@drawable/helpbutton"
+                android:contextClickable="false"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:layout_alignTop="@+id/routeButton"
+                android:layout_alignLeft="@+id/fenceButton"
+                android:layout_alignStart="@+id/fenceButton" />
+
+            <Button
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:text="电子签证"
+                android:id="@+id/myShipButton"
+                android:background="@drawable/myshipbutton"
+                android:contextClickable="false"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginRight="50dp" />
+
+            <Button
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:text="港口信息"
+                android:id="@+id/fenceButton"
+                android:background="@drawable/fencebutton"
+                android:contextClickable="false"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:layout_toRightOf="@+id/myShipButton"
+                android:layout_toEndOf="@+id/myShipButton" />
+
+            <Button
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:text="轨迹记录"
+                android:id="@+id/routeButton"
+                android:layout_marginTop="60dp"
+                android:background="@drawable/routebutton"
+                android:contextClickable="false"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:layout_below="@+id/myShipButton"
+                android:layout_alignLeft="@+id/myShipButton"
+                android:layout_alignStart="@+id/myShipButton" />
+        </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>
