@@ -116,8 +116,9 @@
         <activity
             android:name=".VisaActivity"
             android:label="@string/title_activity_visa"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".NewHelpActivity"></activity>
     </application>
 
 </manifest>

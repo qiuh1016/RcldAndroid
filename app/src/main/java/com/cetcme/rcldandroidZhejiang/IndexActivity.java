@@ -363,7 +363,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.helpButton:
                 Intent helpIntent = new Intent();
-                helpIntent.setClass(getApplicationContext(), HelpActivity.class);
+                helpIntent.setClass(getApplicationContext(), NewHelpActivity.class);
                 startActivity(helpIntent);
                 overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                 break;
