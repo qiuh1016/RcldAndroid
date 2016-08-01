@@ -17,6 +17,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ public class NewHelpActivity extends AppCompatActivity implements View.OnClickLi
 
     private SimpleAdapter simpleAdapter;
     private ArrayList<String> dataList = new ArrayList<>();
+    private List<Map<String, Object>> dataList2 = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +35,19 @@ public class NewHelpActivity extends AppCompatActivity implements View.OnClickLi
 
         setTitle("帮助");
 
-        uiOpreation();
+        UIOperation();
 
-        dataList.add("修改密码");
-        dataList.add("检测更新");
-        dataList.add("信息反馈");
+        dataListOperation();
 
         ListView listView = (ListView) findViewById(R.id.listViewInNewHelpActivity);
-        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dataList);
-        listView.setAdapter(arrayAdapter);
+//        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dataList);
+
+
+        simpleAdapter = new SimpleAdapter(this, dataList2, R.layout.help_view_cell,
+                new String[]{"functionName"},
+                new int[]{R.id.functionNameInHelpViewCell});
+        listView.setAdapter(simpleAdapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -92,7 +99,7 @@ public class NewHelpActivity extends AppCompatActivity implements View.OnClickLi
                 R.anim.push_right_out_no_alpha);
     }
 
-    private void uiOpreation() {
+    private void UIOperation() {
         TextView homePageTextView = (TextView) findViewById(R.id.homePageTextView);
         TextView principleTextView = (TextView) findViewById(R.id.principleTextView);
         TextView weiboTextView = (TextView) findViewById(R.id.weiboTextView);
@@ -100,6 +107,24 @@ public class NewHelpActivity extends AppCompatActivity implements View.OnClickLi
         homePageTextView.setOnClickListener(this);
         principleTextView.setOnClickListener(this);
         weiboTextView.setOnClickListener(this);
+    }
+
+    private void dataListOperation() {
+        dataList.add("修改密码");
+        dataList.add("检测更新");
+        dataList.add("信息反馈");
+
+        Map<String, Object> map = new Hashtable<>();
+        map.put("functionName", "修改密码");
+        dataList2.add(map);
+
+        map = new Hashtable<>();
+        map.put("functionName", "检测更新");
+        dataList2.add(map);
+
+        map = new Hashtable<>();
+        map.put("functionName", "信息反馈");
+        dataList2.add(map);
     }
 
     @Override
