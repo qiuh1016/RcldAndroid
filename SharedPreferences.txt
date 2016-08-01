@@ -2,6 +2,7 @@ SharedPreferences :
 
 system:
 	version			String
+	manualCheckUpdate	Boolen
 
 user: 
 	username 		String

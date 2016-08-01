@@ -69,6 +69,8 @@ public class UpdateAppManager {
     private boolean isCancel;
     // 强制更新
     private boolean forceToUpdate;
+    // 是否手动检测更新
+    private boolean manualCheckUpdate;
 
     //用户数据
     private String username,password,serverIP,updateContent;
@@ -96,6 +98,9 @@ public class UpdateAppManager {
         } catch (NumberFormatException e) {
             currentVersion = 0.0;
         }
+
+        // 获取是否为手动检测更新
+        manualCheckUpdate = system.getBoolean("manualCheckUpdate", false);
     }
 
     private final Handler handler = new Handler(){
@@ -148,11 +153,24 @@ public class UpdateAppManager {
                         serverVersion = 0.0;
                         Log.i("Main", "******** 服务器新版本号转换错误: " + version);
                     }
+
                     if (serverVersion > currentVersion) {
                         FILE_NAME = FILE_PATH + "RCLD_V" + version +".apk";
                         showNoticeDialog();
                     } else {
-                        Log.i("Main","无更新");
+                        if (manualCheckUpdate) {
+                            //手动检测更新
+                            showNoUpdateDialog();
+                            //将手动检测flag设置为false
+                            SharedPreferences system = context.getSharedPreferences("system", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = system.edit();
+                            editor.putBoolean("manualCheckUpdate", false);
+                            editor.apply();
+                        } else {
+                            //登陆界面自动检测更新
+                            Log.i("Main","无更新");
+                        }
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -190,6 +208,18 @@ public class UpdateAppManager {
         if (!forceToUpdate) {
             builder.setNegativeButton("以后再说", null);
         }
+        builder.create().show();
+    }
+
+    /**
+     * 显示无更新对话框
+     */
+    private void showNoUpdateDialog() {
+        AlertDialog.Builder builder =  new AlertDialog.Builder(context);
+        builder.setTitle("无更新")
+                .setMessage("当前已为最新版本！")
+                .setCancelable(false)
+                .setPositiveButton("好的", null);
         builder.create().show();
     }
 

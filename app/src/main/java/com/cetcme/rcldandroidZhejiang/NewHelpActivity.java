@@ -1,9 +1,11 @@
 package com.cetcme.rcldandroidZhejiang;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class NewHelpActivity extends AppCompatActivity {
+public class NewHelpActivity extends AppCompatActivity implements View.OnClickListener {
 
     private SimpleAdapter simpleAdapter;
     private ArrayList<String> dataList = new ArrayList<>();
@@ -29,6 +31,8 @@ public class NewHelpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_help);
 
         setTitle("帮助");
+
+        uiOpreation();
 
         dataList.add("修改密码");
         dataList.add("检测更新");
@@ -43,11 +47,21 @@ public class NewHelpActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         Log.i("Main","mima*****");
+                        Intent intent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                         break;
                     case 1:
                         Log.i("Main","gengxin*****");
+
+                        //将手动检测flag设置为true
+                        SharedPreferences system = getSharedPreferences("system", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = system.edit();
+                        editor.putBoolean("manualCheckUpdate", true);
+                        editor.apply();
+
                         UpdateAppManager updateManager;
-                        updateManager = new UpdateAppManager(getApplicationContext());
+                        updateManager = new UpdateAppManager(NewHelpActivity.this);
                         updateManager.checkUpdateInfo();
                         break;
                     case 2:
@@ -76,5 +90,35 @@ public class NewHelpActivity extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.push_right_in_no_alpha,
                 R.anim.push_right_out_no_alpha);
+    }
+
+    private void uiOpreation() {
+        TextView homePageTextView = (TextView) findViewById(R.id.homePageTextView);
+        TextView principleTextView = (TextView) findViewById(R.id.principleTextView);
+        TextView weiboTextView = (TextView) findViewById(R.id.weiboTextView);
+
+        homePageTextView.setOnClickListener(this);
+        principleTextView.setOnClickListener(this);
+        weiboTextView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id) {
+            case R.id.homePageTextView:
+                Log.i("Main", "***** Home page");
+
+                Uri uri = Uri.parse("http://www.cetcme.com/");
+                Intent it = new Intent(Intent.ACTION_VIEW,uri);
+                startActivity(it);
+                break;
+            case R.id.principleTextView:
+                Log.i("Main", "***** Principle");
+                break;
+            case R.id.weiboTextView:
+                Log.i("Main", "***** weibo");
+                break;
+        }
     }
 }

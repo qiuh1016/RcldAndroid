@@ -28,6 +28,7 @@
     <string name="sailorNewUrl">/api/iof/sailor/new.json</string>
     <string name="helpAlarmUrl">/api/device/helpAlarm.json</string>
     <string name="getDownLoadUrl">/api/app/fishermanApp.json</string>
+    <string name="changePWUrl">/api/password/change.json</string>
 
     <string name="appDownloadUrl">/download</string>
     <string name="appVersionUrl">/api/app/latestVersion.json</string>

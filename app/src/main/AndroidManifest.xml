@@ -101,6 +101,17 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.DeviceDefault.Dialog" />
+        <activity
+            android:name=".settingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".VisaActivity"
+            android:label="@string/title_activity_visa"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewHelpActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".AntiThiefService">
             <intent-filter>
@@ -112,13 +123,7 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <activity android:name=".settingActivity" />
-        <activity
-            android:name=".VisaActivity"
-            android:label="@string/title_activity_visa"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".NewHelpActivity"></activity>
+        <activity android:name=".ChangePasswordActivity"></activity>
     </application>
 
 </manifest>

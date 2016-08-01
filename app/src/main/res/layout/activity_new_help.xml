@@ -63,36 +63,39 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="官网"
-            android:id="@+id/textView3"
-            android:layout_alignTop="@+id/textView8"
-            android:layout_toLeftOf="@+id/textView8"
-            android:layout_toStartOf="@+id/textView8"
+            android:id="@+id/homePageTextView"
+            android:layout_alignTop="@+id/principleTextView"
+            android:layout_toLeftOf="@+id/principleTextView"
+            android:layout_toStartOf="@+id/principleTextView"
             android:layout_marginRight="40dp"
             android:textColor="#0c84fc"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:clickable="true" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="服务条款"
-            android:id="@+id/textView8"
+            android:id="@+id/principleTextView"
             android:layout_centerInParent="true"
             android:textColor="#0c84fc"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:clickable="true" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="微博"
-            android:id="@+id/textView32"
+            android:id="@+id/weiboTextView"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/textView8"
-            android:layout_toEndOf="@+id/textView8"
+            android:layout_toRightOf="@+id/principleTextView"
+            android:layout_toEndOf="@+id/principleTextView"
             android:layout_marginLeft="40dp"
             android:textColor="#0c84fc"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:clickable="true" />
     </RelativeLayout>
 
 </RelativeLayout>
