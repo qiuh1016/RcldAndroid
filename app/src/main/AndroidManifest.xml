@@ -123,7 +123,8 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <activity android:name=".ChangePasswordActivity"></activity>
+        <activity android:name=".ChangePasswordActivity" />
+        <activity android:name=".FeedbackActivity"></activity>
     </application>
 
 </manifest>

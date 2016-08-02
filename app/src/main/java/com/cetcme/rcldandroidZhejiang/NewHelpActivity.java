@@ -54,8 +54,8 @@ public class NewHelpActivity extends AppCompatActivity implements View.OnClickLi
                 switch (position) {
                     case 0:
                         Log.i("Main","mima*****");
-                        Intent intent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
-                        startActivity(intent);
+                        Intent changePasswordIntent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
+                        startActivity(changePasswordIntent);
                         overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                         break;
                     case 1:
@@ -73,6 +73,9 @@ public class NewHelpActivity extends AppCompatActivity implements View.OnClickLi
                         break;
                     case 2:
                         Log.i("Main","fankui*****");
+                        Intent feedbackIntent = new Intent(getApplicationContext(), FeedbackActivity.class);
+                        startActivity(feedbackIntent);
+                        overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                         break;
                 }
             }

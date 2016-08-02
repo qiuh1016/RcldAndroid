@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -38,6 +39,8 @@ import cz.msebera.android.httpclient.Header;
 public class UpdateAppManager {
 
     private Double currentVersion;
+    private Double serverVersion;
+    private KProgressHUD kProgressHUD;
 
     // 文件分隔符
     private static final String FILE_SEPARATOR = "/";
@@ -84,6 +87,15 @@ public class UpdateAppManager {
         serverIP = user.getString("serverIP", context.getString(R.string.defaultServerIP_1));
         UPDATE_SERVER_ADDRESS = "http://" + serverIP;
 
+        //kProgressHUD
+        kProgressHUD = KProgressHUD.create(context)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel("检测中")
+                .setAnimationSpeed(1)
+                .setDimAmount(0.3f)
+                .setSize(110, 110)
+                .setCancellable(false);
+
         // 下载路径
         spec = UPDATE_SERVER_ADDRESS + context.getString(R.string.getDownLoadUrl);
 
@@ -101,6 +113,12 @@ public class UpdateAppManager {
 
         // 获取是否为手动检测更新
         manualCheckUpdate = system.getBoolean("manualCheckUpdate", false);
+
+        if (manualCheckUpdate) {
+            kProgressHUD.show();
+        }
+
+
     }
 
     private final Handler handler = new Handler(){
@@ -129,6 +147,8 @@ public class UpdateAppManager {
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(versionUrl, params, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                kProgressHUD.dismiss();
+
                 Log.i("Main", "versionJSON: " + response.toString());
                 try {
                     String version = response.getString("version");
@@ -145,7 +165,7 @@ public class UpdateAppManager {
                     }
 
                     //TODO: 用version Code 比较
-                    Double serverVersion;
+
                     try {
                         serverVersion = Double.valueOf(version);
                     } catch (NumberFormatException e) {
@@ -179,10 +199,12 @@ public class UpdateAppManager {
 
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.i("Main", "getVersion: " + errorResponse);
+                kProgressHUD.dismiss();
             }
 
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.i("Main", responseString);
+                kProgressHUD.dismiss();
             }
         });
 
@@ -194,6 +216,7 @@ public class UpdateAppManager {
      * 显示提示更新对话框
      */
     private void showNoticeDialog() {
+        message = "检测到新版本发布(V"+ serverVersion + ")，建议您更新！";
         AlertDialog.Builder builder =  new AlertDialog.Builder(context);
         builder.setTitle("软件版本更新")
                 .setMessage(message)
@@ -216,8 +239,8 @@ public class UpdateAppManager {
      */
     private void showNoUpdateDialog() {
         AlertDialog.Builder builder =  new AlertDialog.Builder(context);
-        builder.setTitle("无更新")
-                .setMessage("当前已为最新版本！")
+        builder.setTitle("当前已为最新版本")
+                .setMessage("当前版本：V" + currentVersion + "，服务器版本：V" + serverVersion + "。")
                 .setCancelable(false)
                 .setPositiveButton("好的", null);
         builder.create().show();
@@ -230,7 +253,7 @@ public class UpdateAppManager {
         View view = LayoutInflater.from(context).inflate(R.layout.progress_bar, null);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("软件版本更新");
+        builder.setTitle("新版本下载中");
         builder.setView(view);
         builder.setCancelable(false);
         if (!forceToUpdate) {
