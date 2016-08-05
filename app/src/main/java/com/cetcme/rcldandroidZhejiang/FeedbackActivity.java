@@ -2,7 +2,9 @@ package com.cetcme.rcldandroidZhejiang;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ButtonBarLayout;
@@ -13,6 +15,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.kaopiz.kprogresshud.KProgressHUD;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class FeedbackActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,6 +35,9 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
     private TextView stringLengthTextView;
 
     private boolean showBackDialog = false;
+
+    private KProgressHUD kProgressHUD;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +54,19 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         phoneEditText.addTextChangedListener(textChangeWatcher);
         submitButton.setOnClickListener(this);
 
-        submitButton.setEnabled(false);
-        questionEditText.setEnabled(false);
-        phoneEditText.setEnabled(false);
+//        submitButton.setEnabled(false);
+//        questionEditText.setEnabled(false);
+//        phoneEditText.setEnabled(false);
+
+        toast = Toast.makeText(getApplicationContext(), "" , Toast.LENGTH_SHORT);
+
+        kProgressHUD = KProgressHUD.create(this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel("提交中")
+                .setAnimationSpeed(1)
+                .setDimAmount(0.3f)
+                .setSize(110, 110)
+                .setCancellable(false);
     }
 
     public void onBackPressed() {
@@ -99,12 +125,12 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         int id = view.getId();
         switch (id) {
             case R.id.submitButtonInFeedback:
-                submit();
+                submitButtonTapped();
                 break;
         }
     }
 
-    private void submit() {
+    private void submitButtonTapped() {
         int length = questionEditText.getText().toString().length();
         if (length == 0) {
             showEmptyDialog();
@@ -114,7 +140,8 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         if (length > 400) {
             showToMoreTextDialog();
         } else {
-            showToDevelopDialog();
+            submit();
+//            showToDevelopDialog();
         }
     }
 
@@ -143,5 +170,72 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
                 .setCancelable(false)
                 .setPositiveButton("好的", null);
         builder.create().show();
+    }
+
+    private void submit() {
+
+        kProgressHUD.show();
+
+        SharedPreferences user = getSharedPreferences("user",0);
+        String username = user.getString("username","");
+        String password = user.getString("password","");
+        String serverIP = user.getString("serverIP", getString(R.string.defaultServerIP_1));
+
+        RequestParams params = new RequestParams();
+        params.put("userName", username);
+        params.put("password", password);
+        params.put("backMsg", questionEditText.getText().toString());
+        if (!phoneEditText.getText().toString().isEmpty()) {
+            params.put("phone", phoneEditText.getText().toString());
+        }
+
+        String urlBody = "http://"+serverIP+ getString(R.string.feedbackUrl);
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.setURLEncodingEnabled(true);
+        client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // If the response is JSONObject instead of expected JSONArray
+                Log.i("Main", "feedback: " + response.toString());
+                Integer code;
+                try {
+                    code = response.getInt("code");
+                    if (code == 0) {
+                        toast.setText("提交成功");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                showBackDialog = false;
+                                onBackPressed();
+                            }
+                        },1000);
+                    } else {
+                        String msg = response.getString("msg");
+                        toast.setText(msg);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    toast.setText("提交失败");
+                }
+                kProgressHUD.dismiss();
+                toast.show();
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.i("Main", errorResponse.toString());
+                kProgressHUD.dismiss();
+                toast.setText("网络连接失败");
+                toast.show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("Main", responseString);
+                kProgressHUD.dismiss();
+            }
+        });
+
     }
 }
