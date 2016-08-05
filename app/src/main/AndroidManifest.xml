@@ -112,6 +112,12 @@
         <activity
             android:name=".NewHelpActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".FeedbackActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".AntiThiefService">
             <intent-filter>
@@ -123,8 +129,7 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <activity android:name=".ChangePasswordActivity" />
-        <activity android:name=".FeedbackActivity"></activity>
+
     </application>
 
 </manifest>

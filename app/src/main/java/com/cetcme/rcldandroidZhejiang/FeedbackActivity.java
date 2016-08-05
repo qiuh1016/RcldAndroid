@@ -37,6 +37,10 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         questionEditText.addTextChangedListener(textChangeWatcher);
         phoneEditText.addTextChangedListener(textChangeWatcher);
         submitButton.setOnClickListener(this);
+
+        submitButton.setEnabled(false);
+        questionEditText.setEnabled(false);
+        phoneEditText.setEnabled(false);
     }
 
     public void onBackPressed() {
