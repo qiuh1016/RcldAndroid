@@ -56,6 +56,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
     private Boolean reducePointBySize = false;  //根据轨迹点数量 来减少距离较近的点
 
     private Double dpf = 0.0;
+    private String totalRange;
 
     private SlideDateTimeListener listener = new SlideDateTimeListener() {
 
@@ -188,6 +189,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         bundle.putString("dataString", dataString);
         bundle.putStringArrayList("convedList", geocovedList);
         bundle.putBoolean("geoOK", geoOK);
+        bundle.putString("totalRange", totalRange);
 
         Intent intent = new Intent();
         intent.setClass(getApplicationContext(), RouteDisplayActivity.class);
@@ -230,6 +232,7 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         params.put("startTime", startTime);
         params.put("endTime"  , endTime);
         params.put("dpf"      , dpf);
+        Log.i("Main", params.toString());
 
         String urlBody = "http://"+serverIP+ getString(R.string.trailGetUrl);
         String url = urlBody+"?userName=" + username +"&password="+password+"&deviceNo=" + deviceNo+"&startTime="+startTime+"&endTime=" + endTime;
@@ -244,8 +247,10 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
                 route = new ArrayList<>();
                 try {
                     String msg = response.getString("msg");
+                    totalRange = msg;
+                    int code = response.getInt("code");
 
-                    if (msg.equals("成功")) {
+                    if (code == 0) {
                         JSONArray data = response.getJSONArray("data");
 
                         for (int i = 0; i < data.length(); i++) {

@@ -67,12 +67,20 @@ public class RouteDisplayActivity extends AppCompatActivity {
         String endTime = bundle.getString("endTime");
         showMediaPoint = bundle.getBoolean("showMediaPoint");
         String dataString = bundle.getString("dataString");
+        String totalRange = bundle.getString("totalRange");
 
         ArrayList<String> convedList = bundle.getStringArrayList("convedList");
         boolean geoOK = bundle.getBoolean("geoOK");
 
         startTimeTextView.setText(startTime);
         endTimeTextView.setText(endTime);
+
+        if (totalRange.length() > 5) {
+            distanceTextView.setText(totalRange.substring(4));
+        } else {
+            distanceTextView.setText(totalRange);
+        }
+
 
         if (geoOK) {
 
@@ -294,7 +302,7 @@ public class RouteDisplayActivity extends AppCompatActivity {
             drawRoute(latLngs);
         }
 
-        distanceTextView.setText("共" + latLngs.size() + "个点");
+//        distanceTextView.setText("共" + latLngs.size() + "个点");
     }
 
 }
