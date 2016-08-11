@@ -114,7 +114,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ChangePasswordActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".FeedbackActivity"
             android:screenOrientation="portrait" />
@@ -129,7 +129,7 @@
             android:enabled="true"
             android:process=":remote" />
 
-
+        <activity android:name=".FenceMapActivity"></activity>
     </application>
 
 </manifest>

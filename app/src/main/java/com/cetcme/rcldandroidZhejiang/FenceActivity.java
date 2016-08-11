@@ -1,6 +1,8 @@
 package com.cetcme.rcldandroidZhejiang;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -88,8 +90,9 @@ public class FenceActivity extends AppCompatActivity {
                 String fenceAddr = (String) map.get("fenceAddr");
                 String fenceTypeName = (String) map.get("fenceTypeName");
                 int fenceType = (int) map.get("fenceType");
+                String fenceNo = (String) map.get("fenceNo");
 
-                fenceInfoDialog(fenceName, city, country, fenceAddr, fenceType, fenceTypeName);
+                fenceInfoDialog(fenceName, city, country, fenceAddr, fenceType, fenceTypeName, fenceNo);
             }
         });
 
@@ -117,7 +120,7 @@ public class FenceActivity extends AppCompatActivity {
         }
 
 
-        final String username,password,serverIP;
+        String username,password,serverIP;
         SharedPreferences user = getSharedPreferences("user", Activity.MODE_PRIVATE);
         username = user.getString("username","");
         password = user.getString("password","");
@@ -240,8 +243,8 @@ public class FenceActivity extends AppCompatActivity {
         return dataList;
     }
 
-    private void fenceInfoDialog(String fenceName, String city, String country, String fenceAddr, int fenceType, String fenceTypeName) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(FenceActivity.this);
+    private void fenceInfoDialog(final String fenceName, String city, String country, String fenceAddr, int fenceType, final String fenceTypeName, final String fenceNo) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(FenceActivity.this);
         builder.setMessage(
                 "所在市：" + city + "\n" +
                 "所在县（市）：" + country + "\n" +
@@ -251,6 +254,19 @@ public class FenceActivity extends AppCompatActivity {
             );
         builder.setTitle(fenceName);
         builder.setPositiveButton("OK", null);
+        builder.setNegativeButton("地图", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent fenceMapIntent = new Intent(getApplicationContext(), FenceMapActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("fenceNo",fenceNo);
+                bundle.putString("fenceTypeName",fenceTypeName);
+                bundle.putString("fenceName",fenceName);
+                fenceMapIntent.putExtras(bundle);
+                startActivity(fenceMapIntent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
+            }
+        });
         builder.create().show();
     }
 }

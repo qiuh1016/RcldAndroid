@@ -30,6 +30,7 @@
     <string name="getDownLoadUrl">/api/app/fishermanApp.json</string>
     <string name="changePWUrl">/api/password/change.json</string>
     <string name="feedbackUrl">/api/feedback/save.json</string>
+    <string name="fenceConstructionUrl">/api/fence/construction.json</string>
 
     <string name="appDownloadUrl">/download</string>
     <string name="appVersionUrl">/api/app/latestVersion.json</string>
