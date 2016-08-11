@@ -253,7 +253,7 @@ public class FenceActivity extends AppCompatActivity {
                 "港口类型名称：" + fenceTypeName
             );
         builder.setTitle(fenceName);
-        builder.setPositiveButton("OK", null);
+        builder.setPositiveButton("好的", null);
         builder.setNegativeButton("地图", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

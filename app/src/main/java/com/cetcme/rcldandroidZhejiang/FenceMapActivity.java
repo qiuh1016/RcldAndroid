@@ -45,6 +45,9 @@ public class FenceMapActivity extends AppCompatActivity {
     private String fenceTypeName;
     private String fenceName;
 
+    private int fillColor = 0x77FFFF00;
+    private int strokeColor = 0x8800FF00;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +106,7 @@ public class FenceMapActivity extends AppCompatActivity {
                 Log.i("Main", response.toString());
 
                 Log.i("Main", fenceTypeName);
-                if (fenceTypeName.equals("多边形")) {
+                if (fenceTypeName.equals("多边形") || fenceTypeName.equals("矩形")) {
                     List<LatLng> fencePts = new ArrayList();
                     try {
                         JSONArray array = response.getJSONArray("data");
@@ -128,14 +131,21 @@ public class FenceMapActivity extends AppCompatActivity {
                     drawPolygonFence(fencePts);
                 } else if (fenceTypeName.equals("圆形")) {
 
-                    /**
-                     *
-                     */
+                    try {
+                        JSONObject data = response.getJSONObject("data");
 
+                        double bmapLat = data.getDouble("bmapLatitude");
+                        double bmapLng = data.getDouble("bmapLongitude");
+                        LatLng point = new LatLng(bmapLat, bmapLng);
+                        Log.i("Main", "double:" + data.getDouble("radius"));
+                        int radius = (int) data.getDouble("radius");
+                        Log.i("Main", "int:" + radius);
+                        drawCircleFence(point, radius);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                 }
-
-
 
                 kProgressHUD.dismiss();
                 Toast.makeText(getApplicationContext(), "获取成功",Toast.LENGTH_SHORT).show();
@@ -159,8 +169,8 @@ public class FenceMapActivity extends AppCompatActivity {
         //构建用户绘制多边形的Option对象
         OverlayOptions polygonOption = new PolygonOptions()
                 .points(pts)
-                .stroke(new Stroke(5, 0xAA00FF00))
-                .fillColor(0xAAFFFF00);
+                .stroke(new Stroke(5, strokeColor))
+                .fillColor(fillColor);
         //在地图上添加多边形Option，用于显示
         baiduMap.addOverlay(polygonOption);
 
@@ -176,8 +186,8 @@ public class FenceMapActivity extends AppCompatActivity {
         OverlayOptions circleOption = new CircleOptions()
                 .center(latLng)
                 .radius(radius)
-                .stroke(new Stroke(5, 0xAA00FF00))
-                .fillColor(0xAAFFFF00);
+                .stroke(new Stroke(5, strokeColor))
+                .fillColor(fillColor);
         //在地图上添加多边形Option，用于显示
         baiduMap.addOverlay(circleOption);
 
