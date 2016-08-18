@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import java.util.ArrayList;
 
@@ -55,6 +56,11 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         Bundle bundle = this.getIntent().getExtras();
         ids = bundle.getStringArrayList("ids");

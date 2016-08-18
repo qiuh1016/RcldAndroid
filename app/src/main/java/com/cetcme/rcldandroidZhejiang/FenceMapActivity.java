@@ -24,6 +24,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +63,11 @@ public class FenceMapActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         mapView = (MapView) findViewById(R.id.baiduMapInFenceMapAtivity);
         baiduMap = mapView.getMap();

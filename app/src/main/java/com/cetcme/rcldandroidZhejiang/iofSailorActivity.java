@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +39,11 @@ public class iofSailorActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         Bundle bundle = this.getIntent().getExtras();
         String iofTime = bundle.getString("iofTime");

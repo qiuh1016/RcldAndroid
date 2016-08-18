@@ -22,6 +22,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -103,6 +104,11 @@ public class RouteActivity extends AppCompatActivity implements View.OnClickList
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         toast = Toast.makeText(getApplicationContext(),"没有符合条件的数据",Toast.LENGTH_SHORT);
 

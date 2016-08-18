@@ -31,6 +31,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -166,6 +168,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         UpdateAppManager updateManager;
         updateManager = new UpdateAppManager(this);
         updateManager.checkUpdateInfo();
+
+        /**
+         * umeng 推送
+         */
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.enable(new IUmengRegisterCallback() {
+
+            @Override
+            public void onRegistered(final String registrationId) {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        //onRegistered方法的参数registrationId即是device_token
+                        Log.d("device_token", registrationId);
+                    }
+                });
+            }
+        });
+
+        PushAgent.getInstance(this).onAppStart();
 
     }
 

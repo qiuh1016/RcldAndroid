@@ -47,6 +47,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,6 +110,11 @@ public class VisaActivity extends AppCompatActivity
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

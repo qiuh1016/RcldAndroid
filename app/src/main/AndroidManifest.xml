@@ -50,6 +50,10 @@
         <!-- UMENG-->
         <meta-data android:value="57b54a4367e58e02f9001576" android:name="UMENG_APPKEY" />
         <meta-data android:value="Channel" android:name="UMENG_CHANNEL"/>
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="8dd255d6576746ffd0ffc9481ed7cb19" >
+        </meta-data>
 
         <activity
             android:name=".LoginActivity"

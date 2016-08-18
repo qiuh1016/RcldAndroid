@@ -18,6 +18,7 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +64,11 @@ public class RouteDisplayActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         startTimeTextView = (TextView) findViewById(R.id.startTimeTextView);
         endTimeTextView = (TextView) findViewById(R.id.endTimeTextView);

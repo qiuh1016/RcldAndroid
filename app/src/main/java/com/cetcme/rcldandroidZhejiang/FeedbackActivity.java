@@ -23,6 +23,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +55,11 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         questionEditText = (EditText) findViewById(R.id.questionEditTextInFeedback);
         phoneEditText = (EditText) findViewById(R.id.phoneEditTextInFeedback);

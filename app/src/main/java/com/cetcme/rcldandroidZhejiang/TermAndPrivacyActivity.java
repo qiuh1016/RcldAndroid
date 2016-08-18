@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 public class TermAndPrivacyActivity extends AppCompatActivity {
 
@@ -17,9 +18,6 @@ public class TermAndPrivacyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_and_privacy);
 
-
-//        webView = new WebView(this);
-//        setContentView(webView);
         setTitle("服务条款");
 
         /**
@@ -29,6 +27,11 @@ public class TermAndPrivacyActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         webView = (ProgressWebView) findViewById(R.id.webView);
         webView.loadUrl("file:///android_asset/www/terms.html");

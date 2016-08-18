@@ -20,6 +20,7 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +59,11 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         picNameEditText = (EditText) findViewById(R.id.picNameEditTextInChangeInfoActivity);
         picTelNoEditText = (EditText) findViewById(R.id.picTelNoEditTextInChangeInfoActivity);

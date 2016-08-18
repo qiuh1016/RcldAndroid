@@ -35,6 +35,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,6 +100,11 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_index);
 
         setTitle(getString(R.string.loginTitle));
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         welcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
         myShipButton = (Button) findViewById(R.id.myShipButton);

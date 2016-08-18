@@ -18,6 +18,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -45,6 +46,11 @@ public class NewHelpActivity extends AppCompatActivity implements View.OnClickLi
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         UIOperation();
 

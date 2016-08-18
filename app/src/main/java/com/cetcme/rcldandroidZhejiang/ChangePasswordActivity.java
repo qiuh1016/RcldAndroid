@@ -20,6 +20,7 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +56,11 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         oldPWEditText = (EditText) findViewById(R.id.oldPWEditText);
         newPWEditText_1 = (EditText) findViewById(R.id.newPWEditText_1);

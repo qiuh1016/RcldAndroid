@@ -23,6 +23,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +63,11 @@ public class FenceActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
 //            actionBar.setHomeAsUpIndicator(R.drawable.checkmark);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
 
         toast = Toast.makeText(FenceActivity.this, "获取成功!", LENGTH_SHORT);

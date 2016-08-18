@@ -31,6 +31,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,6 +91,11 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        /**
+         * umeng 推送
+         */
+        PushAgent.getInstance(this).onAppStart();
 
         mapView = (MapView) findViewById(R.id.baiduMapInMyShipActivity);
         showShipLocationImageButton = (ImageButton) findViewById(R.id.showShipLocationImageButton);
