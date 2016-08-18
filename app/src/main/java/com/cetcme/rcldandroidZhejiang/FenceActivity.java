@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -51,6 +52,16 @@ public class FenceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fence);
 
         setTitle("港口信息");
+
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+
         toast = Toast.makeText(FenceActivity.this, "获取成功!", LENGTH_SHORT);
 
         fenceListView = (PullToRefreshListView) findViewById(R.id.fenceListView);
@@ -96,6 +107,16 @@ public class FenceActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     public void onBackPressed() {

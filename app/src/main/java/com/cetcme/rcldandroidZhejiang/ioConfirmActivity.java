@@ -58,6 +58,14 @@ public class ioConfirmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_io_confirm);
 
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         Bundle bundle = this.getIntent().getExtras();
         iofFlag = bundle.getInt("iofFlag");
         if (iofFlag == 1) {
@@ -84,6 +92,16 @@ public class ioConfirmActivity extends AppCompatActivity {
         });
 
         toast = Toast.makeText(ioConfirmActivity.this, "", LENGTH_SHORT);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     @Override

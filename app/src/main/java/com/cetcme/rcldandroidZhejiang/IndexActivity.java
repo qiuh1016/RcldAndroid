@@ -1,5 +1,6 @@
 package com.cetcme.rcldandroidZhejiang;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -208,20 +209,6 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        //TODO: 修改密码
-//        MenuItem changePassword = menu.add(0, 0, 0, "修改密码");
-//        changePassword.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-//        changePassword.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                Toast.makeText(getApplicationContext(),"修改密码",LENGTH_SHORT).show();
-//                return false;
-//            }
-//        });
-
-
-
-
         return true;
 
     }
@@ -299,7 +286,6 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         builder.create().show();
     }
 
-    //TODO: 定位 和 报警求助 搬这来
     private void sosDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(IndexActivity.this);
 //        builder.setIcon(R.mipmap.ic_launcher);

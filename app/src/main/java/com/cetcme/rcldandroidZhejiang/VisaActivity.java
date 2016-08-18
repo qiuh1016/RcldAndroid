@@ -92,9 +92,6 @@ public class VisaActivity extends AppCompatActivity
 
     private int getLocationTime = 30; //秒
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +100,15 @@ public class VisaActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         setTitle("本船信息");
+
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -186,11 +192,19 @@ public class VisaActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.action_settings:
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -234,7 +248,6 @@ public class VisaActivity extends AppCompatActivity
 //        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     private void getShipData() {
         Bundle bundle = this.getIntent().getExtras();
@@ -362,7 +375,6 @@ public class VisaActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onClick(View v) {
@@ -566,13 +578,11 @@ public class VisaActivity extends AppCompatActivity
 
         @Override
         public void onReceive(Context arg0, Intent arg1) {
-            // TODO Auto-generated method stub
             Bundle bundle = arg1.getExtras();
             Double lat = bundle.getDouble("lat");
             Double lng = bundle.getDouble("lng");
             shipLocationUnConved = new LatLng(lat, lng);
             geoconv(shipLocationUnConved);
-
         }
     }
 

@@ -3,6 +3,7 @@ package com.cetcme.rcldandroidZhejiang;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -28,6 +29,14 @@ public class iofSailorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_iof_sailor);
 
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         Bundle bundle = this.getIntent().getExtras();
         String iofTime = bundle.getString("iofTime");
         String iofFlag = bundle.getString("iofFlag");
@@ -46,6 +55,16 @@ public class iofSailorActivity extends AppCompatActivity {
                 });
         listView.setAdapter(simpleAdapter);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     public void onBackPressed() {

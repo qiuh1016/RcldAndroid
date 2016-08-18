@@ -2,6 +2,7 @@ package com.cetcme.rcldandroidZhejiang;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -53,6 +54,14 @@ public class RouteDisplayActivity extends AppCompatActivity {
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_route_display);
         setTitle("轨迹显示");
+
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         startTimeTextView = (TextView) findViewById(R.id.startTimeTextView);
         endTimeTextView = (TextView) findViewById(R.id.endTimeTextView);
@@ -129,6 +138,16 @@ public class RouteDisplayActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
+    }
+
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.push_right_in_no_alpha,
@@ -180,7 +199,6 @@ public class RouteDisplayActivity extends AppCompatActivity {
         baiduMap.addOverlay(startMaker);
         baiduMap.addOverlay(endMaker);
 
-        //TODO: 中间点用infowindow 偏移 显示在中间位置 更改图标
         //showMediaPoint
         if (showMediaPoint && latLngs.size() < maxMediaPointMarkerNum) {
 
@@ -232,7 +250,6 @@ public class RouteDisplayActivity extends AppCompatActivity {
 
     private int zoomLevel(Double d) {
 
-        //TODO: 测试有问题  3302261997120005  5月13日 12点到14点
         int zoomLevel = 14;
         int i = 20;
 //        if (d < 50 * i) {

@@ -23,16 +23,6 @@
         android:layout_alignParentStart="true" android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true" />
 
-    <ImageButton android:layout_width="40dp" android:layout_height="40dp" android:id="@+id/showShipLocationImageButtonInVisaActivity2"
-        android:src="@drawable/ship" android:adjustViewBounds="false" android:scaleType="fitXY"
-        android:background="@drawable/mapbuttonbackground" android:contentDescription="" android:clickable="true"
-        android:layout_marginBottom="100dp"
-        android:layout_alignBottom="@+id/baiduMapInVisaActivity"
-        android:layout_alignRight="@+id/baiduMapInVisaActivity"
-        android:layout_alignEnd="@+id/baiduMapInVisaActivity"
-        android:layout_marginRight="7dp"
-        android:visibility="invisible" />
-
     <ImageButton
         android:layout_width="40dp"
         android:layout_height="40dp"

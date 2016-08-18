@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -53,6 +54,14 @@ public class FenceMapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fence_map);
 
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         mapView = (MapView) findViewById(R.id.baiduMapInFenceMapAtivity);
         baiduMap = mapView.getMap();
 
@@ -74,6 +83,16 @@ public class FenceMapActivity extends AppCompatActivity {
 
         //获取港口坐标
         getFenceConstruction();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     public void onBackPressed() {

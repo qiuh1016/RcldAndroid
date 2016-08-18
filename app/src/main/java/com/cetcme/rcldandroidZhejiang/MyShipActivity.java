@@ -82,6 +82,14 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_myship);
         setTitle("本船信息");
 
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         mapView = (MapView) findViewById(R.id.baiduMapInMyShipActivity);
         showShipLocationImageButton = (ImageButton) findViewById(R.id.showShipLocationImageButton);
         showShipLocationImageButton.setOnClickListener(this);
@@ -112,6 +120,16 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
         initLocation();
         mLocationClient.start();
         */
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     private void getShipData() {
@@ -594,13 +612,11 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 
         @Override
         public void onReceive(Context arg0, Intent arg1) {
-            // TODO Auto-generated method stub
             Bundle bundle = arg1.getExtras();
             Double lat = bundle.getDouble("lat");
             Double lng = bundle.getDouble("lng");
             shipLocationUnConved = new LatLng(lat, lng);
             geoconv(shipLocationUnConved);
-
         }
     }
 
@@ -635,7 +651,7 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
             sb.append(location.getLocType());
             sb.append("\nlatitude : ");
             sb.append(location.getLatitude());
-            sb.append("\nlontitude : ");
+            sb.append("\nlongitude : ");
             sb.append(location.getLongitude());
             sb.append("\nradius : ");
             sb.append(location.getRadius());
@@ -686,8 +702,6 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
             Log.i("BaiduLocationApiDem", sb.toString());
-//            toast.setText(sb.toString());
-//            toast.show();
         }
 
     }

@@ -11,6 +11,7 @@ import android.support.v7.widget.ButtonBarLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +46,14 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_feedback);
         setTitle("信息反馈");
 
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         questionEditText = (EditText) findViewById(R.id.questionEditTextInFeedback);
         phoneEditText = (EditText) findViewById(R.id.phoneEditTextInFeedback);
         submitButton = (Button) findViewById(R.id.submitButtonInFeedback);
@@ -67,6 +76,16 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
                 .setDimAmount(0.3f)
                 .setSize(110, 110)
                 .setCancellable(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     public void onBackPressed() {

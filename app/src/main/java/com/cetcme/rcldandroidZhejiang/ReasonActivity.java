@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -44,6 +45,14 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_reason);
 
         setTitle("添加人员");
+
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         Bundle bundle = this.getIntent().getExtras();
         ids = bundle.getStringArrayList("ids");
@@ -84,6 +93,16 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
 //            fillButton.setVisibility(View.INVISIBLE);
 //        }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     public void onBackPressed() {

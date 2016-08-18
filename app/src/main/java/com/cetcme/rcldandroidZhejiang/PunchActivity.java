@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -52,6 +53,14 @@ public class PunchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_punch);
         setTitle("打卡记录");
 
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         toast = Toast.makeText(PunchActivity.this, "", LENGTH_SHORT);
         listView = (PullToRefreshListView) findViewById(R.id.punchHistoryListView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -93,6 +102,16 @@ public class PunchActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     @Override

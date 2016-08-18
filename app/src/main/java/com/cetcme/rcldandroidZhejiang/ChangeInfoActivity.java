@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,6 +51,14 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_change_info);
         setTitle("信息修改");
 
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         picNameEditText = (EditText) findViewById(R.id.picNameEditTextInChangeInfoActivity);
         picTelNoEditText = (EditText) findViewById(R.id.picTelNoEditTextInChangeInfoActivity);
         antiThiefRadiusEditText = (EditText) findViewById(R.id.antiThiefRadiusTextInChangeInfoActivity);
@@ -84,6 +93,16 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
                 .setCancellable(false)
                 .setSize(110, 110);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     public void onBackPressed() {

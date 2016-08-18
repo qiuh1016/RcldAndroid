@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +48,14 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_change_password);
         setTitle("修改密码");
 
+        /**
+         * 导航栏返回按钮
+         */
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         oldPWEditText = (EditText) findViewById(R.id.oldPWEditText);
         newPWEditText_1 = (EditText) findViewById(R.id.newPWEditText_1);
         newPWEditText_2 = (EditText) findViewById(R.id.newPWEditText_2);
@@ -70,6 +79,16 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                 .setCancellable(false)
                 .setSize(110, 110);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     public void onBackPressed() {
@@ -141,7 +160,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
         String urlBody = "http://"+serverIP+ getString(R.string.changePWUrl);
 //        String url = urlBody + "?userName="+username+"&password="+password+"&shipNo="+shipNo+"&picName="+toChangePicName+"&picTelNo="+toChangePicTelNo;
         AsyncHttpClient client = new AsyncHttpClient();
-        //TODO: 拼接url问题
         client.setURLEncodingEnabled(true);
         client.post(urlBody, params, new JsonHttpResponseHandler("UTF-8"){
             @Override
