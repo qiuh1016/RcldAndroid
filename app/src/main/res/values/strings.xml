@@ -27,12 +27,11 @@
     <string name="trailGetUrl">/api/trail/get.json</string>
     <string name="sailorNewUrl">/api/iof/sailor/new.json</string>
     <string name="helpAlarmUrl">/api/device/helpAlarm.json</string>
-    <string name="getDownLoadUrl">/api/app/fishermanApp.json</string>
     <string name="changePWUrl">/api/password/change.json</string>
     <string name="feedbackUrl">/api/feedback/save.json</string>
     <string name="fenceConstructionUrl">/api/fence/construction.json</string>
 
-    <string name="appDownloadUrl">/download</string>
+    <string name="getDownLoadUrl">/api/app/fishermanApp.json</string>
     <string name="appVersionUrl">/api/app/latestVersion.json</string>
 
     <string name="baiduGeoConvUrl">http://api.map.baidu.com/geoconv/v1/</string>

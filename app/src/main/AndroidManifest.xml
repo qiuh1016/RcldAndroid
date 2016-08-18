@@ -129,7 +129,8 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <activity android:name=".FenceMapActivity"></activity>
+        <activity android:name=".FenceMapActivity" />
+        <activity android:name=".TermAndPrivacyActivity"></activity>
     </application>
 
 </manifest>

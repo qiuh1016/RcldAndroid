@@ -162,6 +162,9 @@ public class NewHelpActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.principleTextView:
                 Log.i("Main", "***** Principle");
+                Intent TAndPIntent = new Intent(getApplicationContext(), TermAndPrivacyActivity.class);
+                startActivity(TAndPIntent);
+                overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
                 break;
             case R.id.weiboTextView:
                 Log.i("Main", "***** weibo");
