@@ -30,6 +30,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -482,6 +483,8 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
+
+        MobclickAgent.onResume(this);
         baiduMap.clear();
         //修改半径后重新绘制
         modifyAntiThiefRadius();
@@ -493,6 +496,11 @@ public class MyShipActivity extends AppCompatActivity implements View.OnClickLis
 
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
         //mapView.onResume();
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

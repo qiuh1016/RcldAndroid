@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.util.ArrayList;
 
 public class ReasonActivity extends AppCompatActivity implements View.OnClickListener{
@@ -93,6 +95,15 @@ public class ReasonActivity extends AppCompatActivity implements View.OnClickLis
 //            fillButton.setVisibility(View.INVISIBLE);
 //        }
 
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

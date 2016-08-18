@@ -47,6 +47,10 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="scfFuUVYVYimLAGl65LmD8ELf9O7ctNK" />
 
+        <!-- UMENG-->
+        <meta-data android:value="57b54a4367e58e02f9001576" android:name="UMENG_APPKEY" />
+        <meta-data android:value="Channel" android:name="UMENG_CHANNEL"/>
+
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait">
@@ -129,8 +133,12 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <activity android:name=".FenceMapActivity" />
-        <activity android:name=".TermAndPrivacyActivity"></activity>
+        <activity
+            android:name=".FenceMapActivity"
+            android:screenOrientation="portrait"  />
+        <activity
+            android:name=".TermAndPrivacyActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -22,6 +22,7 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -92,6 +93,11 @@ public class ioConfirmActivity extends AppCompatActivity {
         });
 
         toast = Toast.makeText(ioConfirmActivity.this, "", LENGTH_SHORT);
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override
@@ -196,6 +202,9 @@ public class ioConfirmActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+
+        //uMeng
+        MobclickAgent.onResume(this);
 
         //更新adapter 添加之后 toAdd 为true
         String name, id, reason;

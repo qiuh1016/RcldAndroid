@@ -34,6 +34,7 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -404,6 +405,9 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
+
+        MobclickAgent.onResume(this);
+
         SharedPreferences antiThiefSharedPreferences = getSharedPreferences("antiThief",Context.MODE_PRIVATE);
         Boolean gotNotification = antiThiefSharedPreferences.getBoolean("notification", false);
         if (gotNotification) {
@@ -412,8 +416,11 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             startActivity(dialog);
 
         }
+    }
 
-
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     private void setButtonSize() {

@@ -6,6 +6,8 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.umeng.analytics.MobclickAgent;
+
 public class TermAndPrivacyActivity extends AppCompatActivity {
 
     private ProgressWebView webView;
@@ -40,6 +42,15 @@ public class TermAndPrivacyActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     public void onBackPressed() {

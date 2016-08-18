@@ -46,6 +46,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -157,6 +158,11 @@ public class VisaActivity extends AppCompatActivity
         registerReceiver(shipLocationReceiver,intentFilter);
 
 
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override
@@ -448,6 +454,9 @@ public class VisaActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        MobclickAgent.onResume(this);
+
         baiduMap.clear();
         //修改半径后重新绘制
         modifyAntiThiefRadius();
