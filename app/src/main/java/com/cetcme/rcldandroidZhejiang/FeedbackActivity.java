@@ -25,6 +25,8 @@ import com.loopj.android.http.RequestParams;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
+import net.steamcrafted.loadtoast.LoadToast;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -69,10 +71,6 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         questionEditText.addTextChangedListener(textChangeWatcher);
         phoneEditText.addTextChangedListener(textChangeWatcher);
         submitButton.setOnClickListener(this);
-
-//        submitButton.setEnabled(false);
-//        questionEditText.setEnabled(false);
-//        phoneEditText.setEnabled(false);
 
         toast = Toast.makeText(getApplicationContext(), "" , Toast.LENGTH_SHORT);
 
@@ -259,7 +257,6 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.i("Main", errorResponse.toString());
                 kProgressHUD.dismiss();
                 toast.setText("网络连接失败");
                 toast.show();
@@ -267,7 +264,6 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.i("Main", responseString);
                 kProgressHUD.dismiss();
             }
         });
