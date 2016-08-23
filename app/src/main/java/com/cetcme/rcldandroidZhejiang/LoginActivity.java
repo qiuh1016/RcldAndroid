@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -188,6 +190,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
         PushAgent.getInstance(this).onAppStart();
+
+        /**
+         * snackbar
+         */
+//        Snackbar.make(findViewById(R.id.loginView),"It is a snackbar!", Snackbar.LENGTH_INDEFINITE)
+//                .setActionTextColor(Color.WHITE)
+//                .setAction("Close", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        //
+//                    }
+//                }).show();
 
     }
 

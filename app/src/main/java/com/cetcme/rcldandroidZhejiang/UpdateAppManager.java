@@ -13,10 +13,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.baidu.platform.comapi.map.C;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.loopj.android.http.AsyncHttpClient;
@@ -69,7 +72,9 @@ public class UpdateAppManager {
     // 下载应用的对话框
     private Dialog dialog;
     // 下载应用的进度条
-    private ProgressBar progressBar;
+//    private ProgressBar progressBar;
+    private RoundCornerProgressBar progressBar;
+    private TextView progressTextView;
     // 进度条的当前刻度值
     private int curProgress;
     // 用户是否取消下载
@@ -131,6 +136,7 @@ public class UpdateAppManager {
             switch (msg.what) {
                 case UPDATE_TOKEN:
                     progressBar.setProgress(curProgress);
+                    progressTextView.setText(curProgress + "/100");
                     break;
 
                 case INSTALL_TOKEN:
@@ -157,7 +163,7 @@ public class UpdateAppManager {
                 try {
                     String version = response.getString("version");
                     try {
-                        forceToUpdate = response.getBoolean("force_Update");
+                        forceToUpdate = response.getBoolean("force_update");
                     } catch (JSONException e) {
                         forceToUpdate = false;
                     }
@@ -220,7 +226,11 @@ public class UpdateAppManager {
      * 显示提示更新对话框
      */
     private void showNoticeDialog() {
-        message = "检测到新版本发布(V"+ serverVersion + ")，建议您更新！";
+        if (!forceToUpdate) {
+            message = "检测到新版本发布(V"+ serverVersion + ")，建议您更新！";
+        } else {
+            message = "检测到新版本发布(V"+ serverVersion + ")，请您更新！";
+        }
         AlertDialog.Builder builder =  new AlertDialog.Builder(context);
         builder.setTitle("软件版本更新")
                 .setMessage(message)
@@ -244,7 +254,7 @@ public class UpdateAppManager {
     private void showNoUpdateDialog() {
         AlertDialog.Builder builder =  new AlertDialog.Builder(context);
         builder.setTitle("当前已为最新版本")
-                .setMessage("当前版本：V" + currentVersion + "，服务器版本：V" + serverVersion + "。")
+                .setMessage("当前版本：V" + currentVersion + "。")
                 .setCancelable(false)
                 .setPositiveButton("好的", null);
         builder.create().show();
@@ -255,7 +265,9 @@ public class UpdateAppManager {
      */
     private void showDownloadDialog() {
         View view = LayoutInflater.from(context).inflate(R.layout.progress_bar, null);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+//        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar = (RoundCornerProgressBar) view.findViewById(R.id.progressBar);
+        progressTextView = (TextView) view.findViewById(R.id.progressTextView);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("新版本下载中");
         builder.setView(view);
@@ -271,36 +283,6 @@ public class UpdateAppManager {
         dialog = builder.create();
         dialog.show();
         downloadApp();
-//
-//        //获取下载链接，成功后开始下载，失败后下载进度对话框消失，提示失败
-//
-////        RequestParams params = new RequestParams();
-////        params.put("userName", username);
-////        params.put("password", password);
-////        params.put("code", 1);
-//        String url = "http://" + serverIP + context.getString(R.string.getDownLoadUrl);
-//
-//        AsyncHttpClient client = new AsyncHttpClient();
-//        client.get(url, new JsonHttpResponseHandler() {
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                Log.i("Main", "getDownloadUrl: " + response.toString());
-//                try {
-//                    spec = response.getString("url");
-//                    downloadApp();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                Log.i("Main", "getDownloadUrlERROR: " + errorResponse);
-//            }
-//
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Log.i("Main", responseString);
-//            }
-//
-//        });
 
     }
 
